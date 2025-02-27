@@ -345,6 +345,9 @@ GEM
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    simple_form (5.3.1)
+      actionpack (>= 5.2)
+      activemodel (>= 5.2)
     solid_cable (3.0.7)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -462,6 +465,7 @@ DEPENDENCIES
   rspec-rails
   rubocop-rails
   rubocop-rails-omakase
+  simple_form
   solid_cable
   solid_cache
   solid_queue
