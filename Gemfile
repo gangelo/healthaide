@@ -55,3 +55,22 @@ group :development do
   gem "web-console"
 end
 
+group :development, :test do
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "pry-rails"
+  gem "rubocop-rails"
+end
+
+group :test do
+  gem "cuprite" # https://github.com/rubycdp/cuprite
+  gem "rspec-rails"
+end
+
+gem "devise"
+gem "dotenv-rails"
+gem "good_job"
+gem "pagy"
+gem "pundit"
+gem "strong_migrations"
+gem "view_component"
