@@ -51,6 +51,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "erb_lint"
   gem "letter_opener"
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
@@ -60,7 +61,6 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "ffaker"
   gem "pry-byebug"
-  #  gem 'pry-rails'
   gem "rubocop-rails"
 end
 
@@ -68,6 +68,7 @@ group :test do
   gem "cuprite" # https://github.com/rubycdp/cuprite
   gem "rspec-rails"
   gem "shoulda-matchers"
+  gem "simplecov", require: false
 end
 
 gem "devise"
