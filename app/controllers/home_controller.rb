@@ -1,5 +1,4 @@
 class HomeController < ApplicationController
   # GET /
-  def index
-  end
+  def index; end
 end
