@@ -1,0 +1,63 @@
+<nav data-controller="nav-bar">
+  <header>
+    <div class="container">
+      <div>
+        <a href="/">
+          <%= render partial: "shared/site_name" %>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><%= link_to "Home", root_path, class: "" %></li>
+          <% if user_signed_in? %>
+          <li><%= link_to "My Stores", user_stores_path, class: "" %></li>
+          <li><%= link_to "Shopping lists", user_shopping_lists_path, class: "" %></li>
+          <li><%= link_to "Items", items_path, class: "" %></li>
+          <li><%= link_to "Labels", labels_path, class: "" %></li>
+          <% else %>
+          <li><a href="#" class="">Features</a></li>
+          <li><a href="#" class="">Pricing</a></li>
+          <li><a href="#" class="">FAQs</a></li>
+          <li><a href="#" class="">About</a></li>
+          <% end %>
+        </ul>
+
+        <form class=" role="search">
+          <input type="search" id="search" class="" placeholder="Search..." aria-label="Search" autocomplete="off">
+        </form>
+        <div class="text-end">
+          <% if user_signed_in? %>
+          <%= link_to "Logout",
+                      destroy_user_session_path,
+                      class: "",
+                      data: {
+                        turbo_method: :delete,
+                        confirm: "Are you sure?",
+                        turbo_confirm: "Are you sure?"
+                      } %>
+          <% active = false %>
+          <%= link_to "Profile",
+                      edit_user_registration_path,
+                      class: ["", active: active, disabled: active],
+                      data: {
+                        action: "nav-bar#navigate"
+                      } %>
+          <% else %>
+          <% active = current_page?(new_user_session_path) %>
+          <%= link_to "Login",
+                      new_user_session_path,
+                      class: ["", active: active, disabled: active],
+                      data: {
+                        action: "nav-bar#navigate"
+                      } %>
+          <% active = current_page?(new_user_registration_path) %>
+          <%= link_to "Sign-up", new_user_registration_path,
+                      class: ["", active: active, disabled: active],
+                      data: {
+                        action: "nav-bar#navigate"
+                      } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </header>
+</nav>
