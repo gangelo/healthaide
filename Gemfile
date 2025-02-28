@@ -65,8 +65,9 @@ group :development, :test do
 end
 
 group :test do
-  gem "cuprite" # https://github.com/rubycdp/cuprite
+  gem "capybara"
   gem "rspec-rails"
+  gem "selenium-webdriver"
   gem "shoulda-matchers"
   gem "simplecov", require: false
 end
