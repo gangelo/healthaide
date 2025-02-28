@@ -18,6 +18,7 @@ require "active_support/test_case"
 require 'factory_bot_rails'
 require "capybara/cuprite"
 require "shoulda/matchers"
+require "simplecov"
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
