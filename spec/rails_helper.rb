@@ -16,7 +16,6 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require "active_support/test_case"
 require 'factory_bot_rails'
-require "capybara/cuprite"
 require "shoulda/matchers"
 require "simplecov"
 
@@ -89,13 +88,3 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-
-# cuprite
-Capybara.javascript_driver = :cuprite
-Capybara.register_driver(:cuprite) do |app|
-  Capybara::Cuprite::Driver.new(app, window_size: [ 1200, 800 ], inspector: ENV['INSPECTOR'])
-end
-
-# TODO: These may not be necessary; are they already set up elsewhere or by default?
-Capybara.default_driver = :cuprite
-Capybara.javascript_driver = :cuprite
