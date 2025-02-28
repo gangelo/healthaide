@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 7.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -51,20 +51,23 @@ group :development, :test do
 end
 
 group :development do
+  gem "letter_opener"
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
 
 group :development, :test do
   gem "factory_bot_rails"
-  gem "faker"
-  gem "pry-rails"
+  gem "ffaker"
+  gem "pry-byebug"
+  #  gem 'pry-rails'
   gem "rubocop-rails"
 end
 
 group :test do
   gem "cuprite" # https://github.com/rubycdp/cuprite
   gem "rspec-rails"
+  gem "shoulda-matchers"
 end
 
 gem "devise"
