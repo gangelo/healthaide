@@ -16,5 +16,4 @@ Style/StringLiteralsInInterpolation:
   Enabled: true
 
 Style/EmptyLiteral:
-  EnforcedStyle: double_quotes
   Enabled: true

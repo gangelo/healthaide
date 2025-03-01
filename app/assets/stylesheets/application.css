@@ -8,3 +8,11 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ .health {
+  font-weight: 600;
+ }
+
+ .ai {
+  font-weight: 900;
+ }
