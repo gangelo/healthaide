@@ -7,7 +7,6 @@ mode = mode || :light
 mode = mode.to_sym
 mode = :light unless %i[light dark].include?(mode)
 %>
-
 <span class="<%= container_css_class %> <%= mode %>">
   <span class="<%= primary_css_class %> <%= mode %>">Health</span><span class="<%= secondary_css_class %> <%= mode %>">AI</span><span class="<%= primary_css_class %> <%= mode %>">de</span>
 </span>
