@@ -1,22 +1,26 @@
 <h2>Log in</h2>
-<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :email_or_username,
-                  label: "Email or username",
-                  required: true,
-                  autofocus: true,
-                  input_html: {
-                    autocomplete: "email",
-                  } %>
-    <%= f.input :password,
-                required: true,
-                input_html: {
-                  autocomplete: "current-password"
-                } %>
-    <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field mb-4">
+    <%= f.label :email_or_username, "Email or username" %><br />
+    <%= f.text_field :email_or_username, autofocus: true, autocomplete: "email", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-  <div class="form-actions">
-    <%= f.button :submit, "Log in" %>
+
+  <div class="field mb-4">
+    <%= f.label :password %><br />
+    <%= f.password_field :password, autocomplete: "current-password", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="field mb-4">
+      <%= f.check_box :remember_me, class: "mr-2" %>
+      <%= f.label :remember_me %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Log in", class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium cursor-pointer" %>
   </div>
 <% end %>
+
 <%= render "devise/shared/links" %>

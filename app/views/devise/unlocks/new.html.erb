@@ -1,18 +1,15 @@
 <h2>Resend unlock instructions</h2>
 
-<%= simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
-  <%= f.error_notification %>
-  <%= f.full_error :unlock_token %>
+<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
+  <div class="field mb-4">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Resend unlock instructions" %>
+  <div class="actions">
+    <%= f.submit "Resend unlock instructions", class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium cursor-pointer" %>
   </div>
 <% end %>
 
