@@ -1,9 +1,5 @@
-<% if info %>
-  <p class="info"><%= info %></p>
-<% end %>
-<% if notice %>
-  <p class="notice"><%= notice %></p>
-<% end %>
-<% if alert %>
-  <p class="alert"><%= alert %></p>
-<% end %>
+<div id="flash">
+  <% all_flash_messages.each do |message_data| %>
+    <%= flash_message_tag(message_data[:type], message_data[:message]) %>
+  <% end %>
+</div>

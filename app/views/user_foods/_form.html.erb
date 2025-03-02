@@ -1,0 +1,108 @@
+<%= form_with(model: user_food, class: "contents") do |form| %>
+  <% if user_food.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(user_food.errors.count, "error") %> prohibited this user_food from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% user_food.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": user_food.errors[:user_id].none?, "border-red-400 focus:outline-red-600": user_food.errors[:user_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :food_name %>
+    <%= form.text_field :food_name, value: user_food.food&.food_name, id: "food_name_input",
+                       autocomplete: "off", placeholder: "Search for a food or enter a new one" %>
+    <div id="food_suggestions" class="suggestions"></div>
+  </div>
+
+  <div class="field">
+    <%= form.label :favorite %>
+    <%= form.check_box :favorite %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const foodInput = document.getElementById('food_name_input');
+  const suggestionsDiv = document.getElementById('food_suggestions');
+
+  foodInput.addEventListener('input', function() {
+    const query = this.value.trim();
+
+    if (query.length < 2) {
+      suggestionsDiv.innerHTML = '';
+      return;
+    }
+
+    fetch('/foods.json?query=' + encodeURIComponent(query))
+      .then(response => response.json())
+      .then(data => {
+        suggestionsDiv.innerHTML = '';
+
+        if (data.length === 0) {
+          const div = document.createElement('div');
+          div.textContent = 'No matches found - your entry will create a new food';
+          div.className = 'no-results';
+          suggestionsDiv.appendChild(div);
+          return;
+        }
+
+        data.forEach(food => {
+          const div = document.createElement('div');
+          div.textContent = food.food_name;
+          div.className = 'suggestion';
+          div.addEventListener('click', function() {
+            foodInput.value = food.food_name;
+            suggestionsDiv.innerHTML = '';
+          });
+          suggestionsDiv.appendChild(div);
+        });
+      });
+  });
+
+  // Hide suggestions when clicking outside
+  document.addEventListener('click', function(e) {
+    if (e.target !== foodInput && e.target !== suggestionsDiv) {
+      suggestionsDiv.innerHTML = '';
+    }
+  });
+});
+</script>
+
+<style>
+.suggestions {
+  position: absolute;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  width: 100%;
+  z-index: 1000;
+}
+
+.suggestion, .no-results {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background-color: #f0f0f0;
+}
+
+.no-results {
+  font-style: italic;
+  color: #666;
+}
+</style>
