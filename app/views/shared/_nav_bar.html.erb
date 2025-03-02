@@ -7,7 +7,10 @@
         </a>
         <ul>
           <li><%= link_to "Home", root_path, class: "" %></li>
-          <% unless user_signed_in? %>
+          <% if user_signed_in? %>
+            <li><%= link_to "Foods", foods_path, class: "" %></li>
+            <li><%= link_to "Food Qualifiers", food_qualifiers_path, class: "" %></li>
+          <% else %>
             <li><a href="#" class="">Features</a></li>
             <li><a href="#" class="">Pricing</a></li>
             <li><a href="#" class="">FAQs</a></li>

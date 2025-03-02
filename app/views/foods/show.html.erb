@@ -1,0 +1,20 @@
+<% content_for :title, "Showing food" %>
+
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <%= render "shared/flash" %>
+
+    <div class="food-details">
+      <h1 class="font-bold text-4xl mb-4"><%= @food.food_name %></h1>
+
+      <!-- Food qualifiers partial -->
+      <%= render "qualifiers" %>
+    </div>
+
+    <div class="mt-8">
+      <%= link_to "Edit this food", edit_food_path(@food), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+      <%= link_to "Back to foods", foods_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+      <%= button_to "Delete this food", @food, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-red-600 text-white font-medium", form: { data: { turbo_confirm: "Are you sure?" } } %>
+    </div>
+  </div>
+</div>

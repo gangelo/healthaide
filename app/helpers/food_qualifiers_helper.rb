@@ -1,0 +1,2 @@
+module FoodQualifiersHelper
+end
