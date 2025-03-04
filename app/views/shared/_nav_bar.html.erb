@@ -1,59 +1,59 @@
-<nav data-controller="nav-bar">
-  <header>
-    <div class="container">
-      <div>
-        <a href="/">
-          <%= render partial: "shared/site_name" %>
-        </a>
-        <ul>
-          <li><%= link_to "Home", root_path, class: "" %></li>
-          <% if user_signed_in? %>
-            <li><%= link_to "Foods", foods_path, class: "" %></li>
-            <li><%= link_to "Food Qualifiers", food_qualifiers_path, class: "" %></li>
-          <% else %>
-            <li><a href="#" class="">Features</a></li>
-            <li><a href="#" class="">Pricing</a></li>
-            <li><a href="#" class="">FAQs</a></li>
-            <li><a href="#" class="">About</a></li>
-          <% end %>
-        </ul>
-        <form class="" role="search">
-          <input type="search" id="search" class="" placeholder="Search..." aria-label="Search" autocomplete="off">
-        </form>
-        <div>
-          <% if user_signed_in? %>
-            <%= link_to "Logout",
-                      destroy_user_session_path,
-                      class: "",
-                      data: {
-                        turbo_method: :delete,
-                        confirm: "Are you sure?",
-                        turbo_confirm: "Are you sure?"
-                      } %>
-            <% active = false %>
-            <%= link_to "Profile",
-                      edit_user_registration_path,
-                      class: ["", active: active, disabled: active],
-                      data: {
-                        action: "nav-bar#navigate"
-                      } %>
-          <% else %>
-            <% active = current_page?(new_user_session_path) %>
-            <%= link_to "Login",
-                      new_user_session_path,
-                      class: ["", active: active, disabled: active],
-                      data: {
-                        action: "nav-bar#navigate"
-                      } %>
-            <% active = current_page?(new_user_registration_path) %>
-            <%= link_to "Sign-up", new_user_registration_path,
-                      class: ["", active: active, disabled: active],
-                      data: {
-                        action: "nav-bar#navigate"
-                      } %>
-          <% end %>
-        </div>
-      </div>
+<nav class="nav" data-controller="nav-bar">
+  <div class="nav-container">
+    <a href="/" class="nav-brand">
+      <%= render partial: "shared/site_name" %>
+    </a>
+
+    <ul class="nav-links">
+      <li><%= link_to "Home", root_path, class: "nav-link" %></li>
+      <% if user_signed_in? %>
+        <li><%= link_to "Foods", foods_path, class: "nav-link" %></li>
+        <li><%= link_to "Food Qualifiers", food_qualifiers_path, class: "nav-link" %></li>
+      <% else %>
+        <li><a href="#" class="nav-link">Features</a></li>
+        <li><a href="#" class="nav-link">Pricing</a></li>
+        <li><a href="#" class="nav-link">FAQs</a></li>
+        <li><a href="#" class="nav-link">About</a></li>
+      <% end %>
+    </ul>
+
+    <form class="nav-search" role="search">
+      <svg class="nav-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+      </svg>
+      <input type="search" id="search" class="nav-search-input" placeholder="Search..." aria-label="Search" autocomplete="off">
+    </form>
+
+    <div class="nav-actions">
+      <% if user_signed_in? %>
+        <%= link_to "Logout",
+                  destroy_user_session_path,
+                  class: "nav-link",
+                  data: {
+                    turbo_method: :delete,
+                    confirm: "Are you sure?",
+                    turbo_confirm: "Are you sure?"
+                  } %>
+        <%= link_to "Profile",
+                  edit_user_registration_path,
+                  class: ["nav-link", active: current_page?(edit_user_registration_path)],
+                  data: {
+                    action: "nav-bar#navigate"
+                  } %>
+      <% else %>
+        <%= link_to "Login",
+                  new_user_session_path,
+                  class: ["nav-link", active: current_page?(new_user_session_path)],
+                  data: {
+                    action: "nav-bar#navigate"
+                  } %>
+        <%= link_to "Sign-up",
+                  new_user_registration_path,
+                  class: ["nav-link", active: current_page?(new_user_registration_path)],
+                  data: {
+                    action: "nav-bar#navigate"
+                  } %>
+      <% end %>
     </div>
-  </header>
+  </div>
 </nav>

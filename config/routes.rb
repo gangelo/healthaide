@@ -24,15 +24,4 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   devise_for :users
-
-  # For admin-only access
-  namespace :admin do
-    resources :foods do
-      member do
-        post "add_qualifier"
-        delete "remove_qualifier"
-      end
-    end
-    resources :food_qualifiers
-  end
 end
