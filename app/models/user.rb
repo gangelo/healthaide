@@ -27,14 +27,6 @@ class User < ApplicationRecord
 
   validate :password_complexity, if: -> { password.present? }
 
-  # Admin role check - assuming you have an admin field in your users table
-  # If you don't have this field yet, you'll need to add a migration
-  def admin?
-    # Replace with your actual admin role check logic
-    # This is just a placeholder - implement your own logic
-    role == "admin"
-  end
-
   class << self
     def find_for_database_authentication(warden_conditions)
       conditions = warden_conditions.dup
