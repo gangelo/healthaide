@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@layer components {
+  .health {
+    @apply text-indigo-400 font-semibold;
+  }
+
+  .ai {
+    @apply text-indigo-100 font-semibold;
+
+  }
+}

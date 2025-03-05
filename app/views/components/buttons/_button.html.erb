@@ -1,0 +1,88 @@
+<%#
+  Button component based on Catalyst's design
+  Usage:
+    render "components/buttons/button",
+          text: "Submit",
+          type: :submit,
+          variant: :primary,
+          size: :md,
+          icon: "path/to/icon.svg",
+          class: "additional-classes"
+
+  Parameters:
+    text: String - The button's text content
+    type: Symbol - The button type (:button, :submit, :reset)
+    variant: Symbol - The button's style variant
+    size: Symbol - The button's size
+    icon: String - Path to an icon image (optional)
+    class: String - Additional CSS classes (optional)
+    href: String - If present, renders as a link instead of a button
+
+  Variants:
+    :primary - Blue button with white text
+    :secondary - White button with gray border
+    :danger - Red button with white text
+    :success - Green button with white text
+    :warning - Yellow button with white text
+    :info - Light blue button with blue text
+
+  Sizes:
+    :sm - Small (px-2.5 py-1.5 text-xs)
+    :md - Medium (px-3 py-2 text-sm)
+    :lg - Large (px-4 py-3 text-base)
+%>
+
+<% variant_classes = case local_assigns[:variant]
+   when :primary
+     "bg-blue-600 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+   when :secondary
+     "bg-white text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+   when :danger
+     "bg-red-600 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+   when :success
+     "bg-green-600 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+   when :warning
+     "bg-yellow-600 text-white shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600"
+   when :info
+     "bg-blue-100 text-blue-700 shadow-sm hover:bg-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+   else
+     "bg-blue-600 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+   end %>
+
+<% size_classes = case local_assigns[:size]
+   when :sm
+     "px-2.5 py-1.5 text-xs font-semibold rounded-md"
+   when :lg
+     "px-4 py-3 text-base font-semibold rounded-lg"
+   else
+     "px-3 py-2 text-sm font-semibold rounded-md"
+   end %>
+
+<% icon_classes = case local_assigns[:size]
+   when :sm
+     "h-4 w-4"
+   when :lg
+     "h-5 w-5"
+   else
+     "h-4 w-4"
+   end %>
+
+<% if local_assigns[:href].present? %>
+  <%= link_to href,
+              class: "inline-flex items-center gap-x-1.5 #{variant_classes} #{size_classes} #{local_assigns[:class]}",
+              **local_assigns.except(:text, :variant, :size, :icon, :class) do %>
+    <% if local_assigns[:icon].present? %>
+      <%= image_tag icon, class: icon_classes, aria_hidden: true %>
+    <% end %>
+    <%= text %>
+  <% end %>
+<% else %>
+  <%= button_tag type: local_assigns[:type] || :button,
+                class: "inline-flex items-center gap-x-1.5 #{variant_classes} #{size_classes} #{local_assigns[:class]}",
+                **local_assigns.except(:text, :variant, :size, :icon, :class) do %>
+    <% if local_assigns[:icon].present? %>
+      <%= image_tag icon, class: icon_classes, aria_hidden: true %>
+    <% end %>
+    <%= text %>
+  <% end %>
+<% end %>

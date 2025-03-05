@@ -41,3 +41,4 @@ scratch*.rb
 snippets.rb
 readme.txt
 todo.txt
+vendor/templates/
