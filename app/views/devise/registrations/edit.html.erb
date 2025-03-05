@@ -37,6 +37,10 @@
 
 <h3 class="font-bold text-xl mb-3 mt-8">Cancel my account</h3>
 
-<div class="mb-3">Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "rounded-md px-3.5 py-2.5 bg-red-600 hover:bg-red-500 text-white font-medium cursor-pointer mt-2" %></div>
+<div class="mb-3">Unhappy? <%= button_to "Cancel my account", registration_path(resource_name),
+    class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+    form_class: "inline-flex",
+    data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" },
+    method: :delete %></div>
 
 <%= link_to "Back", :back, class: "rounded-md px-3.5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 inline-block font-medium cursor-pointer" %>

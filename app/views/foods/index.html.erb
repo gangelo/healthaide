@@ -12,12 +12,24 @@
     <% if @foods.any? %>
       <% @foods.each do |food| %>
         <div class="flex justify-between items-center">
-          <%= render food %>
+          <div class="flex items-center gap-2">
+            <%= render food %>
+            <div class="flex gap-1">
+              <% food.food_qualifiers.each do |qualifier| %>
+                <span class="inline-flex items-center gap-x-0.5 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-700/10 ring-inset">
+                  <%= qualifier.qualifier_name %>
+                </span>
+              <% end %>
+            </div>
+          </div>
           <div class="space-x-2">
             <%= link_to "Show", food, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
             <%= link_to "Edit", edit_food_path(food), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
             <div class="inline-block">
-              <%= button_to "Destroy", food, method: :delete, class: "rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+              <%= button_to "Destroy", food, method: :delete,
+                  class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                  form_class: "inline-flex",
+                  data: { turbo_confirm: "Are you sure?" } %>
             </div>
           </div>
         </div>
