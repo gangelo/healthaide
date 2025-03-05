@@ -1,26 +1,24 @@
-<div id="food_qualifiers" class="food-qualifiers">
-  <h3 class="food-qualifiers-title">Qualifiers</h3>
+<div id="food_qualifiers" class="mt-6">
+  <h3 class="text-2xl font-semibold text-gray-900">Qualifiers</h3>
 
   <%= render "qualifier_list", food: @food %>
 
-  <h4 class="food-qualifiers-subtitle">Add a Qualifier</h4>
+  <h4 class="text-xl font-semibold text-gray-900 mt-6 mb-3">Add a Qualifier</h4>
 
   <%= render "add_existing_qualifier_form", food: @food, available_qualifiers: @available_qualifiers %>
 
-  <div class="food-qualifiers-section">
-    <h5 class="food-qualifiers-section-title">
+  <div class="mt-6 border-t border-gray-200 pt-6">
+    <h5 class="text-sm font-medium text-gray-900 mb-4">
       <%= @available_qualifiers.any? ? "Or create a new qualifier:" : "Create a new qualifier:" %>
     </h5>
 
-    <div id="errorMessage" class="food-qualifier-error hidden"></div>
-
     <%= turbo_frame_tag "new_qualifier" do %>
-      <%= form_with url: find_or_create_food_qualifiers_path, method: :post, class: "food-qualifier-form" do |form| %>
-        <%= form.text_field :qualifier_name,
-                          class: "food-qualifier-input",
-                          placeholder: "Enter a new qualifier name",
-                          required: true %>
-        <%= form.submit "Create & Add", class: "food-qualifier-submit" %>
+      <%= form_with url: find_or_create_food_qualifiers_path, method: :post, class: "flex gap-4" do |form| %>
+        <%= text_input form, :qualifier_name,
+                      placeholder: "Enter a new qualifier name",
+                      required: true,
+                      error: flash[:error] %>
+        <%= success_button "Create & Add", type: :submit %>
         <%= form.hidden_field :food_id, value: @food.id %>
       <% end %>
     <% end %>

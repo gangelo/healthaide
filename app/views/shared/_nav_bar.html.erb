@@ -1,59 +1,85 @@
-<nav class="nav" data-controller="nav-bar">
-  <div class="nav-container">
-    <a href="/" class="nav-brand">
-      <%= render partial: "shared/site_name" %>
-    </a>
+<nav class="bg-gray-800 w-full block">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 justify-between">
+      <div class="flex">
+        <div class="flex shrink-0 items-center">
+          <%= link_to root_path, class: "flex items-center" do %>
+            <%= render partial: "shared/site_name" %>
+          <% end %>
+        </div>
+        <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+          <%= link_to "Home", root_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" %>
+          <% if user_signed_in? %>
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <%= link_to "Foods", foods_path, class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white", aria_current: "page" %>
+            <%= link_to "Food Qualifiers", food_qualifiers_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" %>
+          <% else %>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Features</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Pricing</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About</a>
+            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">FAQs</a>
+          <% end %>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <%# <div class="shrink-0">
+          <button type="button" class="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+            <svg class="-ml-0.5 size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+            </svg>
+            New Menu
+          </button>
+        </div> %>
+        <div class="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
+          <!-- Profile dropdown -->
+          <% if user_signed_in? %>
+            <div class="relative ml-3">
+              <%= link_to "Logout",
+                    destroy_user_session_path,
+                    class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                    data: {
+                      turbo_method: :delete,
+                      confirm: "Are you sure?",
+                      turbo_confirm: "Are you sure?"
+                    } %>
+              <%= link_to "Profile",
+                    edit_user_registration_path,
+                    class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                    data: {
+                      action: "nav-bar#navigate"
+                    } %>
+              <%# <div>
+                <button type="button" class="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                  <span class="absolute -inset-1.5"></span>
+                  <span class="sr-only">Open user menu</span>
+                  <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                </button>
+              </div> %>
 
-    <ul class="nav-links">
-      <li><%= link_to "Home", root_path, class: "nav-link" %></li>
-      <% if user_signed_in? %>
-        <li><%= link_to "Foods", foods_path, class: "nav-link" %></li>
-        <li><%= link_to "Food Qualifiers", food_qualifiers_path, class: "nav-link" %></li>
-      <% else %>
-        <li><a href="#" class="nav-link">Features</a></li>
-        <li><a href="#" class="nav-link">Pricing</a></li>
-        <li><a href="#" class="nav-link">FAQs</a></li>
-        <li><a href="#" class="nav-link">About</a></li>
-      <% end %>
-    </ul>
+              <!--
+                Dropdown menu, show/hide based on menu state.
 
-    <form class="nav-search" role="search">
-      <svg class="nav-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="search" id="search" class="nav-search-input" placeholder="Search..." aria-label="Search" autocomplete="off">
-    </form>
-
-    <div class="nav-actions">
-      <% if user_signed_in? %>
-        <%= link_to "Logout",
-                  destroy_user_session_path,
-                  class: "nav-link",
-                  data: {
-                    turbo_method: :delete,
-                    confirm: "Are you sure?",
-                    turbo_confirm: "Are you sure?"
-                  } %>
-        <%= link_to "Profile",
-                  edit_user_registration_path,
-                  class: ["nav-link", active: current_page?(edit_user_registration_path)],
-                  data: {
-                    action: "nav-bar#navigate"
-                  } %>
-      <% else %>
-        <%= link_to "Login",
-                  new_user_session_path,
-                  class: ["nav-link", active: current_page?(new_user_session_path)],
-                  data: {
-                    action: "nav-bar#navigate"
-                  } %>
-        <%= link_to "Sign-up",
-                  new_user_registration_path,
-                  class: ["nav-link", active: current_page?(new_user_registration_path)],
-                  data: {
-                    action: "nav-bar#navigate"
-                  } %>
-      <% end %>
+                Entering: "transition ease-out duration-200"
+                  From: "transform opacity-0 scale-95"
+                  To: "transform opacity-100 scale-100"
+                Leaving: "transition ease-in duration-75"
+                  From: "transform opacity-100 scale-100"
+                  To: "transform opacity-0 scale-95"
+              -->
+              <%# <div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+              </div> %>
+            </div>
+          <% else %>
+            <div class="shrink-0">
+              <%= link_to "Login", new_user_session_path, class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
