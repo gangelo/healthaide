@@ -1,6 +1,6 @@
 class UserFoodsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user_food, only: %i[ show edit update destroy ]
+  before_action :set_user_food, only: %i[ show edit update destroy add_qualifier ]
 
   # GET /user_foods or /user_foods.json
   def index
@@ -22,32 +22,36 @@ class UserFoodsController < ApplicationController
 
   # POST /user_foods or /user_foods.json
   def create
-    # Find or create the food
-    food_name = user_food_params[:food_name]
-    food = Food.find_by(food_name: food_name)
+    @user_food = current_user.user_foods.new
 
-    if food.nil? && food_name.present?
-      food = Food.create(food_name: food_name)
+    if params[:user_food][:food_id].present?
+      # Using existing food
+      @user_food.food_id = params[:user_food][:food_id]
+    elsif params[:user_food][:new_food_name].present?
+      # Create new food
+      food = Food.create!(food_name: params[:user_food][:new_food_name])
+      @user_food.food = food
+    else
+      # Neither option selected
+      @user_food.errors.add(:base, "Please select an existing food or enter a new food name")
+      render :new, status: :unprocessable_entity
+      return
     end
 
-    @user_food = current_user.user_foods.new(favorite: user_food_params[:favorite])
-    @user_food.food = food if food
-
-    respond_to do |format|
-      if @user_food.save
-        format.html { redirect_to @user_food, notice: "Food was successfully added to your list." }
-        format.json { render :show, status: :created, location: @user_food }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user_food.errors, status: :unprocessable_entity }
-      end
+    if @user_food.save
+      redirect_to user_foods_path, notice: "Food was successfully added to your list."
+    else
+      render :new, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => e
+    @user_food.errors.add(:base, e.record.errors.full_messages.to_sentence)
+    render :new, status: :unprocessable_entity
   end
 
   # PATCH/PUT /user_foods/1 or /user_foods/1.json
   def update
     respond_to do |format|
-      if @user_food.update(user_food_params.except(:food_name))
+      if @user_food.update(user_food_params)
         format.html { redirect_to @user_food, notice: "Food item was successfully updated." }
         format.json { render :show, status: :ok, location: @user_food }
       else
@@ -67,6 +71,22 @@ class UserFoodsController < ApplicationController
     end
   end
 
+  def add_qualifier
+    if params[:food_qualifier_id].present?
+      qualifier = FoodQualifier.find(params[:food_qualifier_id])
+      @user_food.food.food_qualifiers << qualifier unless @user_food.food.food_qualifiers.include?(qualifier)
+      redirect_to @user_food, notice: "Qualifier was successfully added."
+    elsif params[:new_qualifier_name].present?
+      qualifier = FoodQualifier.create!(qualifier_name: params[:new_qualifier_name])
+      @user_food.food.food_qualifiers << qualifier
+      redirect_to @user_food, notice: "New qualifier was successfully created and added."
+    else
+      redirect_to @user_food, alert: "Please select an existing qualifier or enter a new one."
+    end
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to @user_food, alert: e.record.errors.full_messages.to_sentence
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user_food
@@ -75,6 +95,6 @@ class UserFoodsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_food_params
-      params.require(:user_food).permit(:favorite, :food_name)
+      params.require(:user_food).permit(:food_id, :new_food_name)
     end
 end

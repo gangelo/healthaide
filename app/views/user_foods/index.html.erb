@@ -1,32 +1,73 @@
-<% content_for :title, "User foods" %>
+<% content_for :title, "My Foods" %>
 
-<div class="w-full">
-  <%= render "shared/flash" %>
+<div class="mx-auto md:w-2/3 w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">User foods</h1>
-    <%= link_to "New user food", new_user_food_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="font-bold text-4xl">My Foods</h1>
+    <%= link_to "Add Food",
+        new_user_food_path,
+        class: "rounded-lg py-3 px-5 bg-blue-600 text-white font-medium hover:bg-blue-500 transition-colors" %>
   </div>
 
-  <div id="user_foods" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @user_foods.any? %>
-      <% @user_foods.each do |user_food| %>
-        <div class="flex justify-between items-center">
-          <%= render user_food %>
-          <div class="space-x-2">
-            <%= link_to "Show", user_food, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_user_food_path(user_food), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <div class="inline-block">
-              <%= button_to "Delete", user_food, method: :delete,
-                  class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-                  form_class: "inline-flex",
-                  data: { turbo_confirm: "Are you sure?" } %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-center my-10">No user foods found.</p>
-    <% end %>
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Food</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qualifiers</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <% if @user_foods.any? %>
+          <% @user_foods.each do |user_food| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4">
+                <div class="inline-flex items-center gap-x-0.5 rounded-md bg-indigo-50 px-2 py-1 text-sm font-medium text-indigo-700 ring-1 ring-indigo-700/10 ring-inset">
+                  <%= user_food.food.food_name %>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex flex-wrap gap-2">
+                  <% user_food.food.food_qualifiers.each do |qualifier| %>
+                    <span class="inline-flex items-center gap-x-0.5 rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20">
+                      <%= qualifier.qualifier_name %>
+                    </span>
+                  <% end %>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right whitespace-nowrap">
+                <div class="flex items-center justify-end space-x-2">
+                  <%= link_to user_food_path(user_food), class: "text-blue-600 hover:text-blue-900" do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  <% end %>
+                  <%= button_to user_food_path(user_food),
+                      method: :delete,
+                      class: "text-red-600 hover:text-red-900",
+                      form_class: "inline-block",
+                      data: { turbo_confirm: "Are you sure?" } do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+              No foods added yet.
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>

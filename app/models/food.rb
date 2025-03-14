@@ -11,6 +11,8 @@ class Food < ApplicationRecord
 
   validates :food_name, presence: true, length: { maximum: 64 }
 
+  scope :ordered, -> { order(:food_name) }
+
   private
 
   def before_save_food_name

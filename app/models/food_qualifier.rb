@@ -8,7 +8,7 @@ class FoodQualifier < ApplicationRecord
 
   validates :qualifier_name, presence: true, length: { maximum: 64 }
 
-  scope :by_name, -> { order(:qualifier_name) }
+  scope :ordered, -> { order(:qualifier_name) }
 
   private
 

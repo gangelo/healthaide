@@ -13,7 +13,11 @@ Rails.application.routes.draw do
   get "health_conditions/create"
   get "health_conditions/update"
   get "health_conditions/destroy"
-  resources :user_foods
+  resources :user_foods do
+    member do
+      post :add_qualifier
+    end
+  end
   resources :food_qualifiers do
     collection do
       post "find_or_create"
