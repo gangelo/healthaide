@@ -1,0 +1,2 @@
+module UserHealthConditionsHelper
+end

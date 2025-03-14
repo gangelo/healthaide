@@ -1,10 +1,12 @@
 <% content_for :title, "Editing food qualifier" %>
 
-<div class="md:w-2/3 w-full">
+<div class="mx-auto md:w-2/3 w-full">
   <h1 class="font-bold text-4xl">Editing food qualifier</h1>
 
   <%= render "form", food_qualifier: @food_qualifier %>
 
-  <%= link_to "Show this food qualifier", @food_qualifier, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to food qualifiers", food_qualifiers_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <div class="inline-block ml-2">
+    <%= link_to "Show this food qualifier", @food_qualifier, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Back to food qualifiers", food_qualifiers_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  </div>
 </div>

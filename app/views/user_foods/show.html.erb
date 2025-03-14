@@ -10,7 +10,7 @@
   <%= link_to "Edit this user food", edit_user_food_path(@user_food), class: "mt-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
   <%= link_to "Back to user foods", user_foods_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
   <div class="inline-block ml-2">
-    <%= button_to "Destroy this user food", @user_food, method: :delete,
+    <%= button_to "Delete this user food", @user_food, method: :delete,
         class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
         form_class: "inline-flex",
         data: { turbo_confirm: "Are you sure?" } %>

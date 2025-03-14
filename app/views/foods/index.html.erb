@@ -1,41 +1,54 @@
 <% content_for :title, "Foods" %>
 
 <div class="w-full">
-  <%= render "shared/flash" %>
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
 
   <div class="flex justify-between items-center">
     <h1 class="font-bold text-4xl">Foods</h1>
-    <%= link_to "New food", new_food_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+    <%= link_to "New food", new_food_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
   </div>
 
-  <div id="foods" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @foods.any? %>
-      <% @foods.each do |food| %>
-        <div class="flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <%= render food %>
-            <div class="flex gap-1">
-              <% food.food_qualifiers.each do |qualifier| %>
-                <span class="inline-flex items-center gap-x-0.5 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-700/10 ring-inset">
-                  <%= qualifier.qualifier_name %>
-                </span>
-              <% end %>
-            </div>
-          </div>
-          <div class="space-x-2">
-            <%= link_to "Show", food, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_food_path(food), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <div class="inline-block">
-              <%= button_to "Destroy", food, method: :delete,
-                  class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-                  form_class: "inline-flex",
-                  data: { turbo_confirm: "Are you sure?" } %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-center my-10">No foods found.</p>
-    <% end %>
+  <div id="foods" class="min-w-full">
+    <div class="bg-white shadow-md rounded my-6">
+      <table class="min-w-full table-auto">
+        <thead>
+          <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            <th class="py-3 px-6 text-left w-1/3">Name</th>
+            <th class="py-3 px-6 text-left w-2/3">Qualifiers</th>
+            <th class="py-3 px-6 text-center whitespace-nowrap">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+          <% @foods.each do |food| %>
+            <tr class="border-b border-gray-200 hover:bg-gray-100">
+              <td class="py-3 px-6 text-left">
+                <%= food.food_name %>
+              </td>
+              <td class="py-3 px-6 text-left">
+                <div class="flex gap-1 flex-wrap">
+                  <% food.food_qualifiers.each do |qualifier| %>
+                    <span class="inline-flex items-center gap-x-0.5 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-indigo-700/10 ring-inset">
+                      <%= qualifier.qualifier_name %>
+                    </span>
+                  <% end %>
+                </div>
+              </td>
+              <td class="py-3 px-6 text-center whitespace-nowrap">
+                <div class="flex item-center justify-center">
+                  <%= link_to "Show", food, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+                  <%= link_to "Edit", edit_food_path(food), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+                  <%= button_to "Delete", food, method: :delete,
+                      class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                      form_class: "inline-block",
+                      data: { turbo_confirm: "Are you sure?" } %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -1,0 +1,83 @@
+<%= form_with(model: user_health_condition) do |form| %>
+  <% if user_health_condition.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(user_health_condition.errors.count, "error") %> prohibited this health condition from being saved:</h2>
+
+      <ul>
+        <% user_health_condition.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4" data-controller="health-condition-form">
+    <h2 class="text-lg font-semibold mb-6">Add a Health Condition</h2>
+
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Select Existing Condition</h3>
+        <%= form.collection_select :health_condition_id,
+            HealthCondition.ordered.where.not(id: current_user.user_health_conditions.map(&:health_condition_id)),
+            :id,
+            :health_condition_name,
+            { prompt: "Select a health condition" },
+            {
+              class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full",
+              data: {
+                health_condition_form_target: "select",
+                action: "change->health-condition-form#handleSelect"
+              }
+            } %>
+      </div>
+
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center" aria-hidden="true">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center">
+          <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">Or</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Create New Condition</h3>
+        <%= form.text_field :new_condition_name,
+            placeholder: "Enter new health condition name",
+            class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full",
+            data: {
+              health_condition_form_target: "input",
+              action: "input->health-condition-form#handleInput"
+            } %>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <%= form.submit "Add Health Condition", class: "w-full rounded-lg py-3 px-5 bg-blue-600 text-white font-medium cursor-pointer hover:bg-blue-500 transition-colors" %>
+    </div>
+  </div>
+<% end %>
+
+<% content_for :javascript do %>
+  <script>
+    document.addEventListener('turbo:load', function() {
+      const existingRadio = document.querySelector('input[value="existing"]');
+      const newRadio = document.querySelector('input[value="new"]');
+      const existingFields = document.getElementById('existing_condition_fields');
+      const newFields = document.getElementById('new_condition_fields');
+
+      function toggleFields() {
+        if (existingRadio.checked) {
+          existingFields.classList.remove('hidden');
+          newFields.classList.add('hidden');
+        } else {
+          existingFields.classList.add('hidden');
+          newFields.classList.remove('hidden');
+        }
+      }
+
+      existingRadio.addEventListener('change', toggleFields);
+      newRadio.addEventListener('change', toggleFields);
+    });
+  </script>
+<% end %>

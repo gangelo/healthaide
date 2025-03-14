@@ -1,4 +1,4 @@
-<% content_for :title, "Food qualifiers" %>
+<% content_for :title, "Health Conditions" %>
 
 <div class="w-full">
   <% if notice.present? %>
@@ -6,11 +6,11 @@
   <% end %>
 
   <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Food qualifiers</h1>
-    <%= link_to "New food qualifier", new_food_qualifier_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <h1 class="font-bold text-4xl">Health Conditions</h1>
+    <%= link_to "New health condition", new_health_condition_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
   </div>
 
-  <div id="food_qualifiers" class="min-w-full">
+  <div id="health_conditions" class="min-w-full">
     <div class="bg-white shadow-md rounded my-6">
       <table class="min-w-full table-auto">
         <thead>
@@ -20,16 +20,16 @@
           </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
-          <% @food_qualifiers.each do |food_qualifier| %>
+          <% @health_conditions.each do |health_condition| %>
             <tr class="border-b border-gray-200 hover:bg-gray-100">
               <td class="py-3 px-6 text-left">
-                <%= food_qualifier.qualifier_name %>
+                <%= health_condition.health_condition_name %>
               </td>
               <td class="py-3 px-6 text-center whitespace-nowrap">
                 <div class="flex item-center justify-center">
-                  <%= link_to "Show", food_qualifier, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-                  <%= link_to "Edit", edit_food_qualifier_path(food_qualifier), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-                  <%= button_to "Delete", food_qualifier, method: :delete,
+                  <%= link_to "Show", health_condition, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+                  <%= link_to "Edit", edit_health_condition_path(health_condition), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+                  <%= button_to "Delete", health_condition, method: :delete,
                       class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
                       form_class: "inline-block",
                       data: { turbo_confirm: "Are you sure?" } %>
