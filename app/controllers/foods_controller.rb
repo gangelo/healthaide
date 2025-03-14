@@ -13,8 +13,8 @@ class FoodsController < ApplicationController
 
   # GET /foods/1 or /foods/1.json
   def show
-    @food_qualifiers = @food.food_qualifiers.kept.by_name
-    @available_qualifiers = FoodQualifier.kept.by_name.where.not(id: @food.food_qualifier_ids)
+    @food_qualifiers = @food.food_qualifiers.kept.ordered
+    @available_qualifiers = FoodQualifier.kept.ordered.where.not(id: @food.food_qualifier_ids)
   end
 
   # GET /foods/new

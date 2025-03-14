@@ -42,7 +42,7 @@
                   FoodQualifier.ordered.where.not(id: @user_food.food.food_qualifiers.pluck(:id)),
                   :id,
                   :qualifier_name,
-                  { prompt: "Select a qualifier" },
+                  { prompt: "-- Select --" },
                   {
                     class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full",
                     data: {
