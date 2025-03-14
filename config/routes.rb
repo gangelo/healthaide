@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   get "health_conditions/update"
   get "health_conditions/destroy"
   resources :user_foods do
+    collection do
+      post :add_multiple
+    end
     member do
       post :add_qualifier
     end

@@ -11,121 +11,85 @@
     </div>
   <% end %>
 
-  <div class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4" data-controller="food-form">
-    <div class="space-y-6">
-      <div>
-        <h3 class="text-sm font-medium text-gray-700 mb-2">Select Existing Food</h3>
-        <%= form.collection_select :food_id,
-            Food.ordered.where.not(id: current_user.user_foods.pluck(:food_id)),
-            :id,
-            :food_name,
-            { prompt: "-- Select --" },
-            {
+  <div data-controller="modal">
+    <div class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4" data-controller="food-form">
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-sm font-medium text-gray-700 mb-2">Select Multiple Foods</h3>
+          <button type="button"
+                  class="w-full rounded-lg py-3 px-5 bg-gray-100 text-gray-900 font-medium hover:bg-gray-50 transition-colors"
+                  data-action="click->modal#open"
+                  data-modal-target="openButton">
+            Choose Multiple Foods
+          </button>
+        </div>
+
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center" aria-hidden="true">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">Or</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-700 mb-2">Select Existing Food</h3>
+          <div class="relative">
+            <input type="text"
+                   class="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"
+                   placeholder="Type to search and select food..."
+                   role="combobox"
+                   aria-controls="food-listbox"
+                   aria-expanded="false"
+                   data-food-form-target="searchInput"
+                   data-action="input->food-form#searchAndFilter focus->food-form#showOptions blur->food-form#handleBlur">
+            <%= form.hidden_field :food_id, data: { food_form_target: "foodId" } %>
+            <div id="food-listbox"
+                 role="listbox"
+                 class="absolute z-10 w-full mt-1 bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm hidden"
+                 data-food-form-target="dropdown">
+              <% Food.ordered.where.not(id: current_user.user_foods.pluck(:food_id)).each do |food| %>
+                <div role="option"
+                     data-value="<%= food.id %>"
+                     data-food-name="<%= food.food_name.downcase %>"
+                     class="cursor-default select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
+                     data-action="click->food-form#selectOption">
+                  <%= food.food_name %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center" aria-hidden="true">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center">
+            <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">Or</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-700 mb-2">Create New Food</h3>
+          <%= form.text_field :new_food_name,
+              placeholder: "Enter new food name",
               class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full",
               data: {
-                food_form_target: "select",
-                action: "change->food-form#handleSelect"
-              }
-            } %>
-      </div>
-
-      <div class="relative">
-        <div class="absolute inset-0 flex items-center" aria-hidden="true">
-          <div class="w-full border-t border-gray-300"></div>
-        </div>
-        <div class="relative flex justify-center">
-          <span class="bg-white px-3 text-base font-semibold leading-6 text-gray-900">Or</span>
+                food_form_target: "input",
+                action: "input->food-form#handleInput"
+              } %>
         </div>
       </div>
 
-      <div>
-        <h3 class="text-sm font-medium text-gray-700 mb-2">Create New Food</h3>
-        <%= form.text_field :new_food_name,
-            placeholder: "Enter new food name",
-            class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full",
-            data: {
-              food_form_target: "input",
-              action: "input->food-form#handleInput"
-            } %>
+      <div class="mt-6">
+        <%= form.submit "Add Food", class: "w-full rounded-lg py-3 px-5 bg-blue-600 text-white font-medium cursor-pointer hover:bg-blue-500 transition-colors" %>
       </div>
     </div>
 
-    <div class="mt-6">
-      <%= form.submit "Add Food", class: "w-full rounded-lg py-3 px-5 bg-blue-600 text-white font-medium cursor-pointer hover:bg-blue-500 transition-colors" %>
+    <div id="multiple-foods-modal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto" data-modal-target="modal">
+      <%= render "multiple_foods_modal" %>
     </div>
   </div>
 <% end %>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const foodInput = document.getElementById('food_name_input');
-  const suggestionsDiv = document.getElementById('food_suggestions');
-
-  foodInput.addEventListener('input', function() {
-    const query = this.value.trim();
-
-    if (query.length < 2) {
-      suggestionsDiv.innerHTML = '';
-      return;
-    }
-
-    fetch('/foods.json?query=' + encodeURIComponent(query))
-      .then(response => response.json())
-      .then(data => {
-        suggestionsDiv.innerHTML = '';
-
-        if (data.length === 0) {
-          const div = document.createElement('div');
-          div.textContent = 'No matches found - your entry will create a new food';
-          div.className = 'no-results';
-          suggestionsDiv.appendChild(div);
-          return;
-        }
-
-        data.forEach(food => {
-          const div = document.createElement('div');
-          div.textContent = food.food_name;
-          div.className = 'suggestion';
-          div.addEventListener('click', function() {
-            foodInput.value = food.food_name;
-            suggestionsDiv.innerHTML = '';
-          });
-          suggestionsDiv.appendChild(div);
-        });
-      });
-  });
-
-  // Hide suggestions when clicking outside
-  document.addEventListener('click', function(e) {
-    if (e.target !== foodInput && e.target !== suggestionsDiv) {
-      suggestionsDiv.innerHTML = '';
-    }
-  });
-});
-</script>
-
-<style>
-.suggestions {
-  position: absolute;
-  border: 1px solid #ccc;
-  max-height: 200px;
-  overflow-y: auto;
-  background: white;
-  width: 100%;
-  z-index: 1000;
-}
-
-.suggestion, .no-results {
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.suggestion:hover {
-  background-color: #f0f0f0;
-}
-
-.no-results {
-  font-style: italic;
-  color: #666;
-}
-</style>

@@ -87,6 +87,23 @@ class UserFoodsController < ApplicationController
     redirect_to @user_food, alert: e.record.errors.full_messages.to_sentence
   end
 
+  def add_multiple
+    if params[:user_food][:food_ids].present?
+      food_ids = params[:user_food][:food_ids].reject(&:blank?)
+      @user_foods = food_ids.map do |food_id|
+        current_user.user_foods.create(food_id: food_id)
+      end
+
+      if @user_foods.all?(&:persisted?)
+        redirect_to user_foods_path, notice: "Foods were successfully added to your list."
+      else
+        redirect_to new_user_food_path, alert: "Some foods could not be added."
+      end
+    else
+      redirect_to new_user_food_path, alert: "Please select at least one food."
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user_food
