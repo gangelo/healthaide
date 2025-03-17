@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+# Initialize options with default values
+options = { no_safe: false }
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: bin/dev-clean [options]"
+  opts.on("--no-safe", "Skip safety checks and confirmations") do
+    options[:no_safe] = true
+  end
+end.parse!
+
+task = options[:no_safe] ? "db:clean:user_health_records" : "db:clean:user_health_records_safe"
+puts "Running #{task}..."
+system("bin/rails #{task}")

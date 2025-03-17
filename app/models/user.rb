@@ -19,10 +19,7 @@ class User < ApplicationRecord
   has_many :user_health_goals, dependent: :destroy
   has_many :health_goals, through: :user_health_goals
 
-  enum role: {
-    user: 0,
-    admin: 1
-  }
+  enum :role, %i[ user admin ]
 
   attr_accessor :email_or_username
 
