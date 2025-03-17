@@ -18,28 +18,21 @@ class UserHealthConditionsController < ApplicationController
   end
 
   def create
-    @user_health_condition = current_user.user_health_conditions.build
+    @user_health_condition = current_user.user_health_conditions.build(user_health_condition_params)
 
     # If a new condition name is provided, create it
-    if params[:user_health_condition][:new_condition_name].present?
-      health_condition = HealthCondition.new(
-        health_condition_name: params[:user_health_condition][:new_condition_name]
+    if params[:user_health_condition][:new_health_condition_name].present?
+      health_condition = HealthCondition.create(
+        health_condition_name: params[:user_health_condition][:new_health_condition_name]
       )
 
-      if health_condition.save
+      if health_condition.persisted?
         @user_health_condition.health_condition = health_condition
       else
         @user_health_condition.errors.merge!(health_condition.errors)
         render :new, status: :unprocessable_entity
         return
       end
-    # If an existing condition is selected, use it
-    elsif params[:user_health_condition][:health_condition_id].present?
-      @user_health_condition.health_condition_id = params[:user_health_condition][:health_condition_id]
-    else
-      @user_health_condition.errors.add(:base, "Please either select an existing condition or create a new one")
-      render :new, status: :unprocessable_entity
-      return
     end
 
     if @user_health_condition.save
@@ -62,23 +55,37 @@ class UserHealthConditionsController < ApplicationController
     redirect_to user_health_conditions_url, notice: "Health condition was successfully removed."
   end
 
-  def add_health_condition
-    @user_health_condition = current_user.user_health_conditions.find(params[:user_health_condition_id])
-    @health_condition = HealthCondition.find(params[:health_condition_id])
+  def select_multiple
+    @health_conditions = HealthCondition.ordered.where.not(id: current_user.user_health_conditions.pluck(:health_condition_id))
 
-    if @user_health_condition.health_conditions << @health_condition
-      redirect_to @user_health_condition, notice: "Health condition was successfully added."
-    else
-      redirect_to @user_health_condition, alert: "Failed to add health condition."
+    if params[:search].present?
+      @health_conditions = @health_conditions.where("health_condition_name ILIKE ?", "%#{params[:search]}%")
+      render turbo_stream: turbo_stream.replace("conditions_list", partial: "conditions_list", locals: { health_conditions: @health_conditions })
     end
   end
 
-  def remove_health_condition
-    @user_health_condition = current_user.user_health_conditions.find(params[:user_health_condition_id])
-    @health_condition = @user_health_condition.health_conditions.find(params[:id])
+  def add_multiple
+    health_condition_ids = params[:health_condition_ids]
 
-    @user_health_condition.health_conditions.delete(@health_condition)
-    redirect_to @user_health_condition, notice: "Health condition was successfully removed."
+    if health_condition_ids.blank?
+      redirect_to new_user_health_condition_path, alert: "Please select at least one health condition"
+      return
+    end
+
+    max_order = current_user.user_health_conditions.maximum(:order_of_importance) || 0
+
+    created_conditions = health_condition_ids.each_with_index.map do |condition_id, index|
+      current_user.user_health_conditions.create(
+        health_condition_id: condition_id,
+        order_of_importance: max_order + index + 1
+      )
+    end
+
+    if created_conditions.all?(&:persisted?)
+      redirect_to user_health_conditions_path, notice: "#{created_conditions.count} health conditions were successfully added"
+    else
+      redirect_to new_user_health_condition_path, alert: "There was an error adding some health conditions"
+    end
   end
 
   private
@@ -88,6 +95,6 @@ class UserHealthConditionsController < ApplicationController
   end
 
   def user_health_condition_params
-    params.require(:user_health_condition).permit(:health_condition_id, :new_condition_name)
+    params.require(:user_health_condition).permit(:health_condition_id, :new_health_condition_name)
   end
 end

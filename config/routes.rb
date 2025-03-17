@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  get "user_health_goals/index"
+  get "user_health_goals/show"
+  get "user_health_goals/new"
+  get "user_health_goals/edit"
+  get "health_goals/index"
+  get "health_goals/show"
+  get "health_goals/new"
+  get "health_goals/edit"
   get "user_health_conditions/index"
   get "user_health_conditions/show"
   get "user_health_conditions/new"
@@ -35,6 +43,10 @@ Rails.application.routes.draw do
   resources :health_conditions
   resources :user_health_conditions do
     resources :health_conditions, only: [ :create, :destroy ], controller: "user_health_conditions/health_conditions"
+    collection do
+      post :add_multiple
+      get :select_multiple
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   # Defines the root path route ("/")
@@ -49,4 +61,38 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   devise_for :users
+
+  resources :health_conditions
+  resources :health_goals
+
+  resources :user_health_conditions do
+    collection do
+      post :add_multiple
+    end
+  end
+
+  resources :user_health_goals do
+    collection do
+      post :add_multiple
+    end
+    member do
+      patch :update_importance
+    end
+  end
+
+  resources :food_qualifiers
+  resources :foods do
+    member do
+      post :add_qualifier
+    end
+  end
+
+  resources :user_foods do
+    collection do
+      post :add_multiple
+    end
+    member do
+      post :add_qualifier
+    end
+  end
 end

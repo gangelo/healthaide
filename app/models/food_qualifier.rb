@@ -13,6 +13,6 @@ class FoodQualifier < ApplicationRecord
   private
 
   def before_save_qualifier_name
-    self.qualifier_name = self.qualifier_name&.downcase
+    self.qualifier_name = self.qualifier_name&.downcase&.capitalize
   end
 end

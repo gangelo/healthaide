@@ -8,11 +8,13 @@
           <% end %>
         </div>
         <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
-          <%= link_to "My Foods", user_foods_path, class: "rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white", aria_current: "page" %>
-          <%= link_to "My Health Conditions", user_health_conditions_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" %>
-          <%= link_to "Foods", foods_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" %>
-          <%= link_to "Food Qualifiers", food_qualifiers_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" %>
-          <%= link_to "Health Conditions", health_conditions_path, class: "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" %>
+          <%= link_to "My Foods", user_foods_path, class: nav_link_class(current_page?(user_foods_path)) %>
+          <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(current_page?(user_health_conditions_path)) %>
+          <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(current_page?(user_health_goals_path)) %>
+          <%= link_to "Foods", foods_path, class: nav_link_class(current_page?(foods_path)) %>
+          <%= link_to "Food Qualifiers", food_qualifiers_path, class: nav_link_class(current_page?(food_qualifiers_path)) %>
+          <%= link_to "Health Conditions", health_conditions_path, class: nav_link_class(current_page?(health_conditions_path)) %>
+          <%= link_to "Health Goals", health_goals_path, class: nav_link_class(current_page?(health_goals_path)) %>
         </div>
       </div>
       <div class="flex items-center">

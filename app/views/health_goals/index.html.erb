@@ -1,0 +1,71 @@
+<div class="w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="flex justify-between items-center">
+    <h1 class="font-bold text-4xl">Health Goals</h1>
+    <%= render partial: "components/buttons/button", locals: {
+      type: :link,
+      variant: :primary,
+      text: "New health goal",
+      path: new_health_goal_path
+    } %>
+  </div>
+
+  <div id="health_goals" class="min-w-full">
+    <% if @health_goals.any? %>
+      <div class="bg-white shadow-md rounded my-6">
+        <table class="min-w-full table-auto">
+          <thead>
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+              <th class="py-3 px-6 text-left">Health Goal Name</th>
+              <th class="py-3 px-6 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-600 text-sm font-light">
+            <% @health_goals.each do |health_goal| %>
+              <tr class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-3 px-6 text-left whitespace-nowrap">
+                  <%= health_goal.health_goal_name %>
+                </td>
+                <td class="py-3 px-6 text-center">
+                  <div class="flex item-center justify-center gap-2">
+                    <%= render partial: "components/buttons/button", locals: {
+                      type: :link,
+                      variant: :secondary,
+                      text: "Show",
+                      path: health_goal_path(health_goal)
+                    } %>
+
+                    <%= render partial: "components/buttons/button", locals: {
+                      type: :link,
+                      variant: :secondary,
+                      text: "Edit",
+                      path: edit_health_goal_path(health_goal)
+                    } %>
+
+                    <%= render partial: "components/buttons/button", locals: {
+                      type: :link,
+                      variant: :danger,
+                      text: "Delete",
+                      path: health_goal_path(health_goal),
+                      data: {
+                        turbo_method: :delete,
+                        turbo_confirm: "Are you sure?"
+                      }
+                    } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="bg-white shadow-md rounded my-6 p-6 text-center text-gray-500">
+        No health goals found.
+      </div>
+    <% end %>
+  </div>
+</div>

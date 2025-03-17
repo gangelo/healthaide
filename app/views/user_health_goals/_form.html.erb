@@ -1,0 +1,47 @@
+<div data-controller="health-goal-form">
+  <div class="flex justify-between items-center mb-6">
+    <%= render partial: "components/buttons/button", locals: {
+      type: :button,
+      variant: :secondary,
+      text: "Select Existing Goal",
+      data: { action: "click->health-goal-form#showModal" }
+    } %>
+  </div>
+
+  <%= form_with(model: user_health_goal, class: "contents") do |form| %>
+    <% if user_health_goal.errors.any? %>
+      <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+        <h2><%= pluralize(user_health_goal.errors.count, "error") %> prohibited this health goal from being saved:</h2>
+
+        <ul>
+          <% user_health_goal.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="my-5">
+      <%= form.label :health_goal_name, "New Health Goal Name" %>
+      <%= form.text_field :health_goal_name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :order_of_importance %>
+      <%= form.number_field :order_of_importance,
+                          in: 1..10,
+                          class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+      <p class="text-sm text-gray-500 mt-1">Rate from 1 (least important) to 10 (most important)</p>
+    </div>
+
+    <div class="inline">
+      <%= render partial: "components/buttons/button", locals: {
+        type: :submit,
+        variant: :primary,
+        text: "Create health goal"
+      } %>
+    </div>
+  <% end %>
+
+  <%= render "select_health_goal_modal" %>
+</div>

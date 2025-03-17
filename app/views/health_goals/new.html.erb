@@ -1,0 +1,14 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <h1 class="font-bold text-4xl">Add health goal</h1>
+
+  <%= render "form", health_goal: @health_goal %>
+
+  <div class="mt-4">
+    <%= render partial: "components/buttons/button", locals: {
+      type: :link,
+      variant: :secondary,
+      text: "Back",
+      path: health_goals_path
+    } %>
+  </div>
+</div>

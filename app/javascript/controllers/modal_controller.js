@@ -1,11 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["modal", "foodList", "selectionCount", "submitButton"]
+  static targets = ["modal", "itemList", "selectionCount", "submitButton"]
 
   connect() {
-    // Initialize the selection count and button state
-    this.updateCount()
+    // Only initialize if we have the necessary targets
+    if (this.hasItemListTarget && this.hasSelectionCountTarget) {
+      this.updateCount()
+    }
+    // Ensure modal is hidden initially
+    if (this.hasModalTarget) {
+      this.close()
+    }
   }
 
   open() {
@@ -16,23 +22,9 @@ export default class extends Controller {
     this.modalTarget.classList.add("hidden")
   }
 
-  selectAll() {
-    this.foodListTarget.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-      checkbox.checked = true
-    })
-    this.updateCount()
-  }
-
-  selectNone() {
-    this.foodListTarget.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-      checkbox.checked = false
-    })
-    this.updateCount()
-  }
-
   updateCount() {
-    const checkedCount = this.foodListTarget.querySelectorAll('input[type="checkbox"]:checked').length
-    this.selectionCountTarget.textContent = `${checkedCount} foods selected`
+    const checkedCount = this.itemListTarget.querySelectorAll('input[type="checkbox"]:checked').length
+    this.selectionCountTarget.textContent = `${checkedCount} conditions selected`
 
     // Update submit button state
     if (checkedCount > 0) {
@@ -46,25 +38,37 @@ export default class extends Controller {
     }
   }
 
-  filterFoods(event) {
+  filterItems(event) {
     const searchTerm = event.target.value.toLowerCase()
-    const foodItems = this.foodListTarget.querySelectorAll('[data-food-name]')
+    const items = this.itemListTarget.querySelectorAll('[data-item-name]')
 
-    foodItems.forEach(item => {
-      const foodName = item.getAttribute('data-food-name')
-      if (foodName.includes(searchTerm)) {
-        item.classList.remove('hidden')
-      } else {
-        item.classList.add('hidden')
-      }
+    items.forEach(item => {
+      const name = item.dataset.itemName
+      item.classList.toggle('hidden', !name.includes(searchTerm))
     })
   }
 
-  addSelectedFoods(event) {
-    const checkedBoxes = this.foodListTarget.querySelectorAll('input[type="checkbox"]:checked')
+  selectAll() {
+    const checkboxes = this.itemListTarget.querySelectorAll('input[type="checkbox"]')
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = true
+    })
+    this.updateCount()
+  }
+
+  selectNone() {
+    const checkboxes = this.itemListTarget.querySelectorAll('input[type="checkbox"]')
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = false
+    })
+    this.updateCount()
+  }
+
+  addSelectedItems(event) {
+    const checkedBoxes = this.itemListTarget.querySelectorAll('input[type="checkbox"]:checked')
     const form = document.createElement('form')
     form.method = 'POST'
-    form.action = '/user_foods/add_multiple'
+    form.action = '/user_health_conditions/add_multiple'
 
     // Add CSRF token
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content
@@ -74,11 +78,11 @@ export default class extends Controller {
     csrfInput.value = csrfToken
     form.appendChild(csrfInput)
 
-    // Add selected food IDs
+    // Add selected condition IDs
     checkedBoxes.forEach(checkbox => {
       const input = document.createElement('input')
       input.type = 'hidden'
-      input.name = 'food_ids[]'
+      input.name = 'health_condition_ids[]'
       input.value = checkbox.value
       form.appendChild(input)
     })

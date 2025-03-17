@@ -1,0 +1,2 @@
+module UserHealthGoalsHelper
+end

@@ -20,8 +20,6 @@ class HealthCondition < ApplicationRecord
   private
 
   def before_save_health_condition_name
-    return unless health_condition_name
-
-    self.health_condition_name = health_condition_name.downcase.capitalize
+    self.health_condition_name = self.health_condition_name&.downcase&.capitalize
   end
 end

@@ -1,0 +1,20 @@
+<%= turbo_frame_tag "conditions_list" do %>
+  <div class="h-[300px] overflow-y-auto border border-gray-200 rounded-md">
+    <div class="divide-y divide-gray-200">
+      <% health_conditions.each do |condition| %>
+        <div class="flex items-center px-4 py-3 hover:bg-gray-50">
+          <div class="flex items-center">
+            <%= check_box_tag "health_condition_ids[]",
+                condition.id,
+                false,
+                id: "health_condition_#{condition.id}",
+                class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+            <%= label_tag "health_condition_#{condition.id}",
+                condition.health_condition_name,
+                class: "ml-3 block text-sm font-medium text-gray-700" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
