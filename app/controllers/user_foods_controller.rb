@@ -4,7 +4,7 @@ class UserFoodsController < ApplicationController
 
   # GET /user_foods or /user_foods.json
   def index
-    @user_foods = current_user.user_foods.includes(:food).ordered
+    @user_foods = current_user.user_foods.kept.includes(:food).ordered
   end
 
   # GET /user_foods/1 or /user_foods/1.json
@@ -14,11 +14,7 @@ class UserFoodsController < ApplicationController
   # GET /user_foods/new
   def new
     @user_food = current_user.user_foods.new
-    @foods = Food.ordered.where.not(id: current_user.user_foods.pluck(:food_id))
-  end
-
-  # GET /user_foods/1/edit
-  def edit
+    @foods = Food.kept.ordered.where.not(id: current_user.user_foods.pluck(:food_id))
   end
 
   # POST /user_foods or /user_foods.json
@@ -29,8 +25,11 @@ class UserFoodsController < ApplicationController
       # Using existing food
       @user_food.food_id = params[:user_food][:food_id]
     elsif params[:user_food][:new_food_name].present?
-      # Create new food
-      food = Food.create!(food_name: params[:user_food][:new_food_name])
+      # Undelete the food if it was soft-deleted
+      food = Food.discarded.find_by(food_name: params[:user_food][:new_food_name])&.first
+      unless food.present?
+        Food.create!(food_name: params[:user_food][:new_food_name])
+      end
       @user_food.food = food
     else
       # Neither option selected
@@ -47,6 +46,10 @@ class UserFoodsController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     @user_food.errors.add(:base, e.record.errors.full_messages.to_sentence)
     render :new, status: :unprocessable_entity
+  end
+
+  # GET /user_foods/1/edit
+  def edit
   end
 
   # PATCH/PUT /user_foods/1 or /user_foods/1.json
@@ -93,7 +96,7 @@ class UserFoodsController < ApplicationController
     # Use a more efficient query that doesn't require pluck
     user_food_ids = current_user.user_foods.select(:food_id)
     base_query = Food.ordered.where.not(id: user_food_ids)
-    
+
     # Include food qualifiers for better display
     @foods = base_query.includes(:food_qualifiers)
 
@@ -117,7 +120,7 @@ class UserFoodsController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
           "foods_list",
-          partial: "user_foods/foods_list", 
+          partial: "user_foods/foods_list",
           locals: { foods: @foods }
         )
       end
@@ -131,8 +134,8 @@ class UserFoodsController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.update(
-            "flash_messages", 
-            partial: "shared/flash_messages", 
+            "flash_messages",
+            partial: "shared/flash_messages",
             locals: { alert: "Please select at least one food." }
           )
         end
@@ -142,21 +145,21 @@ class UserFoodsController < ApplicationController
       end
       return
     end
-    
+
     begin
       # Use bulk insert for efficiency
       foods_added = 0
-      
+
       # Get existing food_ids to avoid duplicates
       existing_food_ids = current_user.user_foods.pluck(:food_id)
       new_food_ids = food_ids.map(&:to_i) - existing_food_ids
-      
+
       # Batch create records for efficiency
       if new_food_ids.any?
         records_to_insert = new_food_ids.map do |food_id|
           { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
         end
-        
+
         # Use insert_all for better performance
         UserFood.insert_all(records_to_insert)
         foods_added = new_food_ids.size
@@ -168,17 +171,17 @@ class UserFoodsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.update(
-              "user_foods_list", 
-              partial: "user_foods_list", 
+              "user_foods_list",
+              partial: "user_foods_list",
               locals: { user_foods: current_user.user_foods.includes(:food).ordered }
             ),
             turbo_stream.update(
-              "flash_messages", 
-              partial: "shared/flash_messages", 
+              "flash_messages",
+              partial: "shared/flash_messages",
               locals: { notice: message }
             ),
             turbo_stream.replace(
-              "modal", 
+              "modal",
               partial: "shared/empty_frame"
             )
           ]
@@ -191,8 +194,8 @@ class UserFoodsController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.update(
-            "flash_messages", 
-            partial: "shared/flash_messages", 
+            "flash_messages",
+            partial: "shared/flash_messages",
             locals: { alert: "Error adding foods: #{e.message}" }
           )
         end
@@ -204,13 +207,14 @@ class UserFoodsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user_food
-      @user_food = current_user.user_foods.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_food_params
-      params.require(:user_food).permit(:food_id, :new_food_name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user_food
+    @user_food = current_user.user_foods.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def user_food_params
+    params.require(:user_food).permit(:food_id, :new_food_name)
+  end
 end

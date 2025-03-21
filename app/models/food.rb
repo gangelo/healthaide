@@ -9,7 +9,7 @@ class Food < ApplicationRecord
   has_many :food_food_qualifiers, inverse_of: :food, dependent: :destroy
   has_many :food_qualifiers, through: :food_food_qualifiers
 
-  validates :food_name, presence: true, length: { maximum: 64 }
+  validates :food_name, presence: true, uniqueness: true, length: { maximum: 64 }
 
   scope :ordered, -> { order(:food_name) }
 

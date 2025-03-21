@@ -39,6 +39,7 @@ Rails.application.routes.draw do
     member do
       post "add_qualifier"
       delete "remove_qualifier"
+      patch :restore, action: :restore, as: :restore
     end
   end
   resources :health_conditions

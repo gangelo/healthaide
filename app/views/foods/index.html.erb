@@ -39,10 +39,17 @@
                 <div class="flex item-center justify-center">
                   <%= link_to "Show", food, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
                   <%= link_to "Edit", edit_food_path(food), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-                  <%= button_to "Delete", food, method: :delete,
-                      class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-                      form_class: "inline-block",
-                      data: { turbo_confirm: "Are you sure?" } %>
+                  <% if food.kept? %>
+                    <%= button_to "Delete", food, method: :delete,
+                        class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                        form_class: "inline-block",
+                        data: { turbo_confirm: "Are you sure?" } %>
+                  <% else %>
+                      <%= button_to "Undelete", restore_food_path(food), method: :patch,
+                        class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                        form_class: "inline-block",
+                        data: { turbo_confirm: "Are you sure?" } %>
+                  <% end %>
                 </div>
               </td>
             </tr>

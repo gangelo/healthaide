@@ -42,7 +42,9 @@
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No foods added yet</h3>
       <p class="mt-1 text-sm text-gray-500">Get started by adding foods to your list.</p>
       <div class="mt-6">
-        <%= link_to "Add Food", new_user_food_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" %>
+        <%= link_to "Add Food", new_user_food_path, 
+            class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
+            data: { turbo_frame: "_top" } %>
       </div>
     </div>
   <% end %>
