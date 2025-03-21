@@ -45,8 +45,8 @@
                         form_class: "inline-block",
                         data: { turbo_confirm: "Are you sure?" } %>
                   <% else %>
-                      <%= button_to "Undelete", restore_food_path(food), method: :patch,
-                        class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                      <%= button_to "Restore", restore_food_path(food), method: :patch,
+                        class: "ml-2 rounded-lg py-3 px-5 text-black bg-yellow-500 hover:bg-yellow-400 font-medium cursor-pointer",
                         form_class: "inline-block",
                         data: { turbo_confirm: "Are you sure?" } %>
                   <% end %>
