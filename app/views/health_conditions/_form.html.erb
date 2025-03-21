@@ -1,6 +1,4 @@
 <%= form_with(model: health_condition, class: "contents") do |form| %>
-  <%= render partial: "shared/active_record_errors", locals: { resource: health_condition } %>
-
   <div class="my-5">
     <%= form.label :health_condition_name %>
     <%= form.text_field :health_condition_name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
