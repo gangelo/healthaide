@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get "health_conditions/destroy"
   resources :user_foods do
     collection do
+      get :select_multiple
       post :add_multiple
     end
     member do

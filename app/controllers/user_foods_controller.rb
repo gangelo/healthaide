@@ -4,7 +4,7 @@ class UserFoodsController < ApplicationController
 
   # GET /user_foods or /user_foods.json
   def index
-    @user_foods = current_user.user_foods.kept.includes(:food)
+    @user_foods = current_user.user_foods.includes(:food).ordered
   end
 
   # GET /user_foods/1 or /user_foods/1.json
@@ -14,6 +14,7 @@ class UserFoodsController < ApplicationController
   # GET /user_foods/new
   def new
     @user_food = current_user.user_foods.new
+    @foods = Food.ordered.where.not(id: current_user.user_foods.pluck(:food_id))
   end
 
   # GET /user_foods/1/edit
@@ -87,22 +88,118 @@ class UserFoodsController < ApplicationController
     redirect_to @user_food, alert: e.record.errors.full_messages.to_sentence
   end
 
+  def select_multiple
+    # Get the list of foods not already selected by the user
+    # Use a more efficient query that doesn't require pluck
+    user_food_ids = current_user.user_foods.select(:food_id)
+    base_query = Food.ordered.where.not(id: user_food_ids)
+    
+    # Include food qualifiers for better display
+    @foods = base_query.includes(:food_qualifiers)
+
+    # Ensure consistent search behavior
+    search_param = params[:search].to_s.strip.presence
+    if search_param
+      search_term = "%#{search_param.downcase}%"
+      @foods = @foods.where("LOWER(food_name) LIKE ?", search_term)
+    end
+
+    respond_to do |format|
+      format.html do
+        if turbo_frame_request? && params[:_frame] == "foods_list"
+          # Render just the foods list within its turbo frame
+          render :_foods_list_frame, locals: { foods: @foods }
+        elsif turbo_frame_request?
+          # For the entire modal
+          render partial: "multiple_foods_modal", locals: { foods: @foods }
+        end
+      end
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "foods_list",
+          partial: "user_foods/foods_list", 
+          locals: { foods: @foods }
+        )
+      end
+    end
+  end
+
   def add_multiple
-    food_ids = params[:food_ids]
+    food_ids = params[:food_ids]&.reject(&:blank?)
 
     if food_ids.blank?
-      redirect_to new_user_food_path, alert: "Please select at least one food"
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "flash_messages", 
+            partial: "shared/flash_messages", 
+            locals: { alert: "Please select at least one food." }
+          )
+        end
+        format.html do
+          redirect_to user_foods_path, alert: "Please select at least one food."
+        end
+      end
       return
     end
+    
+    begin
+      # Use bulk insert for efficiency
+      foods_added = 0
+      
+      # Get existing food_ids to avoid duplicates
+      existing_food_ids = current_user.user_foods.pluck(:food_id)
+      new_food_ids = food_ids.map(&:to_i) - existing_food_ids
+      
+      # Batch create records for efficiency
+      if new_food_ids.any?
+        records_to_insert = new_food_ids.map do |food_id|
+          { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
+        end
+        
+        # Use insert_all for better performance
+        UserFood.insert_all(records_to_insert)
+        foods_added = new_food_ids.size
+      end
 
-    created_foods = food_ids.map do |food_id|
-      current_user.user_foods.create(food_id: food_id)
-    end
+      message = "#{foods_added} #{"food".pluralize(foods_added)} successfully added."
 
-    if created_foods.all?(&:persisted?)
-      redirect_to user_foods_path, notice: "#{created_foods.count} foods were successfully added"
-    else
-      redirect_to new_user_food_path, alert: "There was an error adding some foods"
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(
+              "user_foods_list", 
+              partial: "user_foods_list", 
+              locals: { user_foods: current_user.user_foods.includes(:food).ordered }
+            ),
+            turbo_stream.update(
+              "flash_messages", 
+              partial: "shared/flash_messages", 
+              locals: { notice: message }
+            ),
+            turbo_stream.replace(
+              "modal", 
+              partial: "shared/empty_frame"
+            )
+          ]
+        end
+        format.html do
+          redirect_to user_foods_path, notice: message
+        end
+      end
+    rescue => e
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "flash_messages", 
+            partial: "shared/flash_messages", 
+            locals: { alert: "Error adding foods: #{e.message}" }
+          )
+        end
+        format.html do
+          redirect_to user_foods_path, alert: "Error adding foods: #{e.message}"
+        end
+      end
     end
   end
 
