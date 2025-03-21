@@ -4,6 +4,8 @@
     <%= render "shared/flash_messages" %>
   <% end %>
 
+  <%= render partial: "shared/active_record_errors", locals: { resource: @user_food } %>
+
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Add Food</h2>
@@ -75,17 +77,6 @@
       </div>
     </div>
   </div>
-
-  <% if @user_food.errors.any? %>
-    <div class="mt-6 bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg">
-      <h2><%= pluralize(@user_food.errors.count, "error") %> prohibited this food from being saved:</h2>
-      <ul>
-        <% @user_food.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
 
   <%= turbo_frame_tag "modal" %>
 </div>

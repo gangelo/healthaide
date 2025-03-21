@@ -14,12 +14,20 @@ class UserFoodsController < ApplicationController
   # GET /user_foods/new
   def new
     @user_food = current_user.user_foods.new
-    @foods = Food.kept.ordered.where.not(id: current_user.user_foods.pluck(:food_id))
+    @foods = Food.not_selected_by(current_user)
   end
 
   # POST /user_foods or /user_foods.json
   def create
     @user_food = current_user.user_foods.new
+
+    if params[:user_food][:food_id].blank?
+      @user_food.errors.add(:base, "Please select an existing food or enter a new food name")
+      @foods = Food.not_selected_by(current_user)
+      render :new, status: :unprocessable_entity
+
+      return
+    end
 
     if params[:user_food][:food_id].present?
       # Using existing food
@@ -31,11 +39,6 @@ class UserFoodsController < ApplicationController
         Food.create!(food_name: params[:user_food][:new_food_name])
       end
       @user_food.food = food
-    else
-      # Neither option selected
-      @user_food.errors.add(:base, "Please select an existing food or enter a new food name")
-      render :new, status: :unprocessable_entity
-      return
     end
 
     if @user_food.save

@@ -12,6 +12,7 @@ class Food < ApplicationRecord
   validates :food_name, presence: true, uniqueness: true, length: { maximum: 64 }
 
   scope :ordered, -> { order(:food_name) }
+  scope :not_selected_by, ->(user) { where.not(id: user.foods.pluck(:id)) }
 
   private
 

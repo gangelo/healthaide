@@ -58,6 +58,10 @@ class User < ApplicationRecord
     end
   end
 
+  def foods_not_selected
+    Food.where.not(id: foods.pluck(:id))
+  end
+
   private
 
   def password_complexity
