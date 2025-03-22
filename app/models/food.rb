@@ -12,12 +12,14 @@ class Food < ApplicationRecord
   validates :food_name, presence: true, uniqueness: true, length: { maximum: 64 }
 
   scope :ordered, -> { order(:food_name) }
-  # More efficient version that avoids the pluck which loads IDs into memory
   scope :not_selected_by, ->(user) { where.not(id: user.user_foods.select(:food_id)) }
-  # Scope combining common operations
   scope :available_for, ->(user) { ordered.not_selected_by(user) }
 
   class << self
+    def find_by_food_name_normalized(food_name)
+      find_by(food_name: normalize_food_name(food_name))
+    end
+
     def normalize_food_name(food_name)
       food_name&.downcase&.capitalize
     end
