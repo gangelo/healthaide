@@ -13,6 +13,14 @@ class User < ApplicationRecord
   has_many :user_foods, inverse_of: :user, dependent: :destroy
   has_many :foods, through: :user_foods
 
+  has_many :user_health_conditions, dependent: :destroy
+  has_many :health_conditions, through: :user_health_conditions, source: :health_condition
+
+  has_many :user_health_goals, dependent: :destroy
+  has_many :health_goals, through: :user_health_goals
+
+  enum :role, %i[ user admin ]
+
   attr_accessor :email_or_username
 
   validates :first_name, presence: true, length: { maximum: 64 }
@@ -48,6 +56,10 @@ class User < ApplicationRecord
         where(conditions.to_hash).first
       end
     end
+  end
+
+  def foods_not_selected
+    Food.where.not(id: foods.pluck(:id))
   end
 
   private

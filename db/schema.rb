@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_02_000000) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_16_015445) do
   create_table "food_food_qualifiers", force: :cascade do |t|
     t.integer "food_id", null: false
     t.integer "food_qualifier_id", null: false
@@ -39,6 +39,21 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_02_000000) do
     t.index ["deleted_at"], name: "index_foods_on_deleted_at"
   end
 
+  create_table "health_conditions", force: :cascade do |t|
+    t.string "health_condition_name", limit: 64, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_health_conditions_on_deleted_at"
+    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+  end
+
+  create_table "health_goals", force: :cascade do |t|
+    t.string "health_goal_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "user_foods", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "food_id", null: false
@@ -49,6 +64,40 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_02_000000) do
     t.index ["deleted_at"], name: "index_user_foods_on_deleted_at"
     t.index ["food_id"], name: "index_user_foods_on_food_id"
     t.index ["user_id"], name: "index_user_foods_on_user_id"
+  end
+
+  create_table "user_health_condition_health_conditions", force: :cascade do |t|
+    t.integer "user_health_condition_id", null: false
+    t.integer "health_condition_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["health_condition_id"], name: "idx_on_health_condition_id_2e0f4ca33b"
+    t.index ["user_health_condition_id"], name: "idx_on_user_health_condition_id_4e44bada3d"
+  end
+
+  create_table "user_health_conditions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "health_condition_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "order_of_importance", default: 1, null: false
+    t.index ["deleted_at"], name: "index_user_health_conditions_on_deleted_at"
+    t.index ["health_condition_id"], name: "index_user_health_conditions_on_health_condition_id"
+    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+    t.index ["user_id"], name: "index_user_health_conditions_on_user_id"
+  end
+
+  create_table "user_health_goals", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "health_goal_id", null: false
+    t.integer "order_of_importance"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_user_health_goals_on_deleted_at"
+    t.index ["health_goal_id"], name: "index_user_health_goals_on_health_goal_id"
+    t.index ["user_id"], name: "index_user_health_goals_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -86,4 +135,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_02_000000) do
   add_foreign_key "food_food_qualifiers", "foods"
   add_foreign_key "user_foods", "foods"
   add_foreign_key "user_foods", "users"
+  add_foreign_key "user_health_condition_health_conditions", "health_conditions"
+  add_foreign_key "user_health_condition_health_conditions", "user_health_conditions"
+  add_foreign_key "user_health_conditions", "health_conditions"
+  add_foreign_key "user_health_conditions", "users"
+  add_foreign_key "user_health_goals", "health_goals"
+  add_foreign_key "user_health_goals", "users"
 end

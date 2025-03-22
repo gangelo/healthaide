@@ -1,0 +1,12 @@
+<%= form_with(model: user_food, url: user_foods_path, class: "w-full") do |form| %>
+  <div class="mb-4">
+    <%= form.collection_select :food_id,
+        foods,
+        :id,
+        :food_name,
+        { prompt: "Select a food..." },
+        class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 w-full" %>
+  </div>
+  <%= form.submit "Add Selected Food",
+      class: "w-full rounded-lg py-3 px-5 bg-green-600 text-white font-medium cursor-pointer hover:bg-green-500 transition-colors" %>
+<% end %>

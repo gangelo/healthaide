@@ -1,0 +1,16 @@
+<%= form_with(model: health_goal, class: "contents") do |form| %>
+  <%= render partial: "shared/active_record_errors", locals: { resource: health_goal } %>
+
+  <div class="my-5">
+    <%= form.label :health_goal_name %>
+    <%= form.text_field :health_goal_name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="inline">
+    <%= render partial: "components/buttons/button", locals: {
+      type: :submit,
+      variant: :primary,
+      text: health_goal.persisted? ? "Update health goal" : "Create health goal"
+    } %>
+  </div>
+<% end %>

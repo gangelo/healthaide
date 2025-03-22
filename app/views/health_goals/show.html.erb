@@ -1,0 +1,36 @@
+<div class="mx-auto md:w-2/3 w-full flex">
+  <div class="mx-auto">
+    <% if notice.present? %>
+      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <% end %>
+
+    <%= render @health_goal %>
+
+    <div class="flex gap-2">
+      <%= render partial: "components/buttons/button", locals: {
+        type: :link,
+        variant: :secondary,
+        text: "Edit",
+        path: edit_health_goal_path(@health_goal)
+      } %>
+
+      <%= render partial: "components/buttons/button", locals: {
+        type: :link,
+        variant: :secondary,
+        text: "Back",
+        path: health_goals_path
+      } %>
+
+      <%= render partial: "components/buttons/button", locals: {
+        type: :link,
+        variant: :danger,
+        text: "Delete",
+        path: health_goal_path(@health_goal),
+        data: {
+          turbo_method: :delete,
+          turbo_confirm: "Are you sure?"
+        }
+      } %>
+    </div>
+  </div>
+</div>

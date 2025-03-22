@@ -1,0 +1,25 @@
+<!-- In your ERB template -->
+<% if resource.errors.any? %>
+  <div class="mb-5 bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg shadow-sm ring-1 ring-gray-900/5 relative"
+       data-controller="dismissible"
+       data-turbo-cache="false">
+    <div class="flex justify-between items-start">
+      <h2 class="text-sm font-semibold">
+        The following <%= "error".pluralize(resource.errors.count) %> prohibited your action from being carried out:
+      </h2>
+      <button type="button"
+              class="ml-2 text-red-400 hover:text-red-600 focus:outline-none"
+              data-action="dismissible#close">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <span class="sr-only">Dismiss</span>
+      </button>
+    </div>
+    <ul class="mt-2 text-sm list-disc pl-5">
+      <% resource.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

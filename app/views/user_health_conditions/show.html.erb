@@ -1,0 +1,28 @@
+<% content_for :title, "My Health Condition" %>
+
+<div class="mx-auto md:w-2/3 w-full flex flex-col">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="mx-auto">
+    <div class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+      <h1 class="font-bold text-4xl mb-4">My Health Condition</h1>
+
+      <div class="mt-4">
+        <div class="inline-flex items-center gap-x-0.5 rounded-md bg-indigo-50 px-2 py-1 text-sm font-medium text-indigo-700 ring-1 ring-indigo-700/10 ring-inset">
+          <%= @user_health_condition.health_condition_name %>
+        </div>
+      </div>
+
+      <div class="inline-block mt-8">
+        <%= link_to "Edit", edit_user_health_condition_path(@user_health_condition), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+        <%= link_to "Back", user_health_conditions_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+        <%= button_to "Delete", @user_health_condition, method: :delete,
+            class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+            form_class: "inline-block",
+            data: { turbo_confirm: "Are you sure?" } %>
+      </div>
+    </div>
+  </div>
+</div>
