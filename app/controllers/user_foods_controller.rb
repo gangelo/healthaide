@@ -14,36 +14,39 @@ class UserFoodsController < ApplicationController
   # GET /user_foods/new
   def new
     @user_food = current_user.user_foods.new
-    @foods = Food.not_selected_by(current_user)
+    @foods = Food.available_for(current_user)
   end
 
   # POST /user_foods or /user_foods.json
   def create
     @user_food = current_user.user_foods.new
 
-    if params[:user_food][:food_id].blank?
+    new_food_name = params[:user_food][:new_food_name]
+    food_id = params[:user_food][:food_id]
+
+    if food_id.blank? && new_food_name.blank?
       @user_food.errors.add(:base, "Please select an existing food or enter a new food name")
-      @foods = Food.not_selected_by(current_user)
+      @foods = Food.available_for(current_user)
       render :new, status: :unprocessable_entity
 
       return
     end
 
-    if params[:user_food][:food_id].present?
-      # Using existing food
-      @user_food.food_id = params[:user_food][:food_id]
-    elsif params[:user_food][:new_food_name].present?
-      # Undelete the food if it was soft-deleted
-      food = Food.discarded.find_by(food_name: params[:user_food][:new_food_name])&.first
-      unless food.present?
-        Food.create!(food_name: params[:user_food][:new_food_name])
-      end
-      @user_food.food = food
+    # From Create & Add New Food
+    @user_food.food = if new_food_name.present?
+      food = Food.kept.find_by("food_name = ? COLLATE NOCASE", new_food_name)
+      food = Food.create!(food_name: new_food_name) if food.nil?
+      food
+    else
+      # From Select Existing Food
+      Food.kept.find(food_id)
     end
 
     if @user_food.save
+      @foods = Food.available_for(current_user)
       redirect_to user_foods_path, notice: "Food was successfully added to your list."
     else
+      @foods = Food.available_for(current_user)
       render :new, status: :unprocessable_entity
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -95,13 +98,8 @@ class UserFoodsController < ApplicationController
   end
 
   def select_multiple
-    # Get the list of foods not already selected by the user
-    # Use a more efficient query that doesn't require pluck
-    user_food_ids = current_user.user_foods.select(:food_id)
-    base_query = Food.ordered.where.not(id: user_food_ids)
-
-    # Include food qualifiers for better display
-    @foods = base_query.includes(:food_qualifiers)
+    # Get the list of foods not already selected by the user with qualifiers included
+    @foods = helpers.available_foods_with_includes(current_user, include_qualifiers: true)
 
     # Ensure consistent search behavior
     search_param = params[:search].to_s.strip.presence

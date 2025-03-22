@@ -12,11 +12,20 @@ class Food < ApplicationRecord
   validates :food_name, presence: true, uniqueness: true, length: { maximum: 64 }
 
   scope :ordered, -> { order(:food_name) }
-  scope :not_selected_by, ->(user) { where.not(id: user.foods.pluck(:id)) }
+  # More efficient version that avoids the pluck which loads IDs into memory
+  scope :not_selected_by, ->(user) { where.not(id: user.user_foods.select(:food_id)) }
+  # Scope combining common operations
+  scope :available_for, ->(user) { ordered.not_selected_by(user) }
+
+  class << self
+    def normalize_food_name(food_name)
+      food_name&.downcase&.capitalize
+    end
+  end
 
   private
 
   def before_save_food_name
-    self.food_name = self.food_name&.downcase&.capitalize
+    self.food_name = self.class.normalize_food_name(self.food_name)
   end
 end
