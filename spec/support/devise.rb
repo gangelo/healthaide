@@ -12,14 +12,14 @@ RSpec.configure do |config|
   config.before(:each, type: :system, js: true) do
     driven_by :selenium_chrome_headless
   end
-  
+
   # Bypass confirmation for system tests
   config.before(:each, type: :system) do
     class User < ApplicationRecord
       def confirmation_required?
         false
       end
-      
+
       def send_confirmation_instructions
         # Do nothing to bypass actual email sending
       end

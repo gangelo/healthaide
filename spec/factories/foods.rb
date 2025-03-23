@@ -15,7 +15,7 @@ FactoryBot.define do
         end
       end
     end
-    
+
     trait :with_specific_qualifiers do
       transient do
         qualifier_names { [] }
@@ -27,7 +27,7 @@ FactoryBot.define do
         end
       end
     end
-    
+
     trait :soft_deleted do
       deleted_at { Time.current }
     end

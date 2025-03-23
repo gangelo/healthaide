@@ -17,7 +17,7 @@ end
 FactoryBot.define do
   factory :food_qualifier do
     qualifier_name { FFaker::FoodQualifier.qualifier }
-    
+
     trait :soft_deleted do
       deleted_at { Time.current }
     end

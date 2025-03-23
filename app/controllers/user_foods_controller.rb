@@ -165,7 +165,7 @@ class UserFoodsController < ApplicationController
       if new_food_ids.any?
         # Filter out any soft-deleted foods
         available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
-        
+
         records_to_insert = available_food_ids.map do |food_id|
           { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
         end

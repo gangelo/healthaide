@@ -61,7 +61,7 @@ class User < ApplicationRecord
   def foods_not_selected
     Food.where.not(id: foods.pluck(:id))
   end
-  
+
   # Confirm this user if using Devise confirmable
   def confirm
     update_columns(confirmed_at: Time.current) if respond_to?(:confirmed_at)

@@ -31,7 +31,7 @@ class FoodsController < ApplicationController
   # POST /foods or /foods.json
   def create
     @food = Food.new(food_params)
-    
+
     # Handle qualifiers
     process_qualifiers
 
@@ -51,7 +51,7 @@ class FoodsController < ApplicationController
   def update
     # Update basic attributes
     @food.assign_attributes(food_params)
-    
+
     # Handle qualifiers
     process_qualifiers
 
@@ -152,19 +152,19 @@ class FoodsController < ApplicationController
   def food_params
     params.require(:food).permit(:food_name)
   end
-  
+
   # Process qualifiers from params
   def process_qualifiers
     # Clear existing qualifiers first
     @food.food_qualifiers.clear if @food.persisted?
-    
+
     # Add selected qualifiers
     if params[:qualifier_ids].present?
       qualifier_ids = params[:qualifier_ids].reject(&:blank?).map(&:to_i)
       selected_qualifiers = FoodQualifier.where(id: qualifier_ids)
       @food.food_qualifiers = selected_qualifiers
     end
-    
+
     # Add any new qualifier if provided (from the form, not the model)
     if params[:new_qualifier_name].present?
       qualifier_name = params[:new_qualifier_name].strip
