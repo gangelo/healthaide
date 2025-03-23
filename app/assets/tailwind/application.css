@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./badges.css";
+@import "./base.css";
 
 @layer components {
   .health {
@@ -7,6 +9,5 @@
 
   .ai {
     @apply text-indigo-100 font-semibold;
-
   }
 }

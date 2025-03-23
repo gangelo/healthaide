@@ -1,6 +1,8 @@
 class Food < ApplicationRecord
   include SoftDeletable
 
+  UNIQUE_SIGNATURE_SEPARATOR = ":".freeze
+
   before_save :before_save_food_name
   after_update :cleanup_user_foods, if: -> { saved_change_to_deleted_at? && deleted_at.present? }
 
@@ -39,11 +41,20 @@ class Food < ApplicationRecord
 
   # Returns a unique string signature for this food combining name and qualifiers
   def unique_signature
-    qualifiers_string = food_qualifiers.map(&:qualifier_name).sort.join("|")
-    "#{food_name.downcase}:#{qualifiers_string}"
+    "\"#{food_name.downcase}\"#{food_qualifiers_unique_signature}"
   end
 
   private
+
+  def food_qualifiers_unique_signature
+    return "" if food_qualifiers.empty?
+
+    signature = food_qualifiers.map do |food_qualifier, index|
+      "\"#{food_qualifier.qualifier_name.downcase}\""
+    end.sort.join(UNIQUE_SIGNATURE_SEPARATOR)
+
+    signature.prepend(UNIQUE_SIGNATURE_SEPARATOR)
+  end
 
   def food_uniqueness
     return if food_name.blank?

@@ -1,68 +1,83 @@
 <%= form_with(model: food, class: "contents") do |form| %>
   <%= render partial: "shared/active_record_errors", locals: { resource: food } %>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="space-y-6 md:col-span-2">
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">
+        <%= food.new_record? ? "Add a New Food" : "Edit Food" %>
+      </h3>
+      <p class="text-sm text-gray-500">
+        Enter food details and select applicable qualifiers
+      </p>
+    </div>
+
+    <div class="space-y-6">
       <div>
         <%= form.label :food_name, "Food name", class: "block font-medium text-gray-700 mb-1" %>
         <%= form.text_field :food_name, 
-                         class: "block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full", 
-                         maxlength: 64, 
-                         required: true,
-                         placeholder: "Enter food name" %>
-        <p class="text-sm text-gray-500 mt-1">Maximum 64 characters</p>
+                      class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", 
+                      maxlength: 64, 
+                      required: true,
+                      placeholder: "Enter food name" %>
+        <p class="text-xs text-gray-500 mt-1">Maximum 64 characters</p>
       </div>
-    </div>
 
-    <div class="md:col-span-2">
-      <fieldset class="mt-4">
-        <legend class="block font-medium text-gray-700 mb-2">Qualifiers</legend>
-        <p class="text-sm text-gray-500 mb-3">
-          Select qualifiers that apply to this food. Foods with the same name but different qualifiers 
-          are considered unique.
-        </p>
+      <div class="border-t border-gray-200 pt-4">
+        <fieldset>
+          <legend class="block font-medium text-gray-700 mb-2">Qualifiers</legend>
+          <p class="text-sm text-gray-500 mb-3">
+            Select qualifiers that apply to this food. Foods with the same name but different qualifiers 
+            are considered unique.
+          </p>
+          
+          <div class="h-60 overflow-y-auto border rounded-md p-3 bg-gray-50">
+            <% if @food_qualifiers.any? %>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <% @food_qualifiers.each do |qualifier| %>
+                  <div class="relative flex items-start py-1 px-2 rounded-md hover:bg-gray-100">
+                    <div class="flex h-5 items-center">
+                      <%= check_box_tag "qualifier_ids[]", 
+                                    qualifier.id, 
+                                    food.food_qualifiers.include?(qualifier),
+                                    id: "qualifier_#{qualifier.id}",
+                                    class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+                    </div>
+                    <div class="ml-3 text-sm">
+                      <%= label_tag "qualifier_#{qualifier.id}", qualifier.qualifier_name, class: "font-medium text-gray-700 cursor-pointer" %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="flex items-center justify-center h-full">
+                <p class="text-gray-500 italic text-sm">No existing qualifiers available. Create a new one below.</p>
+              </div>
+            <% end %>
+          </div>
+        </fieldset>
         
-        <div class="max-h-60 overflow-y-auto border rounded-md p-3 space-y-2">
-          <% if @food_qualifiers.any? %>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-              <% @food_qualifiers.each do |qualifier| %>
-                <div class="relative flex items-start">
-                  <div class="flex h-5 items-center">
-                    <%= check_box_tag "qualifier_ids[]", 
-                                  qualifier.id, 
-                                  food.food_qualifiers.include?(qualifier),
-                                  id: "qualifier_#{qualifier.id}",
-                                  class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
-                  </div>
-                  <div class="ml-3 text-sm">
-                    <%= label_tag "qualifier_#{qualifier.id}", qualifier.qualifier_name, class: "font-medium text-gray-700" %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="text-gray-500 italic text-sm">No existing qualifiers available. Create a new one below.</p>
-          <% end %>
+        <div class="mt-4">
+          <label for="new_qualifier_name" class="block font-medium text-gray-700 mb-1">Add a New Qualifier</label>
+          <div class="flex space-x-2">
+            <%= text_field_tag :new_qualifier_name, 
+                         nil,
+                         id: "new_qualifier_name", 
+                         class: "flex-grow rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                         placeholder: "Enter a new qualifier name (optional)" %>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Leave blank if you don't want to add a new qualifier</p>
         </div>
-      </fieldset>
-      
-      <div class="mt-6">
-        <label for="new_qualifier_name" class="block font-medium text-gray-700 mb-1">Add a New Qualifier</label>
-        <%= text_field_tag :new_qualifier_name, 
-                       nil,
-                       id: "new_qualifier_name", 
-                       class: "block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full",
-                       placeholder: "Enter a new qualifier name (optional)" %>
-        <p class="text-sm text-gray-500 mt-1">Leave blank if you don't want to add a new qualifier</p>
       </div>
     </div>
-  </div>
 
-  <div class="mt-8 flex space-x-3">
-    <%= form.submit food.new_record? ? "Create Food" : "Update Food", 
-                 class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-    
-    <%= link_to "Cancel", food.new_record? ? foods_path : food_path(food), 
-              class: "rounded-md px-3.5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 inline-block font-medium" %>
+    <div class="mt-8 border-t border-gray-200 pt-5 flex justify-end">
+      <div class="flex space-x-3">
+        <%= link_to "Cancel", food.new_record? ? foods_path : food_path(food), 
+                class: "rounded-md px-4 py-2 bg-white border border-gray-300 text-gray-700 shadow-sm hover:bg-gray-50 inline-block font-medium" %>
+        
+        <%= form.submit food.new_record? ? "Create Food" : "Update Food", 
+                     class: "rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white shadow-sm inline-block font-medium cursor-pointer" %>
+      </div>
+    </div>
   </div>
 <% end %>
