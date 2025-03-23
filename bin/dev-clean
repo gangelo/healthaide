@@ -13,5 +13,11 @@ OptionParser.new do |opts|
 end.parse!
 
 task = options[:no_safe] ? "db:clean:user_health_records" : "db:clean:user_health_records_safe"
+puts "\n***********************************"
+puts "Running #{task}..."
+system("bin/rails #{task}")
+
+task = options[:no_safe] ? "db:clean:food_records" : "db:clean:food_records_safe"
+puts "\n***********************************"
 puts "Running #{task}..."
 system("bin/rails #{task}")
