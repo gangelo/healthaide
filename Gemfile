@@ -65,6 +65,8 @@ end
 
 group :test do
   gem "capybara"
+  gem "pry-byebug"
+  gem "pry-rails"
   gem "rspec-rails"
   gem "selenium-webdriver"
   gem "shoulda-matchers"

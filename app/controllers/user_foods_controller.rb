@@ -4,7 +4,7 @@ class UserFoodsController < ApplicationController
 
   # GET /user_foods or /user_foods.json
   def index
-    @user_foods = current_user.user_foods.kept.includes(:food).ordered
+    @user_foods = current_user.user_foods.includes(:food).ordered
   end
 
   # GET /user_foods/1 or /user_foods/1.json
@@ -79,7 +79,7 @@ class UserFoodsController < ApplicationController
 
   # DELETE /user_foods/1 or /user_foods/1.json
   def destroy
-    @user_food.soft_delete
+    @user_food.destroy
 
     respond_to do |format|
       format.html { redirect_to user_foods_path, status: :see_other, notice: "Food was successfully removed from your list." }
@@ -163,13 +163,16 @@ class UserFoodsController < ApplicationController
 
       # Batch create records for efficiency
       if new_food_ids.any?
-        records_to_insert = new_food_ids.map do |food_id|
+        # Filter out any soft-deleted foods
+        available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
+        
+        records_to_insert = available_food_ids.map do |food_id|
           { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
         end
 
         # Use insert_all for better performance
-        UserFood.insert_all(records_to_insert)
-        foods_added = new_food_ids.size
+        UserFood.insert_all(records_to_insert) if records_to_insert.any?
+        foods_added = records_to_insert.size
       end
 
       message = "#{foods_added} #{"food".pluralize(foods_added)} successfully added."

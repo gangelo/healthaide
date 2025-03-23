@@ -1,23 +1,55 @@
 <% content_for :title, "Showing food" %>
 
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
-    <%= render "shared/flash" %>
+<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+  <%= render "shared/flash" %>
 
-    <div class="food-details">
-      <h1 class="font-bold text-4xl mb-4"><%= @food.food_name %></h1>
-
-      <!-- Food qualifiers partial -->
-      <%= render "qualifiers" %>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6">
+    <div class="mb-6">
+      <div class="mb-1 flex justify-between items-start">
+        <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl"><%= @food.food_name %></h1>
+        <span class="px-2 py-1 text-xs font-medium <%= @food.discarded? ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %> rounded-md">
+          <%= @food.discarded? ? 'Deleted' : 'Active' %>
+        </span>
+      </div>
+      
+      <p class="text-sm text-gray-500">Added on <%= @food.created_at.strftime("%B %d, %Y") %></p>
     </div>
 
-    <div class="mt-8">
-      <%= link_to "Edit this food", edit_food_path(@food), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-      <%= link_to "Back to foods", foods_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-      <%= button_to "Delete this food", @food, method: :delete,
-          class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-          form_class: "inline-flex",
-          form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <div class="border-t border-gray-200 pt-4">
+      <h2 class="text-lg font-medium text-gray-900 mb-2">Qualifiers</h2>
+      
+      <% if @food.food_qualifiers.any? %>
+        <div class="mt-2 space-y-2">
+          <ul class="list-disc list-inside">
+            <% @food.food_qualifiers.ordered.each do |qualifier| %>
+              <li class="text-gray-700"><%= qualifier.qualifier_name %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No qualifiers for this food.</p>
+      <% end %>
+    </div>
+
+    <div class="border-t border-gray-200 pt-4 mt-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-2">Unique Identifier</h2>
+      <div class="bg-gray-50 rounded-md p-3 font-mono text-sm overflow-auto">
+        <%= @food.unique_signature %>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-wrap gap-3">
+      <%= link_to "Edit this food", edit_food_path(@food), class: "rounded-lg py-2 px-3 bg-blue-100 text-blue-700 font-medium hover:bg-blue-200" %>
+      <%= link_to "Back to foods", foods_path, class: "rounded-lg py-2 px-3 bg-gray-100 text-gray-700 font-medium hover:bg-gray-200" %>
+      
+      <% if @food.kept? %>
+        <%= button_to "Delete this food", @food, method: :delete,
+            class: "rounded-lg py-2 px-3 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+            form: { data: { turbo_confirm: "Are you sure? This will remove the food from all users who have added it." } } %>
+      <% else %>
+        <%= button_to "Restore this food", restore_food_path(@food), method: :patch,
+            class: "rounded-lg py-2 px-3 text-white bg-green-600 hover:bg-green-500 font-medium cursor-pointer" %>
+      <% end %>
     </div>
   </div>
 </div>

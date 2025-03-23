@@ -20,21 +20,27 @@ class FoodsController < ApplicationController
   # GET /foods/new
   def new
     @food = Food.new
+    @food_qualifiers = FoodQualifier.kept.ordered
   end
 
   # GET /foods/1/edit
   def edit
+    @food_qualifiers = FoodQualifier.kept.ordered
   end
 
   # POST /foods or /foods.json
   def create
     @food = Food.new(food_params)
+    
+    # Handle qualifiers
+    process_qualifiers
 
     respond_to do |format|
       if @food.save
         format.html { redirect_to @food, notice: "Food was successfully created." }
         format.json { render :show, status: :created, location: @food }
       else
+        @food_qualifiers = FoodQualifier.kept.ordered
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
       end
@@ -43,11 +49,18 @@ class FoodsController < ApplicationController
 
   # PATCH/PUT /foods/1 or /foods/1.json
   def update
+    # Update basic attributes
+    @food.assign_attributes(food_params)
+    
+    # Handle qualifiers
+    process_qualifiers
+
     respond_to do |format|
-      if @food.update(food_params)
+      if @food.save
         format.html { redirect_to @food, notice: "Food was successfully updated." }
         format.json { render :show, status: :ok, location: @food }
       else
+        @food_qualifiers = FoodQualifier.kept.ordered
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
       end
@@ -138,5 +151,28 @@ class FoodsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def food_params
     params.require(:food).permit(:food_name)
+  end
+  
+  # Process qualifiers from params
+  def process_qualifiers
+    # Clear existing qualifiers first
+    @food.food_qualifiers.clear if @food.persisted?
+    
+    # Add selected qualifiers
+    if params[:qualifier_ids].present?
+      qualifier_ids = params[:qualifier_ids].reject(&:blank?).map(&:to_i)
+      selected_qualifiers = FoodQualifier.where(id: qualifier_ids)
+      @food.food_qualifiers = selected_qualifiers
+    end
+    
+    # Add any new qualifier if provided (from the form, not the model)
+    if params[:new_qualifier_name].present?
+      qualifier_name = params[:new_qualifier_name].strip
+      if qualifier_name.present?
+        # Find or create the qualifier
+        qualifier = FoodQualifier.find_or_create_by(qualifier_name: qualifier_name)
+        @food.food_qualifiers << qualifier unless @food.food_qualifiers.include?(qualifier)
+      end
+    end
   end
 end

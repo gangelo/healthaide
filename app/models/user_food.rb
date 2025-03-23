@@ -1,31 +1,36 @@
 class UserFood < ApplicationRecord
-  include SoftDeletable
-
-  before_save :before_save_validations
-
   belongs_to :user, inverse_of: :user_foods
   belongs_to :food, inverse_of: :user_foods
 
-  # Order by food food_name
-  scope :ordered, -> { joins(:food).order("foods.food_name") }
+  # validates_uniqueness_of :food_id, scope: :user_id, message: "has already been selected"
+  validate :food_not_already_selected
+  validate :food_not_deleted
 
-  validates :user, presence: true, on: :save
-  validates :food, presence: true, on: :save
-  validates_uniqueness_of :food_id, scope: :user_id, message: "has already been selected"
+  scope :ordered, -> { joins(:food).order("foods.food_name") }
 
   private
 
-  def before_save_validations
+  def food_not_already_selected
     return if user.blank? || food.blank?
 
-    if Food.find(food_id)&.discarded?
-      errors.add(:food, "'#{food.food_name}' is unavailable")
-      return
-    end
+    errors.add(:food, "has already been selected") if food_already_selected?
+  end
 
-    # Check if we're restoring a record (deleted_at changing from a value to nil)
-    return if deleted_at_was.present? && deleted_at.nil?
+  def food_not_deleted
+    return if user.blank? || food.blank?
 
-    errors.add(:food, "has already been selected") if user.user_foods.kept.where(food_id: food_id).exists?
+    errors.add(:food, "'#{food.food_name}' is unavailable") if food_discarded?
+  end
+
+  def food_discarded?
+    return Food.find(food_id)&.discarded? if food_id.present?
+
+    Food.find_by_food_name_normalized(food.food_name)&.discarded? if food.present?
+  end
+
+  def food_already_selected?
+    return user.user_foods.exists?(food_id: food_id) if food_id.present?
+
+    user.user_foods.joins(:food).exists?(foods: { food_name: food.food_name }) if food.present?
   end
 end
