@@ -7,7 +7,6 @@
         <div class="text-sm font-medium _text-gray-700">Qualifiers</div>
         <div class="text-sm font-medium _text-gray-700 text-right">Actions</div>
       </div>
-
       <!-- Table rows -->
       <ul role="list">
         <% user_foods.each_with_index do |user_food, index| %>
@@ -15,7 +14,6 @@
             <div class="text-sm font-semibold text-gray-900">
               <%= user_food.food.food_name %>
             </div>
-
             <div>
               <% if user_food.food.food_qualifiers.any? %>
                 <div class="flex flex-wrap gap-1">
@@ -29,7 +27,6 @@
                 <span class="text-sm text-gray-500">&nbsp;</span>
               <% end %>
             </div>
-
             <div class="text-right">
               <%= button_to user_food_path(user_food),
                   method: :delete,
@@ -44,9 +41,9 @@
     </div>
   <% else %>
     <div class="px-6 py-10 text-center text-gray-500">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
+      <div class="flex items-center justify-center">
+        <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
+      </div>
       <h3 class="mt-2 text-sm font-semibold text-gray-900">No foods added yet</h3>
       <p class="mt-1 text-sm text-gray-500">Get started by adding foods to your list.</p>
       <div class="mt-6">
