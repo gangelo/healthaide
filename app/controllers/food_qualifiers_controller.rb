@@ -112,14 +112,27 @@ class FoodQualifiersController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_food_qualifier
-      @food_qualifier = FoodQualifier.find(params[:id])
+  # GET /food_qualifiers/export
+  def export
+    respond_to do |format|
+      format.html {
+        render html: FoodQualifierExportService.export.html_safe
+      }
+      format.json {
+        send_data JSON.pretty_generate(FoodQualifierExportService.export), filename: "food_qualifiers.json"
+      }
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def food_qualifier_params
-      params.require(:food_qualifier).permit(:qualifier_name)
-    end
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_food_qualifier
+    @food_qualifier = FoodQualifier.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def food_qualifier_params
+    params.require(:food_qualifier).permit(:qualifier_name)
+  end
 end

@@ -15,6 +15,7 @@ namespace :db do
       deleted_counts = {
         food_food_qualifiers: FoodFoodQualifier.delete_all,
         user_foods: UserFood.delete_all,
+        food_qualifiers: FoodQualifier.delete_all,
         user_health_goals: UserHealthGoal.delete_all,
         user_health_conditions: UserHealthCondition.delete_all
       }
@@ -41,6 +42,7 @@ namespace :db do
       before_counts = {
         food_food_qualifiers: FoodFoodQualifier.count,
         user_foods: UserFood.count,
+        food_qualifiers: FoodQualifier.count,
         user_health_goals: UserHealthGoal.count,
         user_health_conditions: UserHealthCondition.count
       }
@@ -60,6 +62,7 @@ namespace :db do
         deleted_counts = {
           food_food_qualifiers: FoodFoodQualifier.delete_all,
           user_foods: UserFood.delete_all,
+          food_qualifiers: FoodQualifier.delete_all,
           user_health_goals: UserHealthGoal.delete_all,
           user_health_conditions: UserHealthCondition.delete_all
         }

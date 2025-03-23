@@ -1,8 +1,6 @@
 <% content_for :title, "Foods" %>
-
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
   <%= render "shared/flash" %>
-
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Foods</h1>
@@ -10,14 +8,11 @@
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
       <%= link_to new_food_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-        </svg>
+        <%= render partial: "shared/icons/plus_sign" %>
         Add New Food
       <% end %>
     </div>
   </div>
-
   <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-lg overflow-hidden">
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-300">
@@ -45,14 +40,13 @@
                 <td class="px-3 py-4 text-sm text-gray-500">
                   <div class="flex flex-wrap">
                     <%
-                      # Create different colors for qualifiers based on their first letter
-                      colors = ['badge', 'badge-green', 'badge-amber', 'badge-red', 'badge-purple']
-                      food.food_qualifiers.each_with_index do |qualifier, index|
-                        color_class = colors[index % colors.length]
+                    # Create different colors for qualifiers based on their first letter
+                    colors = ['badge', 'badge-green', 'badge-amber', 'badge-red', 'badge-purple']
+                    food.food_qualifiers.each_with_index do |qualifier, index|
+                      color_class = colors[index % colors.length]
                     %>
                       <span class="<%= color_class %>"><%= qualifier.qualifier_name %></span>
                     <% end %>
-
                     <% if food.food_qualifiers.empty? %>
                       <span class="text-gray-400 italic">No qualifiers</span>
                     <% end %>
@@ -61,23 +55,21 @@
                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                   <div class="flex justify-end gap-2">
                     <%#=
-                      render "components/buttons/button",
-                        text: "View",
-                        type: :link,
-                        variant: :primary,
-                        size: :md,
-                        # icon: "path/to/icon.svg",
-                        # class: "additional-classes",
-                        href: food_path(food)
-                    %>
+                        render "components/buttons/button",
+                          text: "View",
+                          type: :link,
+                          variant: :primary,
+                          size: :md,
+                          # icon: "path/to/icon.svg",
+                          # class: "additional-classes",
+                          href: food_path(food)
+                      %>
                     <%= link_to food_path(food), class: "text-blue-600 hover:text-blue-900" do %>
                       <%= render partial: "shared/icons/eye", locals: { screen_reader_text: "View" } %>
                     <% end %>
-
                     <%= link_to edit_food_path(food), class: "text-blue-600 hover:text-blue-900" do %>
                       <%= render partial: "shared/icons/notebook", locals: { screen_reader_text: "Edit" } %>
                     <% end %>
-
                     <% if food.kept? %>
                       <%= button_to food_path(food), method: :delete, form: { class: "inline-block" }, class: "text-red-600 hover:text-red-900", data: { turbo_confirm: "Are you sure? This will remove the food from all users who have added it." } do %>
                         <%= render partial: "shared/icons/trash_can", locals: { screen_reader_text: "Delete" } %>

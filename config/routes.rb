@@ -30,11 +30,18 @@ Rails.application.routes.draw do
       post :add_qualifier
     end
   end
+
+get "food_qualifiers/export",
+    to: "food_qualifiers#export",
+    as: :export_food_qualifiers,
+    constraints: { format: /(html|json)/ }
+  resources :food_qualifiers
   resources :food_qualifiers do
     collection do
       post "find_or_create"
     end
   end
+
   resources :foods do
     member do
       post "add_qualifier"
@@ -82,7 +89,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :food_qualifiers
   resources :foods do
     member do
       post :add_qualifier
