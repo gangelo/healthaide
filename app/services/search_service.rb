@@ -16,6 +16,20 @@ class SearchService
     conditions.where("health_condition_name LIKE ? COLLATE NOCASE", normalized_search_term)
   end
 
+  # Search health goals with standardized case-insensitive behavior
+  # @param user [User] current user
+  # @param search_term [String] search term to filter by
+  # @return [ActiveRecord::Relation] filtered health goals
+  def self.search_health_goals(user, search_term = nil)
+    # Get the base query for goals not already selected by this user
+    goals = HealthGoal.ordered.where.not(id: user.user_health_goals.pluck(:health_goal_id))
+
+    normalized_search_term = normalize_search_term(search_term)
+    return goals if normalized_search_term.blank?
+
+    goals.where("health_goal_name LIKE ? COLLATE NOCASE", normalized_search_term)
+  end
+
   # Search foods with standardized case-insensitive behavior
   # @param user [User] current user
   # @param search_term [String] search term to filter by
@@ -29,7 +43,6 @@ class SearchService
 
     foods.where("food_name LIKE ? COLLATE NOCASE", normalized_search_term)
   end
-
 
   def self.normalize_search_term(search_term)
     search_term = search_term.to_s.strip.presence

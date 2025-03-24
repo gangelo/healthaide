@@ -52,27 +52,107 @@ class UserHealthGoalsController < ApplicationController
     redirect_to user_health_goals_url, notice: "Health goal was successfully removed."
   end
 
+  def select_multiple
+    # Get the list of health goals not already selected by the user
+    @health_goals = SearchService.search_health_goals(current_user, params[:search])
+
+    respond_to do |format|
+      format.html do
+        # For a search, render just the goals list in its turbo frame
+        if turbo_frame_request? && params[:frame_id] == "goals_list"
+          render :_goals_list_frame, locals: { health_goals: @health_goals }
+        elsif turbo_frame_request?
+          # For the entire modal
+          render partial: "multiple_goals_modal", locals: { health_goals: @health_goals }
+        end
+      end
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "goals_list",
+          partial: "goals_list",
+          locals: { health_goals: @health_goals }
+        )
+      end
+    end
+  end
+
   def add_multiple
-    health_goal_ids = params[:health_goal_ids]
+    health_goal_ids = params[:health_goal_ids]&.reject(&:blank?)
 
     if health_goal_ids.blank?
-      redirect_to new_user_health_goal_path, alert: "Please select at least one health goal"
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "flash_messages",
+            partial: "shared/flash_messages",
+            locals: { alert: "Please select at least one health goal." }
+          )
+        end
+        format.html do
+          redirect_to user_health_goals_path, alert: "Please select at least one health goal."
+        end
+      end
       return
     end
 
-    max_order = current_user.user_health_goals.maximum(:order_of_importance) || 0
+    begin
+      # Get maximum order of importance
+      max_order = current_user.user_health_goals.maximum(:order_of_importance) || 0
 
-    created_goals = health_goal_ids.each_with_index.map do |goal_id, index|
-      current_user.user_health_goals.create(
-        health_goal_id: goal_id,
-        order_of_importance: max_order + index + 1
-      )
-    end
+      # Get existing health_goal_ids to avoid duplicates
+      existing_health_goal_ids = current_user.user_health_goals.pluck(:health_goal_id)
+      new_health_goal_ids = health_goal_ids.map(&:to_i) - existing_health_goal_ids
 
-    if created_goals.all?(&:persisted?)
-      redirect_to user_health_goals_path, notice: "#{created_goals.count} health goals were successfully added"
-    else
-      redirect_to new_user_health_goal_path, alert: "There was an error adding some health goals"
+      # Batch create records for efficiency
+      if new_health_goal_ids.any?
+        records_to_insert = new_health_goal_ids.each_with_index.map do |health_goal_id, index|
+          {
+            user_id: current_user.id,
+            health_goal_id: health_goal_id,
+            order_of_importance: max_order + index + 1,
+            created_at: Time.current,
+            updated_at: Time.current
+          }
+        end
+
+        # Use insert_all for better performance
+        UserHealthGoal.insert_all(records_to_insert) if records_to_insert.any?
+        goals_added = records_to_insert.size
+      end
+
+      message = "#{goals_added} #{"health goal".pluralize(goals_added)} successfully added."
+
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.update(
+              "flash_messages",
+              partial: "shared/flash_messages",
+              locals: { notice: message }
+            ),
+            turbo_stream.replace(
+              "modal",
+              partial: "shared/empty_frame"
+            )
+          ]
+        end
+        format.html do
+          redirect_to user_health_goals_path, notice: message
+        end
+      end
+    rescue => e
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.update(
+            "flash_messages",
+            partial: "shared/flash_messages",
+            locals: { alert: "Error adding health goals: #{e.message}" }
+          )
+        end
+        format.html do
+          redirect_to user_health_goals_path, alert: "Error adding health goals: #{e.message}"
+        end
+      end
     end
   end
 

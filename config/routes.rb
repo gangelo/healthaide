@@ -82,6 +82,7 @@ get "food_qualifiers/export",
 
   resources :user_health_goals do
     collection do
+      get :select_multiple
       post :add_multiple
     end
     member do
