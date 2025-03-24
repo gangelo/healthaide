@@ -90,7 +90,7 @@ class UserFoodsController < ApplicationController
   def add_qualifier
     if params[:food_qualifier_id].present?
       qualifier = FoodQualifier.find(params[:food_qualifier_id])
-      @user_food.food.food_qualifiers << qualifier unless @user_food.food.food_qualifiers.include?(qualifier)
+      @user_food.food.food_qualifiers << qualifier unless @user_food.food.includes_qualifier?(qualifier)
       redirect_to @user_food, notice: "Qualifier was successfully added."
     elsif params[:new_qualifier_name].present?
       qualifier = FoodQualifier.create!(qualifier_name: params[:new_qualifier_name])

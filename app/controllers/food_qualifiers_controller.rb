@@ -72,7 +72,7 @@ class FoodQualifiersController < ApplicationController
       # We're adding a qualifier to a food
       @food = Food.kept.find(params[:food_id])
 
-      if @food.food_qualifiers.include?(@food_qualifier)
+      if @food.includes_qualifier?(@food_qualifier)
         # Qualifier is already associated with this food
         flash[:notice] = "#{@food_qualifier.qualifier_name} is already associated with this food."
       else

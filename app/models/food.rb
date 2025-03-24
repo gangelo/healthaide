@@ -33,14 +33,16 @@ class Food < ApplicationRecord
     results
   end
 
-  class << self
-    def find_by_food_name_normalized(food_name)
-      find_by(food_name: normalize_food_name(food_name))
-    end
+  def self.find_by_food_name_normalized(food_name)
+    find_by(food_name: normalize_name(food_name))
+  end
 
-    def normalize_food_name(food_name)
-      food_name&.downcase&.capitalize
-    end
+  def self.normalize_name(food_name)
+    food_name&.downcase&.capitalize
+  end
+
+  def includes_qualifier?(qualifier)
+    food_qualifiers.include?(qualifier)
   end
 
   # Returns a unique string signature for this food combining name and qualifiers
@@ -95,7 +97,7 @@ class Food < ApplicationRecord
   end
 
   def before_save_food_name
-    self.food_name = self.class.normalize_food_name(self.food_name)
+    self.food_name = self.class.normalize_name(self.food_name)
   end
 
   def cleanup_user_foods

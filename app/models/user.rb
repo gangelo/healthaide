@@ -35,26 +35,24 @@ class User < ApplicationRecord
 
   validate :password_complexity, if: -> { password.present? }
 
-  class << self
-    def find_for_database_authentication(warden_conditions)
-      conditions = warden_conditions.dup
-      if (email_or_username = conditions.delete(:email_or_username))
-        where(conditions.to_hash).where(
-          "LOWER(username) = :value OR LOWER(email) = :value",
-          value: email_or_username.downcase
-        ).first
-      # NOTE: We can tell Devise to allow case-insensitive username authentication using
-      # `config.case_insensitive_keys = [:email, :username]` in the config/initializers/devise.rb
-      # initializer. However, doing so would cause Devise to downcase the username whenever a
-      # user is created or updated. We do not want to do this because we want to preserve the
-      # case of the username the user entered. Therefore, we have to manually downcase the
-      # username here to allow case-insensitive username authentication.
-      elsif (username = conditions.delete(:username))
-        where(conditions.to_hash).where("LOWER(username) = :value", value: username.downcase).first
-      else
-        # NOTE: case-insensitive email authentication is already handled by Devise here.
-        where(conditions.to_hash).first
-      end
+  def self.find_for_database_authentication(warden_conditions)
+    conditions = warden_conditions.dup
+    if (email_or_username = conditions.delete(:email_or_username))
+      where(conditions.to_hash).where(
+        "LOWER(username) = :value OR LOWER(email) = :value",
+        value: email_or_username.downcase
+      ).first
+    # NOTE: We can tell Devise to allow case-insensitive username authentication using
+    # `config.case_insensitive_keys = [:email, :username]` in the config/initializers/devise.rb
+    # initializer. However, doing so would cause Devise to downcase the username whenever a
+    # user is created or updated. We do not want to do this because we want to preserve the
+    # case of the username the user entered. Therefore, we have to manually downcase the
+    # username here to allow case-insensitive username authentication.
+    elsif (username = conditions.delete(:username))
+      where(conditions.to_hash).where("LOWER(username) = :value", value: username.downcase).first
+    else
+      # NOTE: case-insensitive email authentication is already handled by Devise here.
+      where(conditions.to_hash).first
     end
   end
 

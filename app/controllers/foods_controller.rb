@@ -91,7 +91,7 @@ class FoodsController < ApplicationController
   def add_qualifier
     @qualifier = FoodQualifier.find(params[:qualifier_id])
 
-    if @food.food_qualifiers.include?(@qualifier)
+    if @food.includes_qualifier?(@qualifier)
       message = "#{@qualifier.qualifier_name} is already associated with this food."
       flash[:notice] = message
     else
@@ -118,7 +118,7 @@ class FoodsController < ApplicationController
   def remove_qualifier
     @qualifier = FoodQualifier.find(params[:qualifier_id])
 
-    if @food.food_qualifiers.include?(@qualifier)
+    if @food.includes_qualifier?(@qualifier)
       @food.food_qualifiers.delete(@qualifier)
       message = "Removed #{@qualifier.qualifier_name} from #{@food.food_name}."
       flash[:success] = message
@@ -171,7 +171,7 @@ class FoodsController < ApplicationController
       if qualifier_name.present?
         # Find or create the qualifier
         qualifier = FoodQualifier.find_or_create_by(qualifier_name: qualifier_name)
-        @food.food_qualifiers << qualifier unless @food.food_qualifiers.include?(qualifier)
+        @food.food_qualifiers << qualifier unless @food.includes_qualifier?(qualifier)
       end
     end
   end

@@ -200,13 +200,13 @@ RSpec.describe Food do
       end
     end
 
-    describe '.normalize_food_name' do
+    describe '.normalize_name' do
       it 'downcases and capitalizes the food name' do
-        expect(described_class.normalize_food_name('CHICKEN nuggets')).to eq('Chicken nuggets')
+        expect(described_class.normalize_name('CHICKEN nuggets')).to eq('Chicken nuggets')
       end
 
       it 'handles nil gracefully' do
-        expect(described_class.normalize_food_name(nil)).to be_nil
+        expect(described_class.normalize_name(nil)).to be_nil
       end
     end
   end
