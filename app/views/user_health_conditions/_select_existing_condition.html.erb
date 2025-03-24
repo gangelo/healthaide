@@ -1,0 +1,12 @@
+<%= form_with(model: user_health_condition, url: user_health_conditions_path, class: "w-full") do |form| %>
+  <div class="mb-4">
+    <%= form.collection_select :health_condition_id,
+        health_conditions,
+        :id,
+        :health_condition_name,
+        { prompt: "Select a health condition..." },
+        class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 w-full" %>
+  </div>
+  <%= form.submit "Add Selected Health Condition",
+      class: "w-full rounded-lg py-3 px-5 bg-green-600 text-white font-medium cursor-pointer hover:bg-green-500 transition-colors" %>
+<% end %>

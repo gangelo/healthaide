@@ -17,7 +17,7 @@ puts "\n***********************************"
 puts "Running #{task}..."
 system("bin/rails #{task}")
 
-task = options[:no_safe] ? "db:clean:food_records" : "db:clean:food_records_safe"
+task = options[:no_safe] ? "db:clean:global_health_records" : "db:clean:global_health_records_safe"
 puts "\n***********************************"
 puts "Running #{task}..."
 system("bin/rails #{task}")

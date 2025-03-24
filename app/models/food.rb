@@ -27,7 +27,11 @@ class Food < ApplicationRecord
 
   scope :ordered, -> { order(:food_name) }
   scope :not_selected_by, ->(user) { where.not(id: user.user_foods.select(:food_id)) }
-  scope :available_for, ->(user) { kept.ordered.not_selected_by(user) }
+  scope :available_for, ->(user, include_qualifiers: false) do
+    results = kept.ordered.not_selected_by(user)
+    results = results.includes(:food_qualifiers) if include_qualifiers
+    results
+  end
 
   class << self
     def find_by_food_name_normalized(food_name)

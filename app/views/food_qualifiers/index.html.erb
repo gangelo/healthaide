@@ -1,44 +1,67 @@
-<% content_for :title, "Food qualifiers" %>
-
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+<% content_for :title, "Food Qualifiers" %>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <%= turbo_frame_tag "flash_messages" do %>
+    <%= render "shared/flash_messages" %>
   <% end %>
-
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Food qualifiers</h1>
-    <%= link_to "New food qualifier", new_food_qualifier_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
-
-  <div id="food_qualifiers" class="min-w-full">
-    <div class="bg-white shadow-md rounded my-6">
-      <table class="min-w-full table-auto">
-        <thead>
-          <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-            <th class="py-3 px-6 text-left w-full">Name</th>
-            <th class="py-3 px-6 text-center whitespace-nowrap">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-600 text-sm font-light">
-          <% @food_qualifiers.each do |food_qualifier| %>
-            <tr class="border-b border-gray-200 hover:bg-gray-100">
-              <td class="py-3 px-6 text-left">
-                <%= food_qualifier.qualifier_name %>
-              </td>
-              <td class="py-3 px-6 text-center whitespace-nowrap">
-                <div class="flex item-center justify-center">
-                  <%= link_to "Show", food_qualifier, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-                  <%= link_to "Edit", edit_food_qualifier_path(food_qualifier), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-                  <%= button_to "Delete", food_qualifier, method: :delete,
-                      class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-                      form_class: "inline-block",
-                      data: { turbo_confirm: "Are you sure?" } %>
-                </div>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
+  
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="min-w-0 flex-1">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Food Qualifiers</h2>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= link_to new_food_qualifier_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
+        <%= render partial: "shared/icons/plus_sign" %>
+        Add New Food Qualifier
+      <% end %>
     </div>
   </div>
+  
+  <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
+    <% if @food_qualifiers.any? %>
+      <div class="divide-y divide-gray-100">
+        <!-- Table header -->
+        <div class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal px-4 py-3 sm:px-6 grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium">Qualifier Name</div>
+          <div class="text-sm font-medium text-right">Actions</div>
+        </div>
+        <!-- Table rows -->
+        <ul role="list">
+          <% @food_qualifiers.each_with_index do |food_qualifier, index| %>
+            <li class="relative px-4 py-3 sm:px-6 grid grid-cols-2 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
+              <div class="text-sm font-semibold text-gray-900">
+                <%= food_qualifier.qualifier_name %>
+              </div>
+              <div class="text-right flex justify-end gap-2">
+                <%= link_to "Show", food_qualifier_path(food_qualifier), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
+                
+                <%= link_to "Edit", edit_food_qualifier_path(food_qualifier), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
+                
+                <%= button_to "Delete", food_qualifier_path(food_qualifier), 
+                    method: :delete, 
+                    class: "rounded-lg py-2 px-4 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", 
+                    form: { data: { turbo_confirm: "Are you sure?" } } %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% else %>
+      <div class="px-6 py-10 text-center text-gray-500">
+        <div class="flex items-center justify-center">
+          <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
+        </div>
+        <h3 class="mt-2 text-sm font-semibold text-gray-900">No food qualifiers added yet</h3>
+        <p class="mt-1 text-sm text-gray-500">Get started by adding food qualifiers to your list.</p>
+        <div class="mt-6">
+          <%= link_to new_food_qualifier_path,
+              class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
+                <%= render partial: "shared/icons/plus_sign" %>
+                Add New Food Qualifier
+              <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <%= turbo_frame_tag "modal" %>
 </div>

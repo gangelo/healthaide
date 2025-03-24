@@ -7,7 +7,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class ModalController extends Controller {
   static targets = ["submitButton", "selectionCount", "selectAllButton", "selectNoneButton"]
   static values = {
-    selectedFoods: { type: Array, default: [] }
+    selectedItems: { type: Array, default: [] },
+    itemType: { type: String, default: "food" } // Can be "food" or "health_condition"
   }
 
   connect() {
@@ -56,29 +57,31 @@ export default class ModalController extends Controller {
   // Track checkbox changes to maintain selection state
   checkboxChanged(event) {
     const checkbox = event.target
-    const foodId = checkbox.value
+    const itemId = checkbox.value
     
     if (checkbox.checked) {
-      // Add to selected foods if not already there
-      if (!this.selectedFoodsValue.includes(foodId)) {
-        this.selectedFoodsValue = [...this.selectedFoodsValue, foodId]
+      // Add to selected items if not already there
+      if (!this.selectedItemsValue.includes(itemId)) {
+        this.selectedItemsValue = [...this.selectedItemsValue, itemId]
       }
     } else {
-      // Remove from selected foods
-      this.selectedFoodsValue = this.selectedFoodsValue.filter(id => id !== foodId)
+      // Remove from selected items
+      this.selectedItemsValue = this.selectedItemsValue.filter(id => id !== itemId)
     }
     
     this.updateSelectionState()
   }
   
-  // Restore selection state when the foods list is updated
+  // Restore selection state when the list is updated
   restoreSelectionState(event) {
-    if (event.target.id === "foods_list") {
+    // Check if we're dealing with foods or health conditions frame
+    const validFrameIds = ["foods_list", "conditions_list"];
+    if (validFrameIds.includes(event.target.id)) {
       const checkboxes = event.target.querySelectorAll('input[type="checkbox"]')
       
       checkboxes.forEach(checkbox => {
-        // Check if this food ID is in our selected foods array
-        checkbox.checked = this.selectedFoodsValue.includes(checkbox.value)
+        // Check if this item ID is in our selected items array
+        checkbox.checked = this.selectedItemsValue.includes(checkbox.value)
         
         // Ensure the checkboxes have the event listener
         checkbox.removeEventListener("change", this.checkboxChanged.bind(this))
@@ -89,29 +92,29 @@ export default class ModalController extends Controller {
     }
   }
 
-  // Select all visible foods
+  // Select all visible items
   selectAll() {
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]:not(:checked)')
     checkboxes.forEach(checkbox => {
       checkbox.checked = true
       
-      // Add to selected foods
-      const foodId = checkbox.value
-      if (!this.selectedFoodsValue.includes(foodId)) {
-        this.selectedFoodsValue = [...this.selectedFoodsValue, foodId]
+      // Add to selected items
+      const itemId = checkbox.value
+      if (!this.selectedItemsValue.includes(itemId)) {
+        this.selectedItemsValue = [...this.selectedItemsValue, itemId]
       }
     })
     
     this.updateSelectionState()
   }
   
-  // Deselect all foods
+  // Deselect all items
   selectNone() {
     const checkboxes = this.element.querySelectorAll('input[type="checkbox"]:checked')
     checkboxes.forEach(checkbox => checkbox.checked = false)
     
-    // Clear selected foods array
-    this.selectedFoodsValue = []
+    // Clear selected items array
+    this.selectedItemsValue = []
     
     this.updateSelectionState()
   }
@@ -122,12 +125,24 @@ export default class ModalController extends Controller {
       return
     }
 
-    const count = this.selectedFoodsValue.length
+    const count = this.selectedItemsValue.length
     const submitButton = this.submitButtonTarget
     const selectionCount = this.selectionCountTarget
 
+    // Determine the item type label (default to "item")
+    let itemTypeLabel = "item"
+    
+    // Check the page path to set the item type
+    if (window.location.pathname.includes("user_foods")) {
+      itemTypeLabel = "food"
+    } else if (window.location.pathname.includes("user_health_conditions")) {
+      itemTypeLabel = "health condition"
+    } else if (this.hasItemTypeValue) {
+      itemTypeLabel = this.itemTypeValue
+    }
+
     // Update selection count text
-    selectionCount.textContent = `${count} food${count === 1 ? '' : 's'} selected`
+    selectionCount.textContent = `${count} ${itemTypeLabel}${count === 1 ? '' : 's'} selected`
 
     // Update submit button state
     submitButton.disabled = count === 0

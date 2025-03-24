@@ -104,19 +104,11 @@ class UserFoodsController < ApplicationController
   end
 
   def select_multiple
-    # Get the list of foods not already selected by the user with qualifiers included
-    @foods = helpers.available_foods_with_includes(current_user, include_qualifiers: true)
-
-    # Ensure consistent search behavior
-    search_param = params[:search].to_s.strip.presence
-    if search_param
-      search_term = "%#{search_param.downcase}%"
-      @foods = @foods.where("LOWER(food_name) LIKE ?", search_term)
-    end
+    @foods = SearchService.search_foods(current_user, params[:search])
 
     respond_to do |format|
       format.html do
-        if turbo_frame_request? && params[:_frame] == "foods_list"
+        if turbo_frame_request? && params[:frame_id] == "foods_list"
           # Render just the foods list within its turbo frame
           render :_foods_list_frame, locals: { foods: @foods }
         elsif turbo_frame_request?
