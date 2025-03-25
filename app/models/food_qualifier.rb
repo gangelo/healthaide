@@ -1,7 +1,6 @@
 class FoodQualifier < ApplicationRecord
+  include NameNormalizable
   include SoftDeletable
-
-  before_save :before_save_qualifier_name
 
   has_many :food_food_qualifiers, inverse_of: :food_qualifier, dependent: :destroy
   has_many :foods, through: :food_food_qualifiers
@@ -12,7 +11,7 @@ class FoodQualifier < ApplicationRecord
 
   private
 
-  def before_save_qualifier_name
+  def normalize_name
     self.qualifier_name = self.class.normalize_name(self.qualifier_name)
   end
 end

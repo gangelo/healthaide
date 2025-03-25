@@ -1,9 +1,9 @@
 class Food < ApplicationRecord
+  include NameNormalizable
   include SoftDeletable
 
   UNIQUE_SIGNATURE_SEPARATOR = ":".freeze
 
-  before_save :before_save_food_name
   after_update :cleanup_user_foods, if: -> { saved_change_to_deleted_at? && deleted_at.present? }
 
   has_many :user_foods, inverse_of: :food
@@ -48,6 +48,10 @@ class Food < ApplicationRecord
 
   private
 
+  def normalize_name
+    self.food_name = self.class.normalize_name(self.food_name)
+  end
+
   def food_qualifiers_unique_signature
     return "" if food_qualifiers.empty?
 
@@ -90,10 +94,6 @@ class Food < ApplicationRecord
     current_qualifier_ids = food_qualifiers.map(&:id).sort
 
     persisted_qualifier_ids != current_qualifier_ids
-  end
-
-  def before_save_food_name
-    self.food_name = normalize_name(self.food_name)
   end
 
   def cleanup_user_foods

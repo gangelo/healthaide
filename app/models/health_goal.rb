@@ -1,5 +1,5 @@
 class HealthGoal < ApplicationRecord
-  before_save :before_save_health_goal_name
+  include NameNormalizable
 
   has_many :user_health_goals, dependent: :destroy
   has_many :users, through: :user_health_goals
@@ -14,7 +14,7 @@ class HealthGoal < ApplicationRecord
 
   private
 
-  def before_save_health_goal_name
-    self.health_goal_name = self.health_goal_name&.downcase&.capitalize
+  def normalize_name
+    self.health_goal_name = self.class.normalize_name(self.health_goal_name)
   end
 end

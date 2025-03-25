@@ -2,7 +2,6 @@ class UserFood < ApplicationRecord
   belongs_to :user, inverse_of: :user_foods
   belongs_to :food, inverse_of: :user_foods
 
-  # validates_uniqueness_of :food_id, scope: :user_id, message: "has already been selected"
   validate :food_not_already_selected
   validate :food_not_deleted
 

@@ -1,7 +1,6 @@
 class HealthCondition < ApplicationRecord
+  include NameNormalizable
   include SoftDeletable
-
-  before_save :before_save_health_condition_name
 
   has_many :user_health_conditions, dependent: :destroy
   has_many :users, through: :user_health_conditions
@@ -19,7 +18,7 @@ class HealthCondition < ApplicationRecord
 
   private
 
-  def before_save_health_condition_name
-    self.health_condition_name = self.health_condition_name&.downcase&.capitalize
+  def normalize_name
+    self.health_condition_name = self.class.normalize_name(self.health_condition_name)
   end
 end
