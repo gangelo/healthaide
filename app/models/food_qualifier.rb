@@ -10,10 +10,6 @@ class FoodQualifier < ApplicationRecord
 
   scope :ordered, -> { order(:qualifier_name) }
 
-  def self.normalize_name(qualifier_name)
-    qualifier_name&.downcase&.capitalize
-  end
-
   private
 
   def before_save_qualifier_name

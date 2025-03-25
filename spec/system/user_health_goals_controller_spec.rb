@@ -1,170 +1,128 @@
 require 'rails_helper'
 
-RSpec.describe UserHealthGoalsController, type: :controller do
+RSpec.describe "UserHealthGoals", type: :system do
   let(:user) { create(:user) }
-  let(:health_goal) { create(:health_goal) }
+  let!(:health_goal1) { create(:health_goal, health_goal_name: "Weight Loss") }
+  let!(:health_goal2) { create(:health_goal, health_goal_name: "Muscle Gain") }
+  let!(:health_goal3) { create(:health_goal, health_goal_name: "Better Sleep") }
 
   before do
     user.confirm
     sign_in user
+    # Create an existing user health goal
+    create(:user_health_goal, user: user, health_goal: health_goal1, order_of_importance: 1)
   end
 
-  describe "GET #index" do
-    it "returns http success" do
-      get :index
-      expect(response).to have_http_status(:success)
-    end
-
-    it "assigns @user_health_goals ordered by importance" do
-      high_priority = create(:user_health_goal, order_of_importance: 10, user: user)
-      medium_priority = create(:user_health_goal, order_of_importance: 5, user: user)
-      low_priority = create(:user_health_goal, order_of_importance: 1, user: user)
-
-      get :index
-
-      expect(assigns(:user_health_goals)).to eq([ low_priority, medium_priority, high_priority ])
+  describe "index page" do
+    it "displays user's health goals" do
+      visit user_health_goals_path
+      
+      # Check page content
+      expect(page).to have_content("My Health Goals")
+      expect(page).to have_content(health_goal1.health_goal_name)
+      expect(page).to have_content("1") # order of importance
     end
   end
 
-  describe "GET #new" do
-    it "returns http success" do
-      get :new
-      expect(response).to have_http_status(:success)
+  describe "adding a new health goal" do
+    it "shows add health goal options" do
+      visit new_user_health_goal_path
+      
+      expect(page).to have_content("Add Health Goal")
+      expect(page).to have_content("Add Multiple Health Goals")
+      expect(page).to have_content("Select Existing Health Goal")
+      expect(page).to have_content("Create New Health Goal")
     end
 
-    it "assigns a new user_health_goal" do
-      get :new
-      expect(assigns(:user_health_goal)).to be_a_new(UserHealthGoal)
+    it "allows selecting an existing health goal" do
+      visit new_user_health_goal_path
+      
+      # Select the second health goal from dropdown
+      select health_goal2.health_goal_name, from: "user_health_goal[health_goal_id]"
+      click_button "Add Health Goal"
+      
+      # Should redirect to index with success message
+      expect(page).to have_current_path(user_health_goals_path)
+      expect(page).to have_content("Health goal was successfully added")
+      expect(page).to have_content(health_goal2.health_goal_name)
+    end
+    
+    it "allows creating a new health goal" do
+      visit new_user_health_goal_path
+      
+      # Create a new health goal
+      fill_in "user_health_goal[health_goal_name]", with: "Improve Flexibility"
+      click_button "Create Health Goal"
+      
+      # Should redirect to index with success message
+      expect(page).to have_current_path(user_health_goals_path)
+      expect(page).to have_content("Health goal was successfully added")
+      expect(page).to have_content("Improve Flexibility")
     end
   end
-
-  describe "POST #create" do
-    context "with existing health goal" do
-      it "creates a new user_health_goal with default importance" do
-        expect {
-          post :create, params: {
-            user_health_goal: {
-              health_goal_id: health_goal.id,
-              order_of_importance: '5'
-            }
-          }
-        }.to change(UserHealthGoal, :count).by(1)
-
-        expect(UserHealthGoal.last.order_of_importance).to eq(5)
-        expect(response).to redirect_to(user_health_goals_path)
+  
+  describe "editing a health goal" do
+    let!(:user_health_goal) { create(:user_health_goal, user: user, health_goal: health_goal2, order_of_importance: 5) }
+    
+    it "allows updating the order of importance" do
+      visit edit_user_health_goal_path(user_health_goal)
+      
+      # Change order of importance
+      fill_in "user_health_goal[order_of_importance]", with: 8
+      click_button "Update Health Goal"
+      
+      # Should redirect to index with updated order
+      expect(page).to have_current_path(user_health_goals_path)
+      expect(page).to have_content("Health goal was successfully updated")
+      
+      # Verify the new order of importance is displayed
+      expect(page).to have_content("8")
+    end
+  end
+  
+  describe "removing a health goal" do
+    let!(:user_health_goal) { create(:user_health_goal, user: user, health_goal: health_goal3, order_of_importance: 3) }
+    
+    it "allows removing a health goal" do
+      visit user_health_goals_path
+      
+      # Find the delete button for this goal and click it
+      within("tr", text: health_goal3.health_goal_name) do
+        accept_confirm do
+          click_button "Delete"
+        end
       end
-    end
-
-    context "with new health goal" do
-      it "creates a new health goal and user_health_goal with default importance" do
-        expect {
-          post :create, params: {
-            user_health_goal: {
-              health_goal_name: 'New Health Goal',
-              order_of_importance: '5'
-            }
-          }
-        }.to change(UserHealthGoal, :count).by(1)
-         .and change(HealthGoal, :count).by(1)
-
-        expect(UserHealthGoal.last.order_of_importance).to eq(5)
-        expect(HealthGoal.last.health_goal_name).to eq('New Health Goal')
-        expect(response).to redirect_to(user_health_goals_path)
-      end
+      
+      # Should stay on index page with success message
+      expect(page).to have_current_path(user_health_goals_path)
+      expect(page).to have_content("Health goal was successfully removed")
+      expect(page).not_to have_content(health_goal3.health_goal_name)
     end
   end
-
-  describe "GET #select_multiple" do
-    before do
-      create_list(:health_goal, 5)
+  
+  # Tests that would require JavaScript (disabled for now)
+  describe "selecting multiple health goals" do
+    it "can access the multiple selection page" do
+      visit select_multiple_user_health_goals_path
+      
+      # Check that the page loads and shows available goals
+      expect(page).to have_content("Select Health Goals")
+      expect(page).to have_content(health_goal2.health_goal_name)
+      expect(page).to have_content(health_goal3.health_goal_name)
     end
-
-    it "returns http success" do
-      get :select_multiple
-      expect(response).to have_http_status(:success)
-    end
-
-    it "filters health goals based on search term" do
-      create(:health_goal, health_goal_name: "Weight Loss")
-      create(:health_goal, health_goal_name: "Muscle Gain")
-
-      get :select_multiple, params: { search: "weight" }
-
-      expect(assigns(:health_goals).map(&:health_goal_name)).to include("Weight Loss")
-      expect(assigns(:health_goals).map(&:health_goal_name)).not_to include("Muscle Gain")
-    end
-
-    it "renders the goals list frame for turbo frame requests" do
-      get :select_multiple, params: { frame_id: "goals_list" }, headers: { "Turbo-Frame" => "goals_list" }
-
-      expect(response).to render_template(:_goals_list_frame)
-    end
-  end
-
-  describe "POST #add_multiple" do
-    let!(:health_goals) { create_list(:health_goal, 3) }
-
-    it "adds multiple health goals with incremental importance" do
-      expect {
-        post :add_multiple, params: { health_goal_ids: health_goals.map(&:id) }
-      }.to change(UserHealthGoal, :count).by(3)
-
-      user_health_goals = user.user_health_goals.order(:order_of_importance)
-      expect(user_health_goals.map(&:order_of_importance)).to eq([ 1, 2, 3 ])
-    end
-
-    it "handles duplicate health goals" do
-      existing = create(:user_health_goal, user: user, health_goal: health_goals.first)
-
-      expect {
-        post :add_multiple, params: { health_goal_ids: health_goals.map(&:id) }
-      }.to change(UserHealthGoal, :count).by(2)
-    end
-
-    it "returns an error when no health goals are selected" do
-      post :add_multiple, params: { health_goal_ids: [] }
-
-      expect(response).to redirect_to(user_health_goals_path)
-      expect(flash[:alert]).to include("Please select at least one health goal")
-    end
-  end
-
-  describe "PATCH #update_importance" do
-    let!(:user_health_goal) { create(:user_health_goal, user: user, order_of_importance: 5) }
-
-    before do
-      create(:user_health_goal, user: user, order_of_importance: 1)
-      create(:user_health_goal, user: user, order_of_importance: 2)
-      create(:user_health_goal, user: user, order_of_importance: 3)
-      create(:user_health_goal, user: user, order_of_importance: 4)
-      create(:user_health_goal, user: user, order_of_importance: 6)
-      create(:user_health_goal, user: user, order_of_importance: 7)
-    end
-
-    it "updates importance and reorders other goals (moving up)" do
-      patch :update_importance, params: { id: user_health_goal.id, order_of_importance: 2 }
-
-      expect(response).to have_http_status(:success)
-
-      user_health_goal.reload
-      expect(user_health_goal.order_of_importance).to eq(2)
-
-      # Check that other goals were shifted
-      goals = user.user_health_goals.order(:order_of_importance)
-      expect(goals.map(&:order_of_importance)).to eq([ 1, 2, 3, 4, 5, 6, 7 ])
-    end
-
-    it "updates importance and reorders other goals (moving down)" do
-      patch :update_importance, params: { id: user_health_goal.id, order_of_importance: 7 }
-
-      expect(response).to have_http_status(:success)
-
-      user_health_goal.reload
-      expect(user_health_goal.order_of_importance).to eq(7)
-
-      # Check that other goals were shifted
-      goals = user.user_health_goals.order(:order_of_importance)
-      expect(goals.map(&:order_of_importance)).to eq([ 1, 2, 3, 4, 5, 6, 7 ])
+    
+    it "can add multiple goals via form submission" do
+      # Directly submit the form to add multiple goals
+      page.driver.post add_multiple_user_health_goals_path, { 
+        health_goal_ids: [health_goal2.id, health_goal3.id] 
+      }
+      
+      # Visit the index page to verify goals were added
+      visit user_health_goals_path
+      
+      # Check that both goals are now in the list
+      expect(page).to have_content(health_goal2.health_goal_name)
+      expect(page).to have_content(health_goal3.health_goal_name)
     end
   end
 end

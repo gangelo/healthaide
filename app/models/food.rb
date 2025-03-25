@@ -37,10 +37,6 @@ class Food < ApplicationRecord
     find_by(food_name: normalize_name(food_name))
   end
 
-  def self.normalize_name(food_name)
-    food_name&.downcase&.capitalize
-  end
-
   def includes_qualifier?(qualifier)
     food_qualifiers.include?(qualifier)
   end
@@ -97,7 +93,7 @@ class Food < ApplicationRecord
   end
 
   def before_save_food_name
-    self.food_name = self.class.normalize_name(self.food_name)
+    self.food_name = normalize_name(self.food_name)
   end
 
   def cleanup_user_foods
