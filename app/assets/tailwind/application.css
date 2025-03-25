@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./badges.css";
 @import "./base.css";
+@import "./buttons.css";
 
 @layer components {
   .health {
