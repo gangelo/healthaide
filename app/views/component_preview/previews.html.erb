@@ -1,0 +1,17 @@
+<h1>ViewComponent Preview</h1>
+<h2>HealthGoals::BadgeComponent</h2>
+<%= render(HealthGoals::BadgeComponent.new(name: "Health goal (size :full)", size: :full)) %>
+<%= render(HealthGoals::BadgeComponent.new(name: "Health goal (size :md)", size: :md, css_class: "ml-2")) %>
+<%= render(HealthGoals::BadgeComponent.new(name: "Health goal (size :sm)", size: :sm, css_class: "ml-2")) %>
+
+<p>
+<h2>HealthConditions::BadgeComponent</h2>
+<%= render(HealthConditions::BadgeComponent.new(name: "Health condition (size :full)", size: :full)) %>
+<%= render(HealthConditions::BadgeComponent.new(name: "Health condition (size :md)", size: :md, css_class: "ml-2")) %>
+<%= render(HealthConditions::BadgeComponent.new(name: "Health condition (size :sm)", size: :sm, css_class: "ml-2")) %>
+
+<p>
+<h2>FoodQualifiers::BadgeComponent</h2>
+<%= render(FoodQualifiers::BadgeComponent.new(name: "Food qualifier (size :full)", size: :full)) %>
+<%= render(FoodQualifiers::BadgeComponent.new(name: "Food qualifier (size :md)", size: :md, css_class: "ml-2")) %>
+<%= render(FoodQualifiers::BadgeComponent.new(name: "Food qualifier (size :sm)", size: :sm, css_class: "ml-2")) %>

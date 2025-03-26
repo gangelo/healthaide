@@ -1,4 +1,8 @@
 /* Base styles for common elements */
+p {
+  @apply mt-4;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
