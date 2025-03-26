@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_16_015445) do
+ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
   create_table "food_food_qualifiers", force: :cascade do |t|
     t.integer "food_id", null: false
     t.integer "food_qualifier_id", null: false
@@ -81,10 +81,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_16_015445) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "order_of_importance", default: 1, null: false
     t.index ["deleted_at"], name: "index_user_health_conditions_on_deleted_at"
     t.index ["health_condition_id"], name: "index_user_health_conditions_on_health_condition_id"
-    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
     t.index ["user_id"], name: "index_user_health_conditions_on_user_id"
   end
 

@@ -99,20 +99,16 @@ class UserHealthConditionsController < ApplicationController
     end
 
     begin
-      # Get maximum order of importance
-      max_order = current_user.user_health_conditions.maximum(:order_of_importance) || 0
-
       # Get existing health_condition_ids to avoid duplicates
       existing_health_condition_ids = current_user.user_health_conditions.pluck(:health_condition_id)
       new_health_condition_ids = health_condition_ids.map(&:to_i) - existing_health_condition_ids
 
       # Batch create records for efficiency
       if new_health_condition_ids.any?
-        records_to_insert = new_health_condition_ids.each_with_index.map do |health_condition_id, index|
+        records_to_insert = new_health_condition_ids.map do |health_condition_id|
           {
             user_id: current_user.id,
             health_condition_id: health_condition_id,
-            order_of_importance: max_order + index + 1,
             created_at: Time.current,
             updated_at: Time.current
           }
