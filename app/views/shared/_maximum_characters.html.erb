@@ -1,0 +1,5 @@
+<%
+text_css_class = text_css_class || "text-sm"
+formatting_message = "#{model.model_name.human} will be saved in title case."
+%>
+<p class="<%= text_css_class %> text-gray-500 mt-1">Maximum <%= max_characters %> characters. <%= formatting_message %></p>

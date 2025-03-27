@@ -7,15 +7,13 @@
       data: { action: "click->health-goal-form#showModal" }
     } %>
   </div>
-
   <%= form_with(model: user_health_goal, class: "contents") do |form| %>
     <%= render partial: "shared/active_record_errors", locals: { resource: user_health_goal } %>
-
     <div class="my-5">
       <%= form.label :health_goal_name, "New Health Goal Name" %>
       <%= form.text_field :health_goal_name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+      <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: HealthGoal } %>
     </div>
-
     <div class="my-5">
       <%= form.label :order_of_importance %>
       <%= form.number_field :order_of_importance,
@@ -23,7 +21,6 @@
                           class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
       <p class="text-sm text-gray-500 mt-1">Rate from 1 (least important) to 10 (most important)</p>
     </div>
-
     <div class="inline">
       <%= render partial: "components/buttons/button", locals: {
         type: :submit,
@@ -32,6 +29,5 @@
       } %>
     </div>
   <% end %>
-
   <%= render "select_health_goal_modal" %>
 </div>

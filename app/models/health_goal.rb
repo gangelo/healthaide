@@ -4,7 +4,10 @@ class HealthGoal < ApplicationRecord
   has_many :user_health_goals, dependent: :destroy
   has_many :users, through: :user_health_goals
 
-  validates :health_goal_name, presence: true, uniqueness: { case_sensitive: false }
+  validates :health_goal_name,
+            presence: true,
+            length: { minimum: 2, maximum: 64 },
+            uniqueness: { case_sensitive: false }
 
   scope :ordered, -> { order(:health_goal_name) }
 
