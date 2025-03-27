@@ -9,9 +9,7 @@
               data: { action: "change->modal#checkboxChanged" } %>
           <%= label_tag "health_goal_ids_#{goal.id}", nil,
               class: "w-full ml-3 flex items-center cursor-pointer" do %>
-            <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-0.5 text-sm font-medium text-green-700 ring-1 ring-green-700/10 ring-inset">
-              <%= goal.health_goal_name %>
-            </span>
+            <%= render HealthGoals::BadgeComponent.new(name: goal.health_goal_name, size: :sm) %>
           <% end %>
         </div>
       </div>

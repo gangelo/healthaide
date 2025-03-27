@@ -3,7 +3,6 @@
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
   <% end %>
-  
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Foods</h2>
@@ -15,17 +14,15 @@
       <% end %>
     </div>
   </div>
-  
   <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
     <% if @foods.any? %>
       <div class="divide-y divide-gray-100">
         <!-- Table header -->
         <div class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
-          <div class="text-sm font-medium">Name</div>
+          <div class="text-sm font-medium">Food Name</div>
           <div class="text-sm font-medium">Qualifiers</div>
           <div class="text-sm font-medium text-right">Actions</div>
         </div>
-        
         <!-- Table rows -->
         <ul role="list">
           <% @foods.each_with_index do |food, index| %>
@@ -38,34 +35,25 @@
                   </span>
                 <% end %>
               </div>
-              
               <div>
                 <% if food.food_qualifiers.any? %>
                   <div class="flex flex-wrap gap-1">
-                    <% 
-                      # Create different colors for qualifiers based on their first letter
-                      colors = ['badge', 'badge-green', 'badge-amber', 'badge-red', 'badge-purple']
-                      food.food_qualifiers.each_with_index do |qualifier, idx| 
-                        color_class = colors[idx % colors.length]
-                    %>
-                      <span class="<%= color_class %>"><%= qualifier.qualifier_name %></span>
+                    <% food.food_qualifiers.each do |food_qualifier| %>
+                      <span><%= render(FoodQualifiers::BadgeComponent.new(name: food_qualifier.qualifier_name, size: :md)) %></span>
                     <% end %>
                   </div>
                 <% else %>
                   <span class="text-sm text-gray-500">&nbsp;</span>
                 <% end %>
               </div>
-              
               <div class="text-right">
                 <div class="flex justify-end gap-2">
                   <%= link_to "Show", food_path(food), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
-                  
                   <%= link_to "Edit", edit_food_path(food), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
-                  
                   <% if food.kept? %>
-                    <%= button_to "Delete", food_path(food), 
-                        method: :delete, 
-                        class: "rounded-lg py-2 px-4 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", 
+                    <%= button_to "Delete", food_path(food),
+                        method: :delete,
+                        class: "rounded-lg py-2 px-4 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
                         form: { data: { turbo_confirm: "Are you sure? This will remove the food from all users who have added it." } } %>
                   <% else %>
                     <%= button_to "Restore", restore_food_path(food),
@@ -88,13 +76,12 @@
         <div class="mt-6">
           <%= link_to new_food_path,
               class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
-                <%= render partial: "shared/icons/plus_sign" %>
-                Add New Food
-              <% end %>
+            <%= render partial: "shared/icons/plus_sign" %>
+            Add New Food
+          <% end %>
         </div>
       </div>
     <% end %>
   </div>
-  
   <%= turbo_frame_tag "modal" %>
 </div>

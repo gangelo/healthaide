@@ -120,9 +120,9 @@ RSpec.describe Food do
 
     describe '.available_for' do
       let(:user) { create(:user) }
-      let!(:food1) { create(:food) }
-      let!(:food2) { create(:food) }
-      let!(:food3) { create(:food, :soft_deleted) }
+      let!(:food1) { create(:food, food_name: "Unique Food 1") }
+      let!(:food2) { create(:food, food_name: "Unique Food 2") }
+      let!(:food3) { create(:food, food_name: "Unique Food 3").tap(&:soft_delete) }
       let!(:user_food) { create(:user_food, user: user, food: food1) }
 
       it 'returns available foods for the user' do

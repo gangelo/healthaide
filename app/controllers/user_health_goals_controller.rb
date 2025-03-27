@@ -19,11 +19,18 @@ class UserHealthGoalsController < ApplicationController
   def create
     if health_goal_params[:health_goal_name].present?
       # Create new health goal
-      @health_goal = HealthGoal.create!(health_goal_name: health_goal_params[:health_goal_name])
-      @user_health_goal = current_user.user_health_goals.build(
-        health_goal: @health_goal,
-        order_of_importance: health_goal_params[:order_of_importance]
-      )
+      begin
+        @health_goal = HealthGoal.create!(health_goal_name: health_goal_params[:health_goal_name])
+        @user_health_goal = current_user.user_health_goals.build(
+          health_goal: @health_goal,
+          order_of_importance: health_goal_params[:order_of_importance]
+        )
+      rescue ActiveRecord::RecordInvalid => e
+        @user_health_goal = current_user.user_health_goals.build
+        @user_health_goal.errors.add(:base, e.record.errors.full_messages.to_sentence)
+        render :new, status: :unprocessable_entity
+        return
+      end
     else
       # Use existing health goal
       @user_health_goal = current_user.user_health_goals.build(

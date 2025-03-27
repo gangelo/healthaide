@@ -16,7 +16,8 @@ RSpec.describe SearchService do
       end
 
       it 'excludes health conditions the user already has' do
-        create(:user_health_condition, user: user, health_condition: health_condition1)
+        # Create without order_of_importance which has been removed
+        UserHealthCondition.create!(user: user, health_condition: health_condition1)
 
         result = described_class.search_health_conditions(user, nil)
         expect(result).not_to include(health_condition1)
