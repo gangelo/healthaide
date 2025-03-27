@@ -17,5 +17,10 @@
 </p>
 <p>
   <h2>Icons::CloseComponent</h2>
-  <%= render(Icons::CloseComponent.new) %>
+  <% %w[red green amber blue].each do |color| %>
+    <p class="text-<%= color %>-400 hover:text-<%= color %>-600">
+      Wrapped in a div specifying text and hover colors (<%= color %>)
+      <%= render(Icons::CloseComponent.new) %>
+    </p>
+  <% end %>
 </p>
