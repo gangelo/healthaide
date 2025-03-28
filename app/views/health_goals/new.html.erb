@@ -2,5 +2,5 @@
   <%= render partial: "shared/active_record_errors", locals: { resource: @health_goal } %>
   <h1>New health goal</h1>
   <%= render "form", health_goal: @health_goal %>
-  <%= link_to "Back to health goals", health_goals_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= link_to "Back to health goals", health_goals_path, class: "back-button" %>
 </div>

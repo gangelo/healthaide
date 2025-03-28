@@ -1,11 +1,15 @@
 .choose-multiple-button {
-  @apply w-full block w-full rounded-lg py-3 px-5 bg-blue-600 text-white text-center font-medium cursor-pointer hover:bg-blue-500 transition-colors
+  @apply w-full block w-full rounded-lg py-3 px-5 bg-blue-600 text-white text-center font-medium cursor-pointer hover:bg-blue-500 transition-colors;
 }
 
 .add-existing-button {
-  @apply w-full rounded-lg py-3 px-5 bg-green-600 text-white font-medium cursor-pointer hover:bg-green-500 transition-colors
+  @apply w-full rounded-lg py-3 px-5 bg-green-600 text-white font-medium cursor-pointer hover:bg-green-500 transition-colors;
 }
 
 .create-and-add-new-button {
-  @apply w-full rounded-lg py-3 px-5 bg-amber-600 text-white font-medium cursor-pointer hover:bg-amber-500 transition-colors
+  @apply w-full rounded-lg py-3 px-5 bg-amber-600 text-white font-medium cursor-pointer hover:bg-amber-500 transition-colors;
+}
+
+.back-button {
+  @apply ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium;
 }
