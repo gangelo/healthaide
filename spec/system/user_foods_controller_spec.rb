@@ -20,7 +20,7 @@ RSpec.describe "UserFoods", type: :system do
 
   describe "adding a new food" do
     let!(:available_food) { create(:food) }
-    let!(:soft_deleted_food) { create(:food, :soft_deleted) }
+    let!(:soft_deleted_food) { create(:food, :soft_deleted, food_name: "Deleted Test Food") }
 
     it "shows add food options" do
       visit new_user_food_path
@@ -46,7 +46,8 @@ RSpec.describe "UserFoods", type: :system do
         visit new_user_food_path
 
         options = page.all("select#user_food_food_id option").map(&:text)
-        expect(options).to include(available_food.food_name)
+        # Use display_name_with_qualifiers instead of just food_name
+        expect(options).to include(available_food.display_name_with_qualifiers)
         expect(options).not_to include(soft_deleted_food.food_name)
       end
     end

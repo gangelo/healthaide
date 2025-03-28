@@ -55,7 +55,7 @@ class Food < ApplicationRecord
   def food_qualifiers_unique_signature
     return "" if food_qualifiers.empty?
 
-    signature = food_qualifiers.map do |food_qualifier, index|
+    signature = food_qualifiers.map do |food_qualifier|
       "\"#{food_qualifier.qualifier_name.downcase}\""
     end.sort.join(UNIQUE_SIGNATURE_SEPARATOR)
 

@@ -14,7 +14,7 @@ class UserFoodsController < ApplicationController
   # GET /user_foods/new
   def new
     @user_food = current_user.user_foods.new
-    @foods = Food.available_for(current_user)
+    @foods = Food.available_for(current_user, include_qualifiers: true)
   end
 
   # POST /user_foods or /user_foods.json
