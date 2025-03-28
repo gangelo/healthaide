@@ -13,7 +13,7 @@ RSpec.describe UserHealthGoal, type: :model do
       should validate_numericality_of(:order_of_importance)
         .only_integer
         .is_greater_than_or_equal_to(1)
-        .is_less_than_or_equal_to(10)
+        .is_less_than_or_equal_to(25)
     end
 
     it 'validates uniqueness of health_goal_id scoped to user_id' do

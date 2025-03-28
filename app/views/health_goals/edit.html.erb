@@ -1,21 +1,9 @@
 <div class="mx-auto md:w-2/3 w-full">
+  <%= render partial: "shared/active_record_errors", locals: { resource: @health_goal } %>
   <h1 class="font-bold text-4xl">Editing health goal</h1>
-
   <%= render "form", health_goal: @health_goal %>
-
-  <div class="flex gap-2 mt-4">
-    <%= render partial: "components/buttons/button", locals: {
-      type: :link,
-      variant: :secondary,
-      text: "Show",
-      path: health_goal_path(@health_goal)
-    } %>
-
-    <%= render partial: "components/buttons/button", locals: {
-      type: :link,
-      variant: :secondary,
-      text: "Back",
-      path: health_goals_path
-    } %>
+  <div class="inline-block ml-2">
+    <%= link_to "Show this health goal", @health_goal, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Back to health goals", health_goals_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>

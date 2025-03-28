@@ -77,7 +77,7 @@ RSpec.describe "UserHealthGoals", type: :system do
       # Health goal name should be displayed but not editable
       expect(page).to have_content(health_goal2.health_goal_name)
       expect(page).not_to have_field("user_health_goal[health_goal_name]")
-      
+
       # Order of importance should be editable
       select "10", from: "user_health_goal[order_of_importance]"
       click_button "Update health goal"
@@ -85,7 +85,7 @@ RSpec.describe "UserHealthGoals", type: :system do
       # Should redirect to index with success message
       expect(page).to have_current_path(user_health_goals_path)
       expect(page).to have_content("Health goal was successfully updated")
-      
+
       # Check the updated order of importance
       user_health_goal.reload
       expect(user_health_goal.order_of_importance).to eq(10)
