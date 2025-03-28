@@ -3,10 +3,8 @@
     <% if notice.present? %>
       <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
     <% end %>
-
     <%= render @health_condition %>
-
-    <div class="inline-block ml-2">
+    <div class="inline-block">
       <%= link_to "Edit this health condition", edit_health_condition_path(@health_condition), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
       <%= link_to "Back to health conditions", health_conditions_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
       <%= button_to "Delete this health condition", health_condition_path(@health_condition), method: :delete, class: "ml-2 rounded-lg py-3 px-5 bg-red-600 text-white font-medium", form_class: "inline-block" %>

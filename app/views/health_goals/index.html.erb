@@ -3,10 +3,9 @@
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
   <% end %>
-
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
-      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Health Goals</h2>
+      <h2>Health Goals</h2>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
       <%= link_to new_health_goal_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
@@ -15,7 +14,6 @@
       <% end %>
     </div>
   </div>
-
   <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
     <% if @health_goals.any? %>
       <div class="divide-y divide-gray-100">
@@ -33,9 +31,7 @@
               </div>
               <div class="text-right flex justify-end gap-2">
                 <%= link_to "Show", health_goal_path(health_goal), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
-
                 <%= link_to "Edit", edit_health_goal_path(health_goal), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
-
                 <%= button_to "Delete", health_goal_path(health_goal),
                     method: :delete,
                     class: "rounded-lg py-2 px-4 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
@@ -55,13 +51,12 @@
         <div class="mt-6">
           <%= link_to new_health_goal_path,
               class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
-                <%= render partial: "shared/icons/plus_sign" %>
-                Add New Health Goal
-              <% end %>
+            <%= render partial: "shared/icons/plus_sign" %>
+            Add New Health Goal
+          <% end %>
         </div>
       </div>
     <% end %>
   </div>
-
   <%= turbo_frame_tag "modal" %>
 </div>
