@@ -1,6 +1,6 @@
 <div id="<%= dom_id health_goal %>">
   <p class="my-5">
-    <strong class="block font-medium mb-1">Health goal name:</strong>
-    <%= render HealthGoals::BadgeComponent.new(name: health_goal.health_goal_name, size: :md) %>
+    <h1>Health goal</h1>
+    <%= health_goal.health_goal_name %>
   </p>
 </div>
