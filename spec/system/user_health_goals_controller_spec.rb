@@ -62,13 +62,33 @@ RSpec.describe "UserHealthGoals", type: :system do
   end
 
   describe "editing a health goal" do
-    let!(:user_health_goal) { create(:user_health_goal, user: user, health_goal: health_goal2) }
+    let!(:user_health_goal) { create(:user_health_goal, user: user, health_goal: health_goal2, order_of_importance: 5) }
 
     it "allows viewing a health goal" do
       visit user_health_goals_path
 
       # Just check we can navigate to the health goal page
       expect(page).to have_content(health_goal2.health_goal_name)
+    end
+
+    it "allows updating only the order of importance" do
+      visit edit_user_health_goal_path(user_health_goal)
+
+      # Health goal name should be displayed but not editable
+      expect(page).to have_content(health_goal2.health_goal_name)
+      expect(page).not_to have_field("user_health_goal[health_goal_name]")
+      
+      # Order of importance should be editable
+      select "10", from: "user_health_goal[order_of_importance]"
+      click_button "Update health goal"
+
+      # Should redirect to index with success message
+      expect(page).to have_current_path(user_health_goals_path)
+      expect(page).to have_content("Health goal was successfully updated")
+      
+      # Check the updated order of importance
+      user_health_goal.reload
+      expect(user_health_goal.order_of_importance).to eq(10)
     end
   end
 

@@ -1,6 +1,6 @@
 class UserHealthConditionsController < ApplicationController
-  before_action :set_user_health_condition, only: %i[show edit update destroy]
   before_action :authenticate_user!
+  before_action :set_user_health_condition, only: %i[show edit update destroy]
 
   def index
     @user_health_conditions = current_user.user_health_conditions.ordered

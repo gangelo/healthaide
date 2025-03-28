@@ -1,33 +1,21 @@
-<div data-controller="health-goal-form">
-  <div class="flex justify-between items-center mb-6">
-    <%= render partial: "components/buttons/button", locals: {
-      type: :button,
-      variant: :secondary,
-      text: "Select Existing Goal",
-      data: { action: "click->health-goal-form#showModal" }
-    } %>
+<%= form_with(model: user_health_goal, class: "contents") do |form| %>
+  <%= render partial: "shared/active_record_errors", locals: { resource: user_health_goal } %>
+  <div class="my-5">
+    <%= form.label :health_goal_name %>
+    <div class="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full bg-gray-100">
+      <%= user_health_goal.health_goal.health_goal_name %>
+    </div>
+    <%= form.hidden_field :health_goal_id, value: user_health_goal.health_goal_id %>
   </div>
-  <%= form_with(model: user_health_goal, class: "contents") do |form| %>
-    <%= render partial: "shared/active_record_errors", locals: { resource: user_health_goal } %>
-    <div class="my-5">
-      <%= form.label :health_goal_name, "New Health Goal Name" %>
-      <%= form.text_field :health_goal_name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-      <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: HealthGoal } %>
-    </div>
-    <div class="my-5">
-      <%= form.label :order_of_importance %>
-      <%= form.number_field :order_of_importance,
-                          in: 1..10,
-                          class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
-      <p class="text-sm text-gray-500 mt-1">Rate from 1 (least important) to 10 (most important)</p>
-    </div>
-    <div class="inline">
-      <%= render partial: "components/buttons/button", locals: {
-        type: :submit,
-        variant: :primary,
-        text: "Create health goal"
-      } %>
-    </div>
-  <% end %>
-  <%= render "select_health_goal_modal" %>
-</div>
+  <div class="my-5">
+    <%= form.label :order_of_importance %>
+    <%= form.select :order_of_importance,
+                  (1..25).to_a,
+                  { selected: user_health_goal.order_of_importance },
+                  { class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" } %>
+    <p class="text-sm text-gray-500 mt-1">1 is highest importance, 25 is lowest</p>
+  </div>
+  <div class="inline">
+    <%= form.submit "Update health goal", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

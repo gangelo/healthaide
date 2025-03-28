@@ -1,6 +1,6 @@
 class UserHealthGoalsController < ApplicationController
-  before_action :set_user_health_goal, only: [ :show, :edit, :update, :destroy ]
   before_action :authenticate_user!
+  before_action :set_user_health_goal, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @user_health_goals = current_user.user_health_goals.ordered_by_importance
@@ -47,7 +47,8 @@ class UserHealthGoalsController < ApplicationController
   end
 
   def update
-    if @user_health_goal.update(health_goal_params)
+    # Only allow updating order_of_importance
+    if @user_health_goal.update(order_of_importance: health_goal_params[:order_of_importance])
       redirect_to user_health_goals_path, notice: "Health goal was successfully updated."
     else
       render :edit, status: :unprocessable_entity
