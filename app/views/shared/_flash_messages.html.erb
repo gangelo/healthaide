@@ -1,0 +1,3 @@
+<% all_flash_messages.each do |message_data| %>
+  <%= flash_message_tag(message_data[:type], message_data[:message]) %>
+<% end %>

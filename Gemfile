@@ -61,6 +61,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "ffaker"
   gem "pry-byebug"
+  gem "pry-rails"
   gem "rubocop-rails"
 end
 
