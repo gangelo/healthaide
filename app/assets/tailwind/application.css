@@ -2,6 +2,7 @@
 @import "./badges.css";
 @import "./base.css";
 @import "./buttons.css";
+@import "./flash.css";
 @import "./headers.css";
 
 @layer components {

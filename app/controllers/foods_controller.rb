@@ -107,7 +107,7 @@ class FoodsController < ApplicationController
         render turbo_stream: [
           turbo_stream.replace("qualifier-list", partial: "foods/qualifier_list", locals: { food: @food }),
           turbo_stream.replace("add_existing_qualifier", partial: "foods/add_existing_qualifier_form", locals: { food: @food, available_qualifiers: @available_qualifiers }),
-          turbo_stream.replace("flash", partial: "shared/flash")
+          turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
         ]
       end
       format.html { redirect_to @food }
@@ -134,7 +134,7 @@ class FoodsController < ApplicationController
         render turbo_stream: [
           turbo_stream.replace("qualifier-list", partial: "foods/qualifier_list", locals: { food: @food }),
           turbo_stream.replace("add_existing_qualifier", partial: "foods/add_existing_qualifier_form", locals: { food: @food, available_qualifiers: @available_qualifiers }),
-          turbo_stream.replace("flash", partial: "shared/flash")
+          turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
         ]
       end
       format.html { redirect_to @food }

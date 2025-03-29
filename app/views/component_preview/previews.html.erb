@@ -24,3 +24,15 @@
     </p>
   <% end %>
 </p>
+<p>
+  <%
+  %i[alert error info success notice success warning unknown].each do |type|
+    flash[type] = "flash[:#{type}] message!"
+  end
+  %>
+  <div id="flash-messages">
+    <% all_flash_messages.each do |message_data| %>
+      <%= flash_message_tag(message_data[:type], message_data[:message]) %>
+    <% end %>
+  </div>
+</p>

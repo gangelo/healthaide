@@ -35,8 +35,6 @@ class UserFoodsController < ApplicationController
     # From Create & Add New Food
     @user_food.food = if new_food_name.present?
       food = Food.find_by_food_name_normalized(new_food_name)
-      # TODO: If the food was soft-deleted globally, send "This food is unavailable" message.
-      # TODO: If the food is NOT soft-deleted globally, but is soft-deleted for the user, restore it.
       if food&.discarded?
         food.restore
         flash[:notice] = "Existing food '#{new_food_name}' was restored."
