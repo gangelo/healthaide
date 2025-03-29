@@ -2,7 +2,7 @@
   <h1>Edit health condition</h1>
   <%= render "form", user_health_condition: @user_health_condition %>
   <div class="inline-block ml-2">
-    <%= link_to "Show this health condition", @user_health_condition, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to my health conditions", user_health_conditions_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Show this health condition", @user_health_condition, class: "show-button" %>
+    <%= link_to "Back to my health conditions", user_health_conditions_path, class: "back-button" %>
   </div>
 </div>

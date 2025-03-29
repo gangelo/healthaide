@@ -5,9 +5,9 @@
     <% end %>
     <%= render @health_goal %>
     <div class="inline-block">
-      <%= link_to "Edit this health goal",  edit_health_goal_path(@health_goal), class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-      <%= link_to "Back to health goals", health_goals_path, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-      <%= button_to "Delete this health goal", health_goals_path(@health_goal), method: :delete, class: "ml-2 rounded-lg py-3 px-5 bg-red-600 text-white font-medium", form_class: "inline-block" %>
+      <%= link_to "Edit this health goal",  edit_health_goal_path(@health_goal), class: "edit-button" %>
+      <%= link_to "Back to health goals", health_goals_path, class: "back-button" %>
+      <%= button_to "Delete this health goal", health_goals_path(@health_goal), method: :delete, class: "delete-button", form_class: "inline-block" %>
     </div>
   </div>
 </div>

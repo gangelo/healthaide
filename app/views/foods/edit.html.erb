@@ -6,10 +6,8 @@
       <p class="mt-1 text-sm text-gray-500 max-w-3xl">Update food details and qualifiers.</p>
     </div>
     <div class="mt-4 flex gap-2 md:ml-4 md:mt-0">
-      <%= link_to "View Food", @food,
-          class: "inline-flex items-center rounded-md bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100" %>
-      <%= link_to "Back to Foods", foods_path,
-          class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+      <%= link_to "Show this food", @food, class: "back-button-sm" %>
+      <%= link_to "Back to foods", foods_path, class: "back-button-sm" %>
     </div>
   </div>
   <%= render "form", food: @food %>
