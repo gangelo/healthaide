@@ -4,9 +4,9 @@
        data-controller="dismissible"
        data-turbo-cache="false">
     <div class="flex justify-between items-start">
-      <h2 class="text-sm font-semibold">
+      <div class="active-record-errors-header">
         The following <%= "error".pluralize(resource.errors.count) %> prohibited your action from being carried out
-      </h2>
+      </div>
       <button type="button"
               class="ml-2 text-red-400 hover:text-red-600 focus:outline-none"
               data-action="dismissible#close">
@@ -14,7 +14,7 @@
         <span class="sr-only">Dismiss</span>
       </button>
     </div>
-    <ul class="mt-2 text-sm list-disc pl-5">
+    <ul class="mt-2 list-disc pl-5">
       <% resource.errors.each do |error| %>
         <li><%= error.full_message %></li>
       <% end %>

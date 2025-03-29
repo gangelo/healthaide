@@ -1,0 +1,5 @@
+@layer components {
+  .active-record-errors-header {
+    @apply text-large font-bold;
+  }
+}
