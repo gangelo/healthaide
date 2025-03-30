@@ -171,14 +171,14 @@ class UserFoodsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.update(
-              "user_foods_list",
-              partial: "user_foods_list",
-              locals: { user_foods: current_user.user_foods.includes(:food).ordered }
-            ),
-            turbo_stream.update(
               "flash_messages",
               partial: "shared/flash_messages",
               locals: { notice: message }
+            ),
+            turbo_stream.update(
+              "user_foods_list",
+              partial: "user_foods_list",
+              locals: { user_foods: current_user.user_foods.includes(:food).ordered }
             ),
             turbo_stream.replace(
               "modal",
