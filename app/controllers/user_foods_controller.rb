@@ -128,16 +128,17 @@ class UserFoodsController < ApplicationController
     food_ids = params[:food_ids]&.reject(&:blank?)
 
     if food_ids.blank?
+      error_message = "Please select at least one food."
       respond_to do |format|
         format.turbo_stream do
+          flash[:alert] = error_message
           render turbo_stream: turbo_stream.update(
             "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { alert: "Please select at least one food." }
+            partial: "shared/flash_messages"
           )
         end
         format.html do
-          redirect_to user_foods_path, alert: "Please select at least one food."
+          redirect_to user_foods_path, alert: error_message
         end
       end
       return
@@ -169,11 +170,13 @@ class UserFoodsController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream do
+          # Set flash in the session so it's available
+          flash[:notice] = message
+
           render turbo_stream: [
             turbo_stream.update(
               "flash_messages",
-              partial: "shared/flash_messages",
-              locals: { notice: message }
+              partial: "shared/flash_messages"
             ),
             turbo_stream.update(
               "user_foods_list",
@@ -191,16 +194,17 @@ class UserFoodsController < ApplicationController
         end
       end
     rescue => e
+      error_message = "Error adding foods: #{e.message}"
       respond_to do |format|
         format.turbo_stream do
+          flash[:alert] = error_message
           render turbo_stream: turbo_stream.update(
             "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { alert: "Error adding foods: #{e.message}" }
+            partial: "shared/flash_messages"
           )
         end
         format.html do
-          redirect_to user_foods_path, alert: "Error adding foods: #{e.message}"
+          redirect_to user_foods_path, alert: error_message
         end
       end
     end

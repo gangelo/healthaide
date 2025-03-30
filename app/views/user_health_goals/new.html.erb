@@ -24,11 +24,13 @@
         <p class="mt-2 text-sm text-gray-500">Select multiple health goals from our database to add to your list at once.</p>
       </div>
       <div class="mt-auto pt-6">
-        <%= button_to "Select Multiple Health Goals",
+        <%= link_to "Select Multiple Health Goals",
             select_multiple_user_health_goals_path,
-            method: :get,
-            class: "choose-multiple-button w-full rounded-md bg-blue-600 py-2 px-4 text-white font-medium hover:bg-blue-500",
-            data: { turbo_frame: "modal" } %>
+            class: "choose-multiple-button",
+            data: {
+              turbo_frame: "modal",
+              turbo_prefetch: false
+            } %>
       </div>
     </div>
     <!-- Select Existing Health Goal Card -->

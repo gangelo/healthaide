@@ -1,6 +1,5 @@
 <%= form_with(model: user_health_goal, class: "contents") do |form| %>
   <div class="mb-4">
-    <%= form.label :health_goal_id, "Select an existing health goal", class: "block text-sm font-medium text-gray-700 mb-1" %>
     <%= form.collection_select :health_goal_id,
         HealthGoal.ordered.where.not(id: current_user.user_health_goals.pluck(:health_goal_id)),
         :id,
@@ -8,9 +7,7 @@
         { prompt: "Choose a health goal" },
         { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
   </div>
-
   <%= form.hidden_field :order_of_importance, value: 5 %>
-
   <%= form.submit "Add Health Goal",
       class: "add-existing-button"
   %>

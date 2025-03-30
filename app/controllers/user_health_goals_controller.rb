@@ -88,16 +88,17 @@ class UserHealthGoalsController < ApplicationController
     health_goal_ids = params[:health_goal_ids]&.reject(&:blank?)
 
     if health_goal_ids.blank?
+      error_message = "Please select at least one health goal."
       respond_to do |format|
         format.turbo_stream do
+          flash[:alert] = error_message
           render turbo_stream: turbo_stream.update(
             "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { alert: "Please select at least one health goal." }
+            partial: "shared/flash_messages"
           )
         end
         format.html do
-          redirect_to user_health_goals_path, alert: "Please select at least one health goal."
+          redirect_to user_health_goals_path, alert: error_message
         end
       end
       return
@@ -132,11 +133,11 @@ class UserHealthGoalsController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream do
+          flash[:notice] = message
           render turbo_stream: [
             turbo_stream.update(
               "flash_messages",
-              partial: "shared/flash_messages",
-              locals: { notice: message }
+              partial: "shared/flash_messages"
             ),
             turbo_stream.replace(
               "modal",
@@ -149,16 +150,17 @@ class UserHealthGoalsController < ApplicationController
         end
       end
     rescue => e
+      error_message = "Error adding health goals: #{e.message}"
       respond_to do |format|
         format.turbo_stream do
+          flash[:alert] = error_message
           render turbo_stream: turbo_stream.update(
             "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { alert: "Error adding health goals: #{e.message}" }
+            partial: "shared/flash_messages"
           )
         end
         format.html do
-          redirect_to user_health_goals_path, alert: "Error adding health goals: #{e.message}"
+          redirect_to user_health_goals_path, alert: error_message
         end
       end
     end

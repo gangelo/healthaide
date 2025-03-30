@@ -83,16 +83,17 @@ class UserHealthConditionsController < ApplicationController
     health_condition_ids = params[:health_condition_ids]&.reject(&:blank?)
 
     if health_condition_ids.blank?
+      error_message = "Please select at least one health condition."
       respond_to do |format|
         format.turbo_stream do
+          flash[:alert] = error_message
           render turbo_stream: turbo_stream.update(
             "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { alert: "Please select at least one health condition." }
+            partial: "shared/flash_messages"
           )
         end
         format.html do
-          redirect_to user_health_conditions_path, alert: "Please select at least one health condition."
+          redirect_to user_health_conditions_path, alert: error_message
         end
       end
       return
@@ -123,11 +124,11 @@ class UserHealthConditionsController < ApplicationController
 
       respond_to do |format|
         format.turbo_stream do
+          flash[:notice] = message
           render turbo_stream: [
             turbo_stream.update(
               "flash_messages",
-              partial: "shared/flash_messages",
-              locals: { notice: message }
+              partial: "shared/flash_messages"
             ),
             turbo_stream.replace(
               "modal",
@@ -140,16 +141,17 @@ class UserHealthConditionsController < ApplicationController
         end
       end
     rescue => e
+      error_message = "Error adding health conditions: #{e.message}"
       respond_to do |format|
         format.turbo_stream do
+          flash[:alert] = error_message
           render turbo_stream: turbo_stream.update(
             "flash_messages",
-            partial: "shared/flash_messages",
-            locals: { alert: "Error adding health conditions: #{e.message}" }
+            partial: "shared/flash_messages"
           )
         end
         format.html do
-          redirect_to user_health_conditions_path, alert: "Error adding health conditions: #{e.message}"
+          redirect_to user_health_conditions_path, alert: error_message
         end
       end
     end

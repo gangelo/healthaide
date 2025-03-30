@@ -27,7 +27,10 @@
         <%= link_to "Choose Multiple Health Conditions",
             select_multiple_user_health_conditions_path,
             class: "choose-multiple-button",
-            data: { turbo_frame: "modal" } %>
+            data: {
+              turbo_frame: "modal",
+              turbo_prefetch: false
+              } %>
       </div>
     </div>
     <!-- Select Existing Health Condition Card -->
