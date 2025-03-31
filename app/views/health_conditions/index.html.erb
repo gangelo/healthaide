@@ -18,10 +18,7 @@
     <% if @health_conditions.any? %>
       <div class="divide-y divide-gray-100">
         <!-- Table header -->
-        <div class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal px-4 py-3 sm:px-6 grid grid-cols-2 gap-4">
-          <div class="text-sm font-medium">Health Condition Name</div>
-          <div class="text-sm font-medium text-right">Actions</div>
-        </div>
+        <%= render(Grids::HeaderComponent.new(columns: ["health condition name", actions: { css_class: "text-right" }])) %>
         <!-- Table rows -->
         <ul role="list">
           <% @health_conditions.each_with_index do |health_condition, index| %>
