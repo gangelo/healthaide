@@ -57,7 +57,7 @@ class UserHealthGoalsController < ApplicationController
 
   def destroy
     @user_health_goal.destroy
-    redirect_to user_health_goals_url, notice: "Health goal was successfully removed."
+    redirect_to user_health_goals_path, notice: "Health goal was successfully removed."
   end
 
   def select_multiple

@@ -24,7 +24,7 @@ module FlashHelper
   # Generate HTML for a flash message with appropriate styling based on type
   def flash_message_tag(type, message)
     flash_type = flash_type_for(type)
-    flash_css_class = flash_css_class_for(flash_type)
+    flash_css_class = flash_container_css_class_for(flash_type)
     flash_svg = svg_icon_container_for_flash_type(flash_type) do
       icon_for_flash_type(flash_type)
     end
@@ -61,14 +61,49 @@ module FlashHelper
   def svg_icon_container_for_flash_type(type, &block)
     icon = block.call
     <<~SVG
-      <svg class="flash-#{type}-icon" viewBox="0 0 20 20" fill="currentColor">
+      <svg class="#{svg_icon_container_css_class_for(type)}" viewBox="0 0 20 20" fill="currentColor">
         #{icon}
       </svg>
     SVG
   end
 
-  def flash_css_class_for(type)
-    "flash-#{type}"
+  def svg_icon_container_css_class_for(type)
+    case type
+    when "notice"
+      "flash-notice-icon"
+    when "success"
+      "flash-success-icon"
+    when "alert"
+      "flash-alert-icon"
+    when "error"
+      "flash-error-icon"
+    when "warning"
+      "flash-warning-icon"
+    when "info"
+      "flash-info-icon"
+    else
+      "flash-other-icon"
+    end
+  end
+
+  def flash_container_css_class_for(type)
+    case type
+    when "notice"
+      "flash-notice"
+    when "success"
+      "flash-success"
+    when "alert"
+      "flash-alert"
+    when "error"
+      "flash-error"
+    when "warning"
+      "flash-warning"
+    when "info"
+      "flash-info"
+    else
+      # TODO: Raise an error here?
+      "flash-other"
+    end
   end
 
   def flash_type_for(type)

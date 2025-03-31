@@ -36,7 +36,7 @@ class HealthGoalsController < ApplicationController
 
   def destroy
     @health_goal.destroy
-    redirect_to health_goals_url, notice: "Health goal was successfully deleted."
+    redirect_to health_goals_path, notice: "Health goal was successfully deleted."
   end
 
   private

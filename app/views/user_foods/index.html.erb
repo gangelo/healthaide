@@ -8,10 +8,11 @@
       <h2>My Foods</h2>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <%= link_to new_user_food_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
-        <%= render partial: "shared/icons/plus_sign" %>
-        Add New Food
-      <% end %>
+      <%= render partial: "shared/add_new_user_item_link",
+          locals: {
+            link_path: new_user_food_path,
+            link_text: "Add Food",
+          } %>
     </div>
   </div>
   <%= turbo_frame_tag "user_foods_list" do %>

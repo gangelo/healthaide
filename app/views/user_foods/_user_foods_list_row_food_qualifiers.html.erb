@@ -1,0 +1,12 @@
+<%# _food_qualifiers.html.erb %>
+<% if food.food_qualifiers.any? %>
+  <div class="flex flex-wrap gap-1">
+    <% food.food_qualifiers.each do |qualifier| %>
+      <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+        <%= qualifier.qualifier_name %>
+      </span>
+    <% end %>
+  </div>
+<% else %>
+  <span class="text-sm text-gray-500">&nbsp;</span>
+<% end %>

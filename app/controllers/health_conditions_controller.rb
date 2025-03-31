@@ -20,7 +20,7 @@ class HealthConditionsController < ApplicationController
     @health_condition = HealthCondition.new(health_condition_params)
 
     if @health_condition.save
-      redirect_to health_condition_url(@health_condition), notice: "Health condition was successfully created."
+      redirect_to @health_condition, notice: "Health condition was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -28,7 +28,7 @@ class HealthConditionsController < ApplicationController
 
   def update
     if @health_condition.update(health_condition_params)
-      redirect_to health_condition_url(@health_condition), notice: "Health condition was successfully updated."
+      redirect_to @health_condition, notice: "Health condition was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -36,7 +36,7 @@ class HealthConditionsController < ApplicationController
 
   def destroy
     @health_condition.soft_delete
-    redirect_to health_conditions_url, notice: "Health condition was successfully deleted."
+    redirect_to health_conditions_path, notice: "Health condition was successfully deleted."
   end
 
   private

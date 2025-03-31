@@ -45,7 +45,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_health_conditions_on_deleted_at"
-    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
   end
 
   create_table "health_goals", force: :cascade do |t|
@@ -83,7 +83,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_user_health_conditions_on_deleted_at"
     t.index ["health_condition_id"], name: "index_user_health_conditions_on_health_condition_id"
-    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
     t.index ["user_id"], name: "index_user_health_conditions_on_user_id"
   end
 

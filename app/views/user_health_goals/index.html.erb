@@ -8,59 +8,15 @@
       <h2>My Health Goals</h2>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <%= link_to new_user_health_goal_path, class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
-        <%= render partial: "shared/icons/plus_sign" %>
-        Add Health Goal
-      <% end %>
+      <%= render partial: "shared/add_new_user_item_link",
+          locals: {
+            link_path: new_user_health_goal_path,
+            link_text: "Add Health Goal",
+          } %>
     </div>
   </div>
-  <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
-    <% if @user_health_goals.any? %>
-      <div class="divide-y divide-gray-100">
-        <!-- Table header -->
-        <div class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal px-4 py-3 sm:px-6 grid grid-cols-3 gap-4">
-          <div class="text-sm font-medium">Health Goal</div>
-          <div class="text-sm font-medium">Order of Importance</div>
-          <div class="text-sm font-medium text-right">Actions</div>
-        </div>
-        <!-- Table rows -->
-        <ul role="list">
-          <% @user_health_goals.each_with_index do |user_health_goal, index| %>
-            <li class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
-              <div>
-                <%= render HealthGoals::BadgeComponent.new(name: user_health_goal.health_goal.health_goal_name) %>
-              </div>
-              <div class="text-sm text-gray-700">
-                <%= user_health_goal.order_of_importance %>
-              </div>
-              <div class="text-right flex justify-end gap-2">
-                <%= link_to "Show", user_health_goal_path(user_health_goal), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
-                <%= link_to "Edit", edit_user_health_goal_path(user_health_goal), class: "rounded-lg py-2 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 font-medium" %>
-                <%= button_to "Delete", user_health_goal_path(user_health_goal),
-                    method: :delete,
-                    class: "rounded-lg py-2 px-4 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-                    form: { data: { turbo_confirm: "Are you sure?" } } %>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    <% else %>
-      <div class="px-6 py-10 text-center text-gray-500">
-        <div class="flex items-center justify-center">
-          <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
-        </div>
-        <h3 class="mt-2 text-sm font-semibold text-gray-900">No health goals added yet</h3>
-        <p class="mt-1 text-sm text-gray-500">Get started by adding health goals to your list.</p>
-        <div class="mt-6">
-          <%= link_to new_user_health_goal_path,
-              class: "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" do %>
-            <%= render partial: "shared/icons/plus_sign" %>
-            Add Health Goal
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+  <%= turbo_frame_tag "user_health_goals_list" do %>
+    <%= render "user_health_goals_list", user_health_goals: @user_health_goals %>
+  <% end %>
   <%= turbo_frame_tag "modal" %>
 </div>

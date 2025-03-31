@@ -17,14 +17,21 @@
 </p>
 <p>
   <h2>Icons::CloseComponent</h2>
-  <% %w[red green amber blue].each do |color| %>
-    <p class="text-<%= color %>-400 hover:text-<%= color %>-600">
-      Wrapped in a div specifying text and hover colors (<%= color %>)
+  <% [
+       ["text-amber-400", "text-amber-600"],
+       ["text-blue-400", "text-blue-600"],
+       ["text-green-400", "text-green-600"],
+       ["text-red-400", "text-red-600"],
+       ["text-violet-400", "text-violet-600"]
+    ].each_with_index do |colors| %>
+    <p class="<%= colors[0] %> hover:<%= colors[1] %>">
+      Wrapped in a div specifying text and hover colors (<%= colors[0] %>, <%= colors[1] %>)
       <%= render(Icons::CloseComponent.new) %>
     </p>
   <% end %>
 </p>
 <p>
+  <h2>all_flash_messages/flash_message_tag helpers</h2>
   <%
   %i[alert error info success notice success warning unknown].each do |type|
     flash[type] = "flash[:#{type}] message!"
@@ -35,4 +42,8 @@
       <%= flash_message_tag(message_data[:type], message_data[:message]) %>
     <% end %>
   </div>
+</p>
+<p>
+  <h2>Grids::HeaderComponent</h2>
+  <%= render(Grids::HeaderComponent.new(columns: [:name, :qualifiers, actions: {css_class: "text-right" }])) %>
 </p>

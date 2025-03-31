@@ -52,7 +52,7 @@ class UserHealthConditionsController < ApplicationController
 
   def destroy
     @user_health_condition.destroy
-    redirect_to user_health_conditions_url, notice: "Health condition was successfully removed."
+    redirect_to user_health_conditions_path, notice: "Health condition was successfully removed."
   end
 
   def select_multiple

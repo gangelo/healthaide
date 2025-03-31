@@ -1,23 +1,23 @@
 <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
-  <% if user_foods.any? %>
+  <% if user_health_conditions.any? %>
     <div class="divide-y divide-gray-100">
       <!-- Table header -->
-      <%= render(Grids::HeaderComponent.new(columns: [:name, :qualifiers, actions: {css_class: "text-right" }])) %>
+      <%= render(Grids::HeaderComponent.new(columns: ["health condition", actions: {css_class: "text-right" }])) %>
       <!-- Table rows -->
-      <%= render partial: "user_foods_list_row", locals: { user_foods: user_foods } %>
+      <%= render partial: "user_health_conditions_list_row", locals: { user_health_conditions: user_health_conditions }%>
     </div>
   <% else %>
     <div class="px-6 py-10 text-center text-gray-500">
       <div class="flex items-center justify-center">
         <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
       </div>
-      <h3 class="mt-2 text-sm font-semibold text-gray-900">No foods added yet</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by adding foods to your list.</p>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No health conditions added yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding health conditions to your list.</p>
       <div class="mt-6">
         <%= render partial: "shared/add_new_user_item_link",
           locals: {
-            link_path: new_user_food_path,
-            link_text: "Add Food",
+            link_path: new_user_health_condition_path,
+            link_text: "Add Health Condition",
           } %>
       </div>
     </div>
