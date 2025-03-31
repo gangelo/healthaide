@@ -1,8 +1,9 @@
 <% content_for :title, "My Health Goals" %>
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-  <%= turbo_frame_tag "flash_messages" do %>
+  <!-- Flash messages outside of Turbo Frames -->
+  <div id="flash_messages">
     <%= render "shared/flash_messages" %>
-  <% end %>
+  </div>
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h2>My Health Goals</h2>
@@ -15,8 +16,8 @@
           } %>
     </div>
   </div>
-  <%= turbo_frame_tag "user_health_goals_list" do %>
+  <!-- Single content frame -->
+  <%= turbo_frame_tag "main_content" do %>
     <%= render "user_health_goals_list", user_health_goals: @user_health_goals %>
   <% end %>
-  <%= turbo_frame_tag "modal" %>
 </div>

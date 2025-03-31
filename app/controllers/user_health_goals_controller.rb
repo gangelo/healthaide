@@ -1,9 +1,9 @@
 class UserHealthGoalsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_health_goal, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_user_health_goals, only: [ :index ]
 
   def index
-    @user_health_goals = current_user.user_health_goals.ordered_by_importance
   end
 
   def show
@@ -57,7 +57,21 @@ class UserHealthGoalsController < ApplicationController
 
   def destroy
     @user_health_goal.destroy
-    redirect_to user_health_goals_path, notice: "Health goal was successfully removed."
+    set_user_health_goals
+
+    respond_to do |format|
+      format.html { redirect_to user_health_goals_path, notice: "Health goal was successfully removed." }
+      format.turbo_stream do
+        flash.now[:notice] = "Health goal was successfully removed."
+        render turbo_stream: [
+          turbo_stream.update("main_content",
+            partial: "user_health_goals_list",
+            locals: { user_health_goals: @user_health_goals }),
+          turbo_stream.update("flash_messages",
+            partial: "shared/flash_messages")
+        ]
+      end
+    end
   end
 
   def select_multiple
@@ -191,6 +205,10 @@ class UserHealthGoalsController < ApplicationController
 
   def set_user_health_goal
     @user_health_goal = current_user.user_health_goals.find(params[:id])
+  end
+
+  def set_user_health_goals
+    @user_health_goals = current_user.user_health_goals.ordered_by_importance
   end
 
   def health_goal_params

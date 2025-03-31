@@ -92,10 +92,10 @@ RSpec.describe "UserHealthGoals", type: :system do
     end
   end
 
-  describe "removing a health goal" do
+  describe "removing a health goal", js: true do
     let!(:user_health_goal) { create(:user_health_goal, user: user, health_goal: health_goal3) }
 
-    it "allows removing a health goal", js: true do
+    it "allows removing a health goal" do
       visit user_health_goals_path
 
       # Find the delete button for this goal and click it
