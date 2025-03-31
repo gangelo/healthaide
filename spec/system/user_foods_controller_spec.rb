@@ -131,4 +131,25 @@ RSpec.describe "UserFoods", type: :system do
       expect(page).to have_content(food3.food_name)
     end
   end
+
+  describe "removing a food", js: true do
+    let!(:user_food) { create(:user_food, user: user, food: food) }
+    let(:food) { create(:food) }
+
+    it "allows removing a food" do
+      visit user_foods_path
+
+      # Find the delete button for this food and click it
+      within("li", text: food.food_name) do
+        accept_confirm do
+          click_button "Delete"
+        end
+      end
+
+      # Should stay on index page with success message
+      expect(page).to have_current_path(user_foods_path)
+      expect(page).to have_content("Food was successfully removed")
+      expect(page).not_to have_content(food.food_name)
+    end
+  end
 end

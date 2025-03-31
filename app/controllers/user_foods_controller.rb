@@ -1,10 +1,10 @@
 class UserFoodsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_food, only: %i[ show edit update destroy add_qualifier ]
+  before_action :set_user_foods, only: [ :index ]
 
   # GET /user_foods or /user_foods.json
   def index
-    @user_foods = current_user.user_foods.includes(:food).ordered
   end
 
   # GET /user_foods/1 or /user_foods/1.json
@@ -78,10 +78,20 @@ class UserFoodsController < ApplicationController
   # DELETE /user_foods/1 or /user_foods/1.json
   def destroy
     @user_food.destroy
+    set_user_foods
 
     respond_to do |format|
-      format.html { redirect_to user_foods_path, status: :see_other, notice: "Food was successfully removed from your list." }
-      format.json { head :no_content }
+      format.html { redirect_to user_foods_path, notice: "Food was successfully removed." }
+      format.turbo_stream do
+        flash.now[:notice] = "Food was successfully removed."
+        render turbo_stream: [
+          turbo_stream.update("main_content",
+            partial: "user_foods_list",
+            locals: { user_foods: @user_foods }),
+          turbo_stream.update("flash_messages",
+            partial: "shared/flash_messages")
+        ]
+      end
     end
   end
 
@@ -215,6 +225,10 @@ class UserFoodsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_user_food
     @user_food = current_user.user_foods.find(params[:id])
+  end
+
+  def set_user_foods
+    @user_foods = current_user.user_foods.includes(:food).ordered
   end
 
   # Only allow a list of trusted parameters through.

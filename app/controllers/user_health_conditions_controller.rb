@@ -1,9 +1,9 @@
 class UserHealthConditionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_health_condition, only: %i[show edit update destroy]
+  before_action :set_user_health_conditions, only: %i[index]
 
   def index
-    @user_health_conditions = current_user.user_health_conditions.ordered
   end
 
   def show
@@ -53,6 +53,25 @@ class UserHealthConditionsController < ApplicationController
   def destroy
     @user_health_condition.destroy
     redirect_to user_health_conditions_path, notice: "Health condition was successfully removed."
+  end
+
+  def destroy
+    @user_health_condition.destroy
+    set_user_health_conditions
+
+    respond_to do |format|
+      format.html { redirect_to user_health_conditions_path, notice: "Health condition was successfully removed." }
+      format.turbo_stream do
+        flash.now[:notice] = "Health condition was successfully removed."
+        render turbo_stream: [
+          turbo_stream.update("main_content",
+            partial: "user_health_conditions_list",
+            locals: { user_health_conditions: @user_health_conditions }),
+          turbo_stream.update("flash_messages",
+            partial: "shared/flash_messages")
+        ]
+      end
+    end
   end
 
   def select_multiple
@@ -161,6 +180,10 @@ class UserHealthConditionsController < ApplicationController
 
   def set_user_health_condition
     @user_health_condition = current_user.user_health_conditions.find(params[:id])
+  end
+
+  def set_user_health_conditions
+    @user_health_conditions = current_user.user_health_conditions.ordered
   end
 
   def user_health_condition_params
