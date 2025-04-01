@@ -12,7 +12,7 @@ module MultipleSelection
     respond_to do |format|
       format.html do
         if turbo_frame_request? && params[:frame_id] == list_frame_id
-          render "#{resource_path}/select/list_frame"
+          render partial: "#{resource_path}/select/list_frame"
         elsif turbo_frame_request?
           render partial: "#{resource_path}/select/modal"
         end
