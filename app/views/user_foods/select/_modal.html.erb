@@ -2,11 +2,7 @@
   <%= render "user_foods/select/search_field" %>
 <% end %>
 
-<% content_for :item_list do %>
-  <%= turbo_frame_tag "foods_list" do %>
-    <%= render "user_foods/select/list", foods: @items %>
-  <% end %>
-<% end %>
+<% # No item_list content needed - it's handled by the search_field partial %>
 
 <%= render "shared/select/modal_base", 
   item_type: "food",

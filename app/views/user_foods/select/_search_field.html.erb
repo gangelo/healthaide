@@ -1,7 +1,7 @@
 <% content_for :yield do %>
   <% # This will be placed in the slot in the search_field_base partial %>
   <%= turbo_frame_tag "foods_list" do %>
-    <div class="h-[300px] border border-gray-200 rounded-md overflow-y-auto" data-food-search-form-target="container">
+    <div class="h-60 border border-gray-200 rounded-md overflow-y-auto" data-food-search-form-target="container">
       <%= render "user_foods/select/list", foods: @items %>
     </div>
   <% end %>

@@ -2,11 +2,7 @@
   <%= render "user_health_conditions/select/search_field" %>
 <% end %>
 
-<% content_for :item_list do %>
-  <%= turbo_frame_tag "health_conditions_list" do %>
-    <%= render "user_health_conditions/select/list", health_conditions: @items %>
-  <% end %>
-<% end %>
+<% # No item_list content needed - it's handled by the search_field partial %>
 
 <%= render "shared/select/modal_base", 
   item_type: "health_condition",
