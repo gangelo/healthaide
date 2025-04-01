@@ -18,6 +18,6 @@
   </div>
   <!-- Single content frame -->
   <%= turbo_frame_tag "main_content" do %>
-    <%= render "user_foods_list", user_foods: @user_foods %>
+    <%= render "user_foods/list/list", user_foods: @user_foods %>
   <% end %>
 </div>

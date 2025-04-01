@@ -4,7 +4,7 @@
       <!-- Table header -->
       <%= render(Grids::HeaderComponent.new(columns: [:name, :qualifiers, actions: {css_class: "text-right" }])) %>
       <!-- Table rows -->
-      <%= render partial: "user_foods_list_row", locals: { user_foods: user_foods } %>
+      <%= render partial: "user_foods/list/row", locals: { user_foods: user_foods } %>
     </div>
   <% else %>
     <div class="px-6 py-10 text-center text-gray-500">

@@ -86,7 +86,7 @@ class UserFoodsController < ApplicationController
         flash.now[:notice] = "Food was successfully removed."
         render turbo_stream: [
           turbo_stream.update("main_content",
-            partial: "user_foods_list",
+            partial: "user_foods/list/list",
             locals: { user_foods: @user_foods }),
           turbo_stream.update("flash_messages",
             partial: "shared/flash_messages")
@@ -189,8 +189,8 @@ class UserFoodsController < ApplicationController
               partial: "shared/flash_messages"
             ),
             turbo_stream.update(
-              "user_foods_list",
-              partial: "user_foods_list",
+              "main_content",
+              partial: "user_foods/list/list",
               locals: { user_foods: current_user.user_foods.includes(:food).ordered }
             ),
             turbo_stream.replace(
