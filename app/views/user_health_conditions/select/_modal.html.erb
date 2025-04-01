@@ -1,0 +1,18 @@
+<% content_for :search_field do %>
+  <%= render "user_health_conditions/select/search_field" %>
+<% end %>
+
+<% content_for :item_list do %>
+  <%= turbo_frame_tag "health_conditions_list" do %>
+    <%= render "user_health_conditions/select/list", health_conditions: health_conditions %>
+  <% end %>
+<% end %>
+
+<%= render "shared/select/modal_base", 
+  item_type: "health_condition",
+  item_type_label: "health condition",
+  title: "Select Health Conditions",
+  back_path: user_health_conditions_path,
+  submit_path: add_multiple_user_health_conditions_path,
+  submit_text: "Add Selected Health Conditions"
+%>

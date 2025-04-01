@@ -8,7 +8,10 @@
     <div class="min-w-0 flex-1">
       <h2>My Health Conditions</h2>
     </div>
-    <div class="mt-4 flex md:ml-4 md:mt-0">
+    <div class="mt-4 flex md:ml-4 md:mt-0 space-x-3">
+      <%= link_to select_multiple_user_health_conditions_path, class: "btn-primary", data: { turbo_frame: "modal" } do %>
+        Add Multiple Conditions
+      <% end %>
       <%= render partial: "shared/add_new_user_item_link",
           locals: {
             link_path: new_user_health_condition_path,

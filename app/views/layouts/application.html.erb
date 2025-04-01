@@ -27,5 +27,7 @@
     <main class="container mx-auto mt-28">
       <%= yield %>
     </main>
+    
+    <%= turbo_frame_tag "modal", src: "", target: "_top" %>
   </body>
 </html>

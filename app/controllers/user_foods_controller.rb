@@ -1,4 +1,6 @@
 class UserFoodsController < ApplicationController
+  include MultipleSelection
+  
   before_action :authenticate_user!
   before_action :set_user_food, only: %i[ show edit update destroy add_qualifier ]
   before_action :set_user_foods, only: [ :index ]
@@ -111,113 +113,44 @@ class UserFoodsController < ApplicationController
     redirect_to @user_food, alert: e.record.errors.full_messages.to_sentence
   end
 
-  def select_multiple
-    @foods = SearchService.search_foods(current_user, params[:search])
+  # These methods provide the required implementation for the MultipleSelection concern
+  private
 
-    respond_to do |format|
-      format.html do
-        if turbo_frame_request? && params[:frame_id] == "foods_list"
-          # Render just the foods list within its turbo frame
-          render :_foods_list_frame, locals: { foods: @foods }
-        elsif turbo_frame_request?
-          # For the entire modal
-          render partial: "multiple_foods_modal", locals: { foods: @foods }
-        end
-      end
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "foods_list",
-          partial: "user_foods/foods_list",
-          locals: { foods: @foods }
-        )
-      end
-    end
+  def resource_type
+    :food
   end
 
-  def add_multiple
-    food_ids = params[:food_ids]&.reject(&:blank?)
+  def resource_path
+    "user_foods"
+  end
 
-    if food_ids.blank?
-      error_message = "Please select at least one food."
-      respond_to do |format|
-        format.turbo_stream do
-          flash[:alert] = error_message
-          render turbo_stream: turbo_stream.update(
-            "flash_messages",
-            partial: "shared/flash_messages"
-          )
-        end
-        format.html do
-          redirect_to user_foods_path, alert: error_message
-        end
+  def search_items_for_user(query)
+    SearchService.search_foods(current_user, query)
+  end
+
+  def add_items_to_user(food_ids)
+    # Use bulk insert for efficiency
+    foods_added = 0
+
+    # Get existing food_ids to avoid duplicates
+    existing_food_ids = current_user.user_foods.pluck(:food_id)
+    new_food_ids = food_ids.map(&:to_i) - existing_food_ids
+
+    # Batch create records for efficiency
+    if new_food_ids.any?
+      # Filter out any soft-deleted foods
+      available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
+
+      records_to_insert = available_food_ids.map do |food_id|
+        { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
       end
-      return
+
+      # Use insert_all for better performance
+      UserFood.insert_all(records_to_insert) if records_to_insert.any?
+      foods_added = records_to_insert.size
     end
 
-    begin
-      # Use bulk insert for efficiency
-      foods_added = 0
-
-      # Get existing food_ids to avoid duplicates
-      existing_food_ids = current_user.user_foods.pluck(:food_id)
-      new_food_ids = food_ids.map(&:to_i) - existing_food_ids
-
-      # Batch create records for efficiency
-      if new_food_ids.any?
-        # Filter out any soft-deleted foods
-        available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
-
-        records_to_insert = available_food_ids.map do |food_id|
-          { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
-        end
-
-        # Use insert_all for better performance
-        UserFood.insert_all(records_to_insert) if records_to_insert.any?
-        foods_added = records_to_insert.size
-      end
-
-      message = "#{foods_added} #{"food".pluralize(foods_added)} successfully added."
-
-      respond_to do |format|
-        format.turbo_stream do
-          # Set flash in the session so it's available
-          flash[:notice] = message
-
-          render turbo_stream: [
-            turbo_stream.update(
-              "flash_messages",
-              partial: "shared/flash_messages"
-            ),
-            turbo_stream.update(
-              "main_content",
-              partial: "user_foods/list/list",
-              locals: { user_foods: current_user.user_foods.includes(:food).ordered }
-            ),
-            turbo_stream.replace(
-              "modal",
-              partial: "shared/empty_frame"
-            )
-          ]
-        end
-        format.html do
-          redirect_to user_foods_path, notice: message
-        end
-      end
-    rescue => e
-      error_message = "Error adding foods: #{e.message}"
-      respond_to do |format|
-        format.turbo_stream do
-          flash[:alert] = error_message
-          render turbo_stream: turbo_stream.update(
-            "flash_messages",
-            partial: "shared/flash_messages"
-          )
-        end
-        format.html do
-          redirect_to user_foods_path, alert: error_message
-        end
-      end
-    end
+    foods_added
   end
 
   private

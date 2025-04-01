@@ -1,0 +1,18 @@
+<% content_for :search_field do %>
+  <%= render "user_foods/select/search_field" %>
+<% end %>
+
+<% content_for :item_list do %>
+  <%= turbo_frame_tag "foods_list" do %>
+    <%= render "user_foods/select/list", foods: foods %>
+  <% end %>
+<% end %>
+
+<%= render "shared/select/modal_base", 
+  item_type: "food",
+  item_type_label: "food",
+  title: "Select Foods",
+  back_path: user_foods_path,
+  submit_path: add_multiple_user_foods_path,
+  submit_text: "Add Selected Foods"
+%>
