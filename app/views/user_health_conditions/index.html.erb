@@ -18,6 +18,6 @@
   </div>
   <!-- Single content frame -->
   <%= turbo_frame_tag "main_content" do %>
-    <%= render "user_health_conditions_list", user_health_conditions: @user_health_conditions %>
+    <%= render "user_health_conditions/list/list", user_health_conditions: @user_health_conditions %>
   <% end %>
 </div>

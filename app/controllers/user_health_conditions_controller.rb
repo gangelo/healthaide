@@ -65,7 +65,7 @@ class UserHealthConditionsController < ApplicationController
         flash.now[:notice] = "Health condition was successfully removed."
         render turbo_stream: [
           turbo_stream.update("main_content",
-            partial: "user_health_conditions_list",
+            partial: "user_health_conditions/list/list",
             locals: { user_health_conditions: @user_health_conditions }),
           turbo_stream.update("flash_messages",
             partial: "shared/flash_messages")
@@ -148,6 +148,11 @@ class UserHealthConditionsController < ApplicationController
             turbo_stream.update(
               "flash_messages",
               partial: "shared/flash_messages"
+            ),
+            turbo_stream.update(
+              "main_content",
+              partial: "user_health_conditions/list/list",
+              locals: { user_health_conditions: current_user.user_health_conditions.ordered }
             ),
             turbo_stream.replace(
               "modal",

@@ -65,7 +65,7 @@ class UserHealthGoalsController < ApplicationController
         flash.now[:notice] = "Health goal was successfully removed."
         render turbo_stream: [
           turbo_stream.update("main_content",
-            partial: "user_health_goals_list",
+            partial: "user_health_goals/list/list",
             locals: { user_health_goals: @user_health_goals }),
           turbo_stream.update("flash_messages",
             partial: "shared/flash_messages")
@@ -152,6 +152,11 @@ class UserHealthGoalsController < ApplicationController
             turbo_stream.update(
               "flash_messages",
               partial: "shared/flash_messages"
+            ),
+            turbo_stream.update(
+              "main_content",
+              partial: "user_health_goals/list/list",
+              locals: { user_health_goals: current_user.user_health_goals.ordered_by_importance }
             ),
             turbo_stream.replace(
               "modal",

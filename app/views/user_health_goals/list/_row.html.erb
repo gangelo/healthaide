@@ -1,5 +1,5 @@
 <ul role="list">
-  <% @user_health_goals.each_with_index do |user_health_goal, index| %>
+  <% user_health_goals.each_with_index do |user_health_goal, index| %>
     <li class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
       <div>
         <%= render HealthGoals::BadgeComponent.new(name: user_health_goal.health_goal.health_goal_name) %>
