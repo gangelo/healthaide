@@ -151,7 +151,8 @@ module MultipleSelection
   # Get the current user's items
   # Can be overridden if the association doesn't follow standard naming
   def current_user_items
-    current_user.send(resource_path).ordered_scope
+    # Use 'ordered' scope by default, controllers can override if needed
+    current_user.send(resource_path).ordered
   end
 
   # The local variable name for the current user's items
