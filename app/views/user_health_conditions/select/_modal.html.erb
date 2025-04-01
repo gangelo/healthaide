@@ -4,7 +4,7 @@
 
 <% content_for :item_list do %>
   <%= turbo_frame_tag "health_conditions_list" do %>
-    <%= render "user_health_conditions/select/list", health_conditions: health_conditions %>
+    <%= render "user_health_conditions/select/list", health_conditions: @items %>
   <% end %>
 <% end %>
 

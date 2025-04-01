@@ -12,16 +12,15 @@ module MultipleSelection
     respond_to do |format|
       format.html do
         if turbo_frame_request? && params[:frame_id] == list_frame_id
-          render "#{resource_path}/select/list_frame", locals: { items_local_name => @items }
+          render "#{resource_path}/select/list_frame"
         elsif turbo_frame_request?
-          render partial: "#{resource_path}/select/modal", locals: { items_local_name => @items }
+          render partial: "#{resource_path}/select/modal"
         end
       end
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
           list_frame_id,
-          partial: "#{resource_path}/select/list_frame",
-          locals: { items_local_name => @items }
+          partial: "#{resource_path}/select/list_frame"
         )
       end
     end

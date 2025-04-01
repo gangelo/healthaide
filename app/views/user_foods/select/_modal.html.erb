@@ -4,7 +4,7 @@
 
 <% content_for :item_list do %>
   <%= turbo_frame_tag "foods_list" do %>
-    <%= render "user_foods/select/list", foods: foods %>
+    <%= render "user_foods/select/list", foods: @items %>
   <% end %>
 <% end %>
 

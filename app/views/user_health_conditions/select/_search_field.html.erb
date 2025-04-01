@@ -2,7 +2,7 @@
   <% # This will be placed in the slot in the search_field_base partial %>
   <%= turbo_frame_tag "health_conditions_list" do %>
     <div class="h-[300px] border border-gray-200 rounded-md overflow-y-auto" data-health-condition-search-form-target="container">
-      <%= render "user_health_conditions/select/list", health_conditions: @health_conditions || health_conditions %>
+      <%= render "user_health_conditions/select/list", health_conditions: @items %>
     </div>
   <% end %>
 <% end %>
