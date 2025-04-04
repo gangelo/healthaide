@@ -9,9 +9,6 @@
       <h2>My Health Goals</h2>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0 space-x-3">
-      <%= link_to select_multiple_user_health_goals_path, class: "btn-primary", data: { turbo_frame: "modal" } do %>
-        Add Multiple Goals
-      <% end %>
       <%= render partial: "shared/add_new_user_item_link",
           locals: {
             link_path: new_user_health_goal_path,

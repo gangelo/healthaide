@@ -62,12 +62,12 @@ group :development, :test do
   gem "ffaker"
   gem "pry-byebug"
   gem "pry-rails"
+  gem "rspec-rails"
   gem "rubocop-rails"
 end
 
 group :test do
   gem "capybara"
-  gem "rspec-rails"
   gem "selenium-webdriver"
   gem "shoulda-matchers"
   gem "simplecov", require: false

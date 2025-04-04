@@ -1,6 +1,6 @@
 class UserFoodsController < ApplicationController
   include MultipleSelection
-  
+
   before_action :authenticate_user!
   before_action :set_user_food, only: %i[ show edit update destroy add_qualifier ]
   before_action :set_user_foods, only: [ :index ]

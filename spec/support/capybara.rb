@@ -1,5 +1,5 @@
-# require 'capybara/rails'
-# require 'capybara/rspec'
+require "capybara/rails"
+require "capybara/rspec"
 # require 'selenium-webdriver'
 
 # Capybara.register_driver :selenium_chrome do |app|

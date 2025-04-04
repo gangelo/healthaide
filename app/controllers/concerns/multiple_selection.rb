@@ -29,7 +29,7 @@ module MultipleSelection
   # Handle the add_multiple action for adding selected items
   def add_multiple
     item_ids = params["#{item_id_param_name}"]&.reject(&:blank?)
-    
+
     if item_ids.blank?
       handle_empty_selection
       return
@@ -109,21 +109,23 @@ module MultipleSelection
     respond_to do |format|
       format.turbo_stream do
         flash[:notice] = message
-        render turbo_stream: [
-          turbo_stream.update(
-            "flash_messages",
-            partial: "shared/flash_messages"
-          ),
-          turbo_stream.update(
-            "main_content",
-            partial: "#{resource_path}/list/list",
-            locals: { "#{user_items_local_name}" => current_user_items }
-          ),
-          turbo_stream.replace(
+
+          turbo_streams = [
+            turbo_stream.update(
+              "flash_messages",
+              partial: "shared/flash_messages"
+            )
+          ]
+
+        # Only add the modal replacement if we're in a modal context
+        if params[:_turbo_frame] == "modal" || request.headers["Turbo-Frame"] == "modal"
+          turbo_streams << turbo_stream.replace(
             "modal",
             partial: "shared/empty_frame"
           )
-        ]
+        end
+
+        render turbo_stream: turbo_streams
       end
       format.html do
         redirect_to send("#{resource_path}_path"), notice: message
@@ -153,6 +155,9 @@ module MultipleSelection
   def current_user_items
     # Use 'ordered' scope by default, controllers can override if needed
     current_user.send(resource_path).ordered
+  rescue NoMethodError
+    Rails.logger.error("Error in multiple_selection: resource_path '#{resource_path}' is not a valid association")
+    []
   end
 
   # The local variable name for the current user's items

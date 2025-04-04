@@ -1,6 +1,6 @@
 class UserHealthGoalsController < ApplicationController
   include MultipleSelection
-  
+
   before_action :authenticate_user!
   before_action :set_user_health_goal, only: [ :show, :edit, :update, :destroy ]
   before_action :set_user_health_goals, only: [ :index ]
@@ -16,6 +16,7 @@ class UserHealthGoalsController < ApplicationController
   end
 
   def edit
+    Rails.logger.debug "xyzzy: Editing UserHealthGoal: #{@user_health_goal.inspect}"
   end
 
   def create
@@ -107,11 +108,11 @@ class UserHealthGoalsController < ApplicationController
   def resource_path
     "user_health_goals"
   end
-  
+
   def search_items_for_user(query)
     SearchService.search_health_goals(current_user, query)
   end
-  
+
   def add_items_to_user(health_goal_ids)
     # Get maximum order of importance
     max_order = current_user.user_health_goals.maximum(:order_of_importance) || 0
@@ -121,7 +122,7 @@ class UserHealthGoalsController < ApplicationController
     new_health_goal_ids = health_goal_ids.map(&:to_i) - existing_health_goal_ids
 
     goals_added = 0
-    
+
     # Batch create records for efficiency
     if new_health_goal_ids.any?
       records_to_insert = new_health_goal_ids.each_with_index.map do |health_goal_id, index|
@@ -141,17 +142,17 @@ class UserHealthGoalsController < ApplicationController
 
     goals_added
   end
-  
+
   # Override the items_local_name to use the correct variable name in view templates
   def items_local_name
     "health_goals"
   end
-  
+
   # Override the list_frame_id to use the correct frame ID
   def list_frame_id
     "health_goals_list"
   end
-  
+
   # Override the current_user_items method to ensure proper ordering
   def current_user_items
     current_user.user_health_goals.ordered_by_importance
