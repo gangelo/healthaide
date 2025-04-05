@@ -61,12 +61,13 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "ffaker"
   gem "pry-byebug"
+  gem "pry-rails"
+  gem "rspec-rails"
   gem "rubocop-rails"
 end
 
 group :test do
   gem "capybara"
-  gem "rspec-rails"
   gem "selenium-webdriver"
   gem "shoulda-matchers"
   gem "simplecov", require: false

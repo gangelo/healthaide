@@ -72,7 +72,7 @@ class FoodQualifiersController < ApplicationController
       # We're adding a qualifier to a food
       @food = Food.kept.find(params[:food_id])
 
-      if @food.food_qualifiers.include?(@food_qualifier)
+      if @food.includes_qualifier?(@food_qualifier)
         # Qualifier is already associated with this food
         flash[:notice] = "#{@food_qualifier.qualifier_name} is already associated with this food."
       else
@@ -88,7 +88,7 @@ class FoodQualifiersController < ApplicationController
           render turbo_stream: [
             turbo_stream.replace("qualifier-list", partial: "foods/qualifier_list", locals: { food: @food }),
             turbo_stream.replace("add_existing_qualifier", partial: "foods/add_existing_qualifier_form", locals: { food: @food, available_qualifiers: @available_qualifiers }),
-            turbo_stream.replace("flash", partial: "shared/flash")
+            turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
           ]
         end
         format.html { redirect_to @food }
@@ -112,14 +112,27 @@ class FoodQualifiersController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_food_qualifier
-      @food_qualifier = FoodQualifier.find(params[:id])
+  # GET /food_qualifiers/export
+  def export
+    respond_to do |format|
+      format.html {
+        render html: FoodQualifierExportService.export.html_safe
+      }
+      format.json {
+        send_data JSON.pretty_generate(FoodQualifierExportService.export), filename: "food_qualifiers.json"
+      }
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def food_qualifier_params
-      params.require(:food_qualifier).permit(:qualifier_name)
-    end
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_food_qualifier
+    @food_qualifier = FoodQualifier.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def food_qualifier_params
+    params.require(:food_qualifier).permit(:qualifier_name)
+  end
 end
