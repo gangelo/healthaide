@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 
 /**
  * SearchFormController handles dynamic searching with Turbo
@@ -9,7 +9,7 @@ export default class SearchFormController extends Controller {
   static values = {
     debounce: { type: Number, default: 200 },
     frame: { type: String, default: "search_results" },
-    url: String
+    url: String,
   };
 
   connect() {
@@ -51,7 +51,6 @@ export default class SearchFormController extends Controller {
       // Use a consistent parameter name for frame targeting
       url.searchParams.set("frame_id", frameId);
 
-
       // Find the frame to update
       const frame = document.querySelector(`turbo-frame#${frameId}`);
       if (frame) {
@@ -74,7 +73,7 @@ export default class SearchFormController extends Controller {
     this.inputTarget.value = "";
     this.search();
   }
-  
+
   // Get the default frame ID if not specified in values
   getDefaultFrameId() {
     return "search_results";
