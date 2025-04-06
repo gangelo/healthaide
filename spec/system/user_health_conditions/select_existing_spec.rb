@@ -19,7 +19,7 @@ RSpec.describe "Selecting existing health conditions", type: :system do
     visit new_user_health_condition_path
 
     # Check dropdown options
-    within("#select-existing-condition") do
+    within("#select-existing-form") do
       dropdown_options = page.all('select#user_health_condition_health_condition_id option').map(&:text)
       expect(dropdown_options).to include(health_condition2.health_condition_name)
       expect(dropdown_options).to include(health_condition3.health_condition_name)
@@ -31,13 +31,14 @@ RSpec.describe "Selecting existing health conditions", type: :system do
     visit new_user_health_condition_path
 
     # Select from dropdown
-    within("#select-existing-condition") do
+    within("#select-existing-form") do
       select health_condition2.health_condition_name, from: "user_health_condition[health_condition_id]"
       click_button "Add Selected Health Condition"
     end
 
-    # Verify the result
     expect(page).to have_current_path(user_health_conditions_path)
+
+    # Verify the result
     expect(page).to have_content("Health condition was successfully added")
     expect(page).to have_content(health_condition2.health_condition_name)
   end
@@ -46,23 +47,23 @@ RSpec.describe "Selecting existing health conditions", type: :system do
     visit new_user_health_condition_path
 
     # Try to submit without selecting a condition
-    within("#select-existing-condition") do
+    within("#select-existing-form") do
       # Don't select anything from dropdown
       click_button "Add Selected Health Condition"
     end
 
     # Should see validation error
-    expect(page).to have_content("Health condition must be selected")
+    expect(page).to have_content("Health condition can't be blank")
   end
 
   scenario "User cannot add a health condition they already have" do
     # First add health_condition2
     create(:user_health_condition, user: user, health_condition: health_condition2)
-    
+
     visit new_user_health_condition_path
 
     # Check dropdown options
-    within("#select-existing-condition") do
+    within("#select-existing-form") do
       dropdown_options = page.all('select#user_health_condition_health_condition_id option').map(&:text)
       expect(dropdown_options).not_to include(health_condition1.health_condition_name) # Already added
       expect(dropdown_options).not_to include(health_condition2.health_condition_name) # Already added

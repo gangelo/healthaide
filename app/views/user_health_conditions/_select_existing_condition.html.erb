@@ -1,4 +1,4 @@
-<%= form_with(model: user_health_condition, url: user_health_conditions_path, class: "w-full") do |form| %>
+<%= form_with(model: user_health_condition, id: "select-existing-form", url: user_health_conditions_path, class: "w-full") do |form| %>
   <div class="mb-4">
     <%= form.collection_select :health_condition_id,
         health_conditions,

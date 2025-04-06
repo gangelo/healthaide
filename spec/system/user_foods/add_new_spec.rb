@@ -16,7 +16,7 @@ RSpec.describe "Adding new foods", type: :system do
     visit user_foods_path
 
     # NOTE: We need to match: :first because there are no foods in the list yet
-    # and the "Add Food" button appears twice in the UI.
+    # and the "Add" button appears twice in the UI.
     click_link "Add Food", match: :first
 
     expect(page).to have_content("Add Food")

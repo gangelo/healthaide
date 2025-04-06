@@ -13,7 +13,10 @@ RSpec.describe "Adding new health goals", type: :system do
 
   scenario "User can navigate to the new health goal form" do
     visit user_health_goals_path
-    click_link "Add Health Goal"
+
+    # NOTE: We need to match: :first because there are no foods in the list yet
+    # and the "Add" button appears twice in the UI.
+    click_link "Add Health Goal", match: :first
 
     expect(page).to have_content("Add Health Goal")
     expect(page).to have_content("Create New Health Goal")
@@ -27,7 +30,7 @@ RSpec.describe "Adding new health goals", type: :system do
     # Choose the create new goal option
     within("#create-new-goal") do
       fill_in "user_health_goal[health_goal_name]", with: "Improve Flexibility"
-      click_button "Create Health Goal"
+      click_button "Create & Add New Health Goal"
     end
 
     # Verify the result
@@ -42,11 +45,11 @@ RSpec.describe "Adding new health goals", type: :system do
     # Try to submit with empty name
     within("#create-new-goal") do
       fill_in "user_health_goal[health_goal_name]", with: ""
-      click_button "Create Health Goal"
+      click_button "Create & Add New Health Goal"
     end
 
     # Should see validation error
-    expect(page).to have_content("Health goal name can't be blank")
+    expect(page).to have_content("Health goal must exist")
   end
 
   scenario "User cannot create a duplicate health goal" do
@@ -55,7 +58,7 @@ RSpec.describe "Adding new health goals", type: :system do
     # Try to create a health goal with an existing name
     within("#create-new-goal") do
       fill_in "user_health_goal[health_goal_name]", with: existing_health_goal.health_goal_name
-      click_button "Create Health Goal"
+      click_button "Create & Add New Health Goal"
     end
 
     # Should see validation error

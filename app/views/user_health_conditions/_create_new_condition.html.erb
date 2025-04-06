@@ -1,4 +1,4 @@
-<%= form_with(model: @user_health_condition, url: user_health_conditions_path, class: "w-full") do |form| %>
+<%= form_with(model: @user_health_condition, id: "create-add-new-form", url: user_health_conditions_path, class: "w-full") do |form| %>
   <div class="mb-4">
     <%= form.text_field :new_health_condition_name,
         placeholder: "Enter new health condition name",
