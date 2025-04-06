@@ -16,7 +16,6 @@ class UserHealthGoalsController < ApplicationController
   end
 
   def edit
-    Rails.logger.debug "xyzzy: Editing UserHealthGoal: #{@user_health_goal.inspect}"
   end
 
   def create

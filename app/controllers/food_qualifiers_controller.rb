@@ -116,7 +116,7 @@ class FoodQualifiersController < ApplicationController
   def export
     respond_to do |format|
       format.html {
-        render html: FoodQualifierExportService.export.html_safe
+        render html: FoodQualifierExportService.export
       }
       format.json {
         send_data JSON.pretty_generate(FoodQualifierExportService.export), filename: "food_qualifiers.json"

@@ -14,15 +14,20 @@
   .back-button,
   .edit-button,
   .show-button {
-    @apply rounded-lg py-3 px-5 bg-gray-300 inline-block font-medium;
+    @apply rounded-lg py-3 px-5 bg-gray-300 inline-block font-medium cursor-pointer;
   }
 
   .back-button-sm,
+  .edit-button-sm,
   .show-button-sm {
-    @apply rounded-lg py-1 px-3 bg-gray-300 inline-block font-medium;
+    @apply rounded-lg py-2 px-4 bg-gray-300 inline-block font-medium cursor-pointer;
   }
 
   .delete-button {
-    @apply rounded-lg py-3 px-5 bg-red-600 text-white font-medium;
+    @apply rounded-lg py-3 px-5 bg-red-600 text-white font-medium cursor-pointer;
+  }
+
+  .delete-button-sm {
+    @apply rounded-lg py-2 px-4 bg-red-600 text-white font-medium cursor-pointer;
   }
 }

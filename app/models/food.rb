@@ -65,35 +65,22 @@ class Food < ApplicationRecord
   def food_uniqueness
     return if food_name.blank?
 
-    # Skip validation if this is an update and food_name/qualifiers haven't changed
-    return if persisted? &&
-              !food_name_changed? &&
-              !food_qualifiers_updated?
-
     # Check if any other food has the same signature
-    duplicate_exists = Food.where.not(id: id || 0)
-                           .kept
-                           .any? { |f| f.unique_signature == unique_signature }
+    duplicate_food = Food.where.not(id: id || 0)
+                         .find { |f| f.unique_signature == unique_signature }
 
-    if duplicate_exists
-      errors.add(:base, "A food with this name and the same qualifiers already exists")
+    if duplicate_food
+      if duplicate_food.discarded?
+        errors.add(:base, "A deleted food with this name and the same qualifiers already exists")
+      else
+        errors.add(:base, "A food with this name and the same qualifiers already exists")
+      end
     end
   end
 
-  # Checks if food qualifiers have been updated
+  # Keep this method for backward compatibility, but it's no longer used
   def food_qualifiers_updated?
-    return true if new_record?
-
-    # Compare current qualifier IDs with what's in the database
-    persisted_qualifier_ids = Food.includes(:food_qualifiers)
-                                 .find(id)
-                                 .food_qualifiers
-                                 .map(&:id)
-                                 .sort
-
-    current_qualifier_ids = food_qualifiers.map(&:id).sort
-
-    persisted_qualifier_ids != current_qualifier_ids
+    true
   end
 
   def cleanup_user_foods

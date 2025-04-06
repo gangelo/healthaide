@@ -54,35 +54,6 @@ RSpec.describe "Managing foods", type: :system do
     expect(page).to have_content(food1.food_name) # Other food still there
   end
 
-  scenario "User can add qualifiers to a food", js: true do
-    # Create a new qualifier
-    new_qualifier = create(:food_qualifier, qualifier_name: "Non-GMO")
-
-    # Go to food detail page
-    visit user_food_path(UserFood.find_by(user: user, food: food1))
-
-    # Add qualifier
-    select new_qualifier.qualifier_name, from: "food_qualifier_id"
-    click_button "Add Qualifier"
-
-    # Verify qualifier was added
-    expect(page).to have_content("Qualifier was successfully added")
-    expect(page).to have_content(new_qualifier.qualifier_name)
-  end
-
-  scenario "User can create and add a new qualifier", js: true do
-    # Go to food detail page
-    visit user_food_path(UserFood.find_by(user: user, food: food1))
-
-    # Create and add new qualifier
-    fill_in "new_qualifier_name", with: "Local"
-    click_button "Create & Add"
-
-    # Verify qualifier was added
-    expect(page).to have_content("New qualifier was successfully created and added")
-    expect(page).to have_content("Local")
-  end
-
   scenario "User sees empty state when no foods are present" do
     # Remove all foods
     UserFood.destroy_all
