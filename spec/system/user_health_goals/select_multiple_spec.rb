@@ -19,7 +19,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User can open the multiple selection modal", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     within("turbo-frame#modal") do
       expect(page).to have_content("Select Health Goals")
@@ -36,7 +36,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User can search for health goals in the modal", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     # Search for specific term
     fill_in "Search health goals...", with: "flex"
@@ -49,10 +49,10 @@ RSpec.describe "Selecting multiple health goals", type: :system do
     end
   end
 
-  scenario "User can select multiple health goals", js: true do
+  scenario "User can Choose Multiple Health Goals", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     # Select multiple goals using checkboxes
     check "health_goal_ids_#{health_goal2.id}"
@@ -73,7 +73,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User cannot submit without selecting any goals", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     # Don't select any checkboxes
 
@@ -84,7 +84,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User can use select all button", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     # Use select all button
     click_button "Select All"
@@ -101,7 +101,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User can use select none button", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     # First select all
     click_button "Select All"
@@ -121,7 +121,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User can cancel the modal", js: true do
     visit new_user_health_goal_path
 
-    click_link "Select Multiple Health Goals"
+    click_link "Choose Multiple Health Goals"
 
     # Check modal is open
     expect(page).to have_content("Select Health Goals")
@@ -131,6 +131,6 @@ RSpec.describe "Selecting multiple health goals", type: :system do
 
     # Modal should be closed
     expect(page).not_to have_content("Select Health Goals")
-    expect(page).to have_current_path(new_user_health_goal_path)
+    expect(page).to have_current_path(user_health_goals_path)
   end
 end
