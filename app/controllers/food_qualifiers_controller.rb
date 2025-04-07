@@ -1,10 +1,10 @@
 class FoodQualifiersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_food_qualifier, only: %i[ show edit update destroy ]
+  before_action :set_food_qualifiers, only: %i[ index ]
 
   # GET /food_qualifiers or /food_qualifiers.json
   def index
-    @food_qualifiers = FoodQualifier.kept.order(:qualifier_name)
   end
 
   # GET /food_qualifiers/1 or /food_qualifiers/1.json
@@ -51,11 +51,29 @@ class FoodQualifiersController < ApplicationController
 
   # DELETE /food_qualifiers/1 or /food_qualifiers/1.json
   def destroy
-    @food_qualifier.soft_delete
+    if @food_qualifier.destroy
+      set_food_qualifiers
 
-    respond_to do |format|
-      format.html { redirect_to food_qualifiers_path, status: :see_other, notice: "Food qualifier was successfully deleted." }
-      format.json { head :no_content }
+      respond_to do |format|
+        # format.html { redirect_to food_qualifiers_path, notice: "Food qualifier was successfully deleted.", status: :see_other }
+        # format.json { head :no_content }
+        format.turbo_stream do
+          flash[:notice] = "Food qualifier was successfully deleted."
+          render turbo_stream: [
+            turbo_stream.update("flash_messages", partial: "shared/flash_messages"),
+            turbo_stream.update("main_content", partial: "food_qualifiers/list", locals: { food_qualifiers: @food_qualifiers })
+          ]
+        end
+      end
+    else
+      respond_to do |format|
+        # format.html { redirect_to food_qualifiers_path, alert: @food_qualifier.errors.full_messages.to_sentence, status: :unprocessable_entity }
+        # format.json { render json: { errors: @food_qualifier.errors.full_messages }, status: :unprocessable_entity }
+        format.turbo_stream do
+          flash[:alert] = @food_qualifier.errors.full_messages.to_sentence
+          render turbo_stream: turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
+        end
+      end
     end
   end
 
@@ -129,6 +147,10 @@ class FoodQualifiersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_food_qualifier
     @food_qualifier = FoodQualifier.find(params[:id])
+  end
+
+  def set_food_qualifiers
+    @food_qualifiers = FoodQualifier.kept.order(:qualifier_name)
   end
 
   # Only allow a list of trusted parameters through.

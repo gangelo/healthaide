@@ -9,8 +9,11 @@ class Food < ApplicationRecord
   has_many :user_foods, inverse_of: :food
   has_many :users, through: :user_foods
 
+  # has_many :food_food_qualifiers, inverse_of: :food, dependent: :destroy
+  # has_many :food_qualifiers, through: :food_food_qualifiers
+
   has_many :food_food_qualifiers, inverse_of: :food, dependent: :destroy
-  has_many :food_qualifiers, through: :food_food_qualifiers
+  has_many :food_qualifiers, -> { kept }, through: :food_food_qualifiers
 
   validates :food_name, presence: true, length: { maximum: 64 }
   validate :food_uniqueness

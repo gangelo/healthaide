@@ -7,7 +7,7 @@
       <div class="text-right flex justify-end gap-2">
         <%= button_to "Delete", user_health_condition_path(user_health_condition),
                     method: :delete,
-                    class: "rounded-lg py-2 px-4 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                    class: "delete-button-sm",
                     form: { data: { turbo_confirm: "Are you sure?" } } %>
       </div>
     </li>
