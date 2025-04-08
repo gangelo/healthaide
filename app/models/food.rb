@@ -6,11 +6,8 @@ class Food < ApplicationRecord
 
   after_update :cleanup_user_foods, if: -> { saved_change_to_deleted_at? && deleted_at.present? }
 
-  has_many :user_foods, inverse_of: :food
+  has_many :user_foods, inverse_of: :food, dependent: :destroy
   has_many :users, through: :user_foods
-
-  # has_many :food_food_qualifiers, inverse_of: :food, dependent: :destroy
-  # has_many :food_qualifiers, through: :food_food_qualifiers
 
   has_many :food_food_qualifiers, inverse_of: :food, dependent: :destroy
   has_many :food_qualifiers, -> { kept }, through: :food_food_qualifiers

@@ -1,6 +1,6 @@
 <ul role="list">
   <% user_health_conditions.each_with_index do |user_health_condition, index| %>
-    <li class="relative px-4 py-3 sm:px-6 grid grid-cols-2 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
+    <li class="relative px-4 py-3 sm:px-6 grid grid-cols-2 gap-4 <%= grid_alternate_row_color(index) %>">
       <div class="text-sm font-semibold text-gray-900">
         <%= user_health_condition.health_condition_name %>
       </div>

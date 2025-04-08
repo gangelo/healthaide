@@ -55,23 +55,21 @@ class FoodQualifiersController < ApplicationController
       set_food_qualifiers
 
       respond_to do |format|
-        # format.html { redirect_to food_qualifiers_path, notice: "Food qualifier was successfully deleted.", status: :see_other }
-        # format.json { head :no_content }
         format.turbo_stream do
           flash[:notice] = "Food qualifier was successfully deleted."
           render turbo_stream: [
             turbo_stream.update("flash_messages", partial: "shared/flash_messages"),
-            turbo_stream.update("main_content", partial: "food_qualifiers/list", locals: { food_qualifiers: @food_qualifiers })
+            turbo_stream.replace("main_content",
+              partial: "food_qualifiers/list/list",
+              locals: { food_qualifiers: @food_qualifiers })
           ]
         end
       end
     else
       respond_to do |format|
-        # format.html { redirect_to food_qualifiers_path, alert: @food_qualifier.errors.full_messages.to_sentence, status: :unprocessable_entity }
-        # format.json { render json: { errors: @food_qualifier.errors.full_messages }, status: :unprocessable_entity }
         format.turbo_stream do
           flash[:alert] = @food_qualifier.errors.full_messages.to_sentence
-          render turbo_stream: turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
+          render turbo_stream: turbo_stream.update("flash_messages", partial: "shared/flash_messages")
         end
       end
     end

@@ -4,9 +4,9 @@ RSpec.describe Food do
   subject(:food) { build(:food) }
 
   describe 'associations' do
-    it { is_expected.to have_many(:user_foods) }
+    it { is_expected.to have_many(:user_foods).inverse_of(:food).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_foods) }
-    it { is_expected.to have_many(:food_food_qualifiers).dependent(:destroy) }
+    it { is_expected.to have_many(:food_food_qualifiers).inverse_of(:food).dependent(:destroy) }
     it { is_expected.to have_many(:food_qualifiers).through(:food_food_qualifiers) }
   end
 

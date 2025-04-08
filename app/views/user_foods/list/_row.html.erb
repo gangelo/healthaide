@@ -1,6 +1,6 @@
 <ul role="list">
   <% user_foods.each_with_index do |user_food, index| %>
-    <li id="food-id-<%= user_food.food.id %>" class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
+    <li id="food-id-<%= user_food.food.id %>" class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= grid_alternate_row_color(index) %>">
       <div class="text-sm font-semibold text-gray-900">
         <%= user_food.food.food_name %>
       </div>
