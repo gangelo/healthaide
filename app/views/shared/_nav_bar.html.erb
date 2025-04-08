@@ -12,10 +12,12 @@
             <%= link_to "My Foods", user_foods_path, class: nav_link_class(current_page?(user_foods_path)) %>
             <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(current_page?(user_health_conditions_path)) %>
             <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(current_page?(user_health_goals_path)) %>
-            <%= link_to "Foods", foods_path, class: nav_link_class(current_page?(foods_path)) %>
-            <%= link_to "Food Qualifiers", food_qualifiers_path, class: nav_link_class(current_page?(food_qualifiers_path)) %>
-            <%= link_to "Health Conditions", health_conditions_path, class: nav_link_class(current_page?(health_conditions_path)) %>
-            <%= link_to "Health Goals", health_goals_path, class: nav_link_class(current_page?(health_goals_path)) %>
+            <% if current_user.admin? %>
+              <%= link_to "Foods", foods_path, class: nav_link_class(current_page?(foods_path)) %>
+              <%= link_to "Food Qualifiers", food_qualifiers_path, class: nav_link_class(current_page?(food_qualifiers_path)) %>
+              <%= link_to "Health Conditions", health_conditions_path, class: nav_link_class(current_page?(health_conditions_path)) %>
+              <%= link_to "Health Goals", health_goals_path, class: nav_link_class(current_page?(health_goals_path)) %>
+            <% end %>
           </div>
         <% end %>
       </div>

@@ -25,4 +25,10 @@ class ApplicationController < ActionController::Base
       render json: { error: "session_expired" }, status: :unauthorized
     end
   end
+
+  def authenticate_admin!
+    authenticate_user!
+    # TODO: Send alert error message if not admin.
+    redirect_to root_path, status: :forbidden unless current_user.admin?
+  end
 end

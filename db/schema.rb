@@ -45,13 +45,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_health_conditions_on_deleted_at"
-    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/"
   end
 
   create_table "health_goals", force: :cascade do |t|
-    t.string "health_goal_name"
+    t.string "health_goal_name", limit: 64, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["health_goal_name"], name: "index_health_goals_on_health_goal_name", unique: true
   end
 
   create_table "user_foods", force: :cascade do |t|
@@ -66,15 +67,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.index ["user_id"], name: "index_user_foods_on_user_id"
   end
 
-  create_table "user_health_condition_health_conditions", force: :cascade do |t|
-    t.integer "user_health_condition_id", null: false
-    t.integer "health_condition_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["health_condition_id"], name: "idx_on_health_condition_id_2e0f4ca33b"
-    t.index ["user_health_condition_id"], name: "idx_on_user_health_condition_id_4e44bada3d"
-  end
-
   create_table "user_health_conditions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "health_condition_id", null: false
@@ -83,19 +75,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_user_health_conditions_on_deleted_at"
     t.index ["health_condition_id"], name: "index_user_health_conditions_on_health_condition_id"
-    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/ /*application='HealthAIde'*/"
+    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/"
     t.index ["user_id"], name: "index_user_health_conditions_on_user_id"
   end
 
   create_table "user_health_goals", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "health_goal_id", null: false
-    t.integer "order_of_importance"
+    t.integer "order_of_importance", default: 0, null: false
+    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
     t.index ["deleted_at"], name: "index_user_health_goals_on_deleted_at"
     t.index ["health_goal_id"], name: "index_user_health_goals_on_health_goal_id"
+    t.index ["user_id", "health_goal_id"], name: "index_user_health_goals_on_user_id_and_health_goal_id", unique: true
     t.index ["user_id"], name: "index_user_health_goals_on_user_id"
   end
 
@@ -120,9 +113,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
+    t.integer "role", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "role", default: "user"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -134,8 +127,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
   add_foreign_key "food_food_qualifiers", "foods"
   add_foreign_key "user_foods", "foods"
   add_foreign_key "user_foods", "users"
-  add_foreign_key "user_health_condition_health_conditions", "health_conditions"
-  add_foreign_key "user_health_condition_health_conditions", "user_health_conditions"
   add_foreign_key "user_health_conditions", "health_conditions"
   add_foreign_key "user_health_conditions", "users"
   add_foreign_key "user_health_goals", "health_goals"

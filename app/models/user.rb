@@ -2,6 +2,9 @@
 
 # The user model for this application.
 class User < ApplicationRecord
+  ROLE_USER = 0
+  ROLE_ADMIN = 1
+
   before_save :downcase_email
 
   # Include default devise modules. Others available are: :omniauthable
@@ -19,7 +22,8 @@ class User < ApplicationRecord
   has_many :user_health_goals, dependent: :destroy
   has_many :health_goals, through: :user_health_goals
 
-  enum :role, %i[ user admin ]
+  # enum :role, [ ROLE_USER, ROLE_ADMIN ], default: ROLE_USER
+  enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER
 
   attr_accessor :email_or_username
 

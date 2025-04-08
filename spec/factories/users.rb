@@ -8,5 +8,10 @@ FactoryBot.define do
     email { FFaker::Internet.email.sub(/^[^@]+/, "#{first_name}.#{last_name}".downcase) }
     password { "Password1!" }
     password_confirmation { "Password1!" }
+    role { User::ROLE_USER }
+
+    trait :admin do
+      role { User::ROLE_ADMIN }
+    end
   end
 end
