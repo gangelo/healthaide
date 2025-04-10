@@ -1,4 +1,4 @@
-<div>
+  <%= turbo_frame_tag "main_content" do %>
   <div class="not-prose isolate">
     <div class="mb-4">
       <div class="flex space-x-2">
@@ -12,6 +12,7 @@
         <div class="h-100 space-y-4 overflow-auto overscroll-none text-gray-600 dark:bg-gray-800 dark:text-gray-400">
           <%= pretty_json(selected_user_export_hash) %>
         </div>
-      </figure>
-    </div>
+      </div>
+    </figure>
   </div>
+<% end %>

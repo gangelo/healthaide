@@ -13,22 +13,14 @@ class ExportsController < ApplicationController
 
     @selected_user_export_hash = {}
     if @user.present? && @selected_options.any?
-      # # Your logic to build the export hash based on selected options
-      # # For example:
-      # @selected_user_export_hash = {
-      #   user: { id: @user.id, username: @user.username },
-      #   exports: @selected_options.map do |option|
-      #     { type: option, data: get_export_data(@user, option) }
-      #   end
-      # }
-      @selected_user_export_hash
+      @selected_user_export_hash = @user.to_export_hash
     end
 
     render partial: "exports/preview", locals: { selected_user_export_hash: @selected_user_export_hash }
-    # render "exports/export_json", selected_user_export_hash: @selected_user_export_hash
   end
 
   def export
+    # TODO: Implement export functionality
   end
 
   private

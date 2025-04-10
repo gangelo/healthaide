@@ -73,8 +73,8 @@ class User < ApplicationRecord
   def to_export_hash
     {
     username => attributes.symbolize_keys.tap do |hash|
-      hash[:foods] = foods.map { |f| f.attributes.symbolize_keys },
-      hash[:health_conditions] = health_conditions.map { |hc| hc.attributes.symbolize_keys },
+      hash[:foods] = foods.map { |f| f.attributes.symbolize_keys }
+      hash[:health_conditions] = health_conditions.map { |hc| hc.attributes.symbolize_keys }
       hash[:health_goals] = health_goals.map { |hg| hg.attributes.symbolize_keys }
     end
     }

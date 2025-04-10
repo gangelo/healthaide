@@ -81,7 +81,5 @@
     </div>
   <% end %>
   <!-- Single content frame -->
-  <%= turbo_frame_tag "main_content" do %>
-    <%= render partial: "exports/preview", locals: { selected_user_export_hash: @selected_user_export_hash } %>
-  <% end %>
+  <%= render partial: "exports/preview", locals: { selected_user_export_hash: @selected_user_export_hash } %>
 </div>
