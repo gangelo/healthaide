@@ -3,10 +3,10 @@
 ## Build & Run Commands
 
 - **Start dev server**: `bin/dev`
-- **Run all tests**: `bin/rails spec`
-- **Run single test**: `bin/rails spec SPEC=path/to/spec.rb:line_number`
-- **Lint Ruby code**: `bin/rubocop`
-- **Lint ERB files**: `bundle exec erb_lint --lint-all`
+- **Run all tests**: `bundle exec rspec`
+- **Run single test**: `bundle exec rspec path/to/spec.rb[:line_number]`
+- **Lint Ruby code**: `bin/rubocop` (`-a` to auto-correct)
+- **Lint ERB files**: `bundle exec erb_lint --lint-all --enable-all-linters` (`--autocorrect` to auto-correct)
 - **Security scan**: `bin/brakeman`
 
 ## Code Style Guidelines

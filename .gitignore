@@ -36,9 +36,11 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
+vendor/templates/
+
 # Ignore scratch files
+exports/*
 scratch*.rb
 snippets.rb
 readme.txt
 todo.txt
-vendor/templates/

@@ -29,7 +29,7 @@ Food.find_or_create_by!(food_name: "Tuna")
 Food.find_or_create_by!(food_name: "Turkey")
 Food.find_or_create_by!(food_name: "Turmeric")
 
-puts "Adding common food qualifiers to foods..."
+puts "- Adding common food qualifiers to foods..."
 
 Food.all.each do |food|
   COMMON_FOOD_QUALIFIERS.each do |qualifier_name|

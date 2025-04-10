@@ -1,32 +1,46 @@
 puts "Creating health goals..."
 
-HealthGoal.find_or_create_by!(health_goal_name: "Balance blood sugar")
-HealthGoal.find_or_create_by!(health_goal_name: "Balance hormones")
-HealthGoal.find_or_create_by!(health_goal_name: "Boost cognitive function")
-HealthGoal.find_or_create_by!(health_goal_name: "Boost energy levels")
-HealthGoal.find_or_create_by!(health_goal_name: "Boost metabolism")
-HealthGoal.find_or_create_by!(health_goal_name: "Enhance brain function")
-HealthGoal.find_or_create_by!(health_goal_name: "Enhance gut health")
-HealthGoal.find_or_create_by!(health_goal_name: "Enhance respiratory health")
-HealthGoal.find_or_create_by!(health_goal_name: "Enhance skin health")
-HealthGoal.find_or_create_by!(health_goal_name: "Improve athletic performance")
-HealthGoal.find_or_create_by!(health_goal_name: "Improve cardiovascular endurance")
-HealthGoal.find_or_create_by!(health_goal_name: "Improve digestion")
-HealthGoal.find_or_create_by!(health_goal_name: "Improve mental clarity")
-HealthGoal.find_or_create_by!(health_goal_name: "Improve sleep quality")
-HealthGoal.find_or_create_by!(health_goal_name: "Increase muscle strength")
-HealthGoal.find_or_create_by!(health_goal_name: "Maintain healthy blood pressure")
-HealthGoal.find_or_create_by!(health_goal_name: "Maintain healthy weight")
-HealthGoal.find_or_create_by!(health_goal_name: "Optimize nutrient absorption")
-HealthGoal.find_or_create_by!(health_goal_name: "Promote healthy aging")
-HealthGoal.find_or_create_by!(health_goal_name: "Reduce allergic reactions")
-HealthGoal.find_or_create_by!(health_goal_name: "Reduce inflammation")
-HealthGoal.find_or_create_by!(health_goal_name: "Reduce stress levels")
-HealthGoal.find_or_create_by!(health_goal_name: "Strengthen immune system")
-HealthGoal.find_or_create_by!(health_goal_name: "Support bone health")
-HealthGoal.find_or_create_by!(health_goal_name: "Support dental health")
-HealthGoal.find_or_create_by!(health_goal_name: "Support heart health")
-HealthGoal.find_or_create_by!(health_goal_name: "Support joint health")
-HealthGoal.find_or_create_by!(health_goal_name: "Support kidney function")
-HealthGoal.find_or_create_by!(health_goal_name: "Support liver function")
-HealthGoal.find_or_create_by!(health_goal_name: "Support thyroid function")
+health_goal_names = [
+  "Balance blood sugar",
+  "Balance hormones",
+  "Boost cognitive function",
+  "Boost energy levels",
+  "Boost metabolism",
+  "Enhance brain function",
+  "Enhance gut health",
+  "Enhance respiratory health",
+  "Enhance skin health",
+  "Improve athletic performance",
+  "Improve cardiovascular endurance",
+  "Improve digestion",
+  "Improve mental clarity",
+  "Improve sleep quality",
+  "Increase muscle mass",
+  "Increase muscle strength",
+  "Maintain healthy blood pressure",
+  "Maintain healthy weight",
+  "Maintain muscle mass",
+  "Optimize nutrient absorption",
+  "Promote healthy aging",
+  "Reduce allergic reactions",
+  "Reduce inflammation",
+  "Reduce stress levels",
+  "Strengthen immune system",
+  "Support bone health",
+  "Support dental health",
+  "Support heart health",
+  "Support joint health",
+  "Support kidney function",
+  "Support liver function",
+  "Support thyroid function"
+]
+
+health_goal_attributes = health_goal_names.map do |name|
+  { health_goal_name: name }
+end
+
+HealthGoal.upsert_all(
+  health_goal_attributes,
+  unique_by: :health_goal_name,    # The unique constraint
+  update_only: [ :health_goal_name ] # Fields to update if record exists
+)

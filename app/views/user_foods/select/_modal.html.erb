@@ -1,9 +1,7 @@
 <% content_for :search_field do %>
   <%= render "user_foods/select/search_field" %>
 <% end %>
-
-<% # No item_list content needed - it's handled by the search_field partial %>
-
+<%# No item_list content needed - it's handled by the search_field partial %>
 <%= render "shared/select/modal_base",
   item_type: "food",
   item_type_label: "food",

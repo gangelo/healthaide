@@ -18,11 +18,11 @@
 <p>
   <h2>Icons::CloseComponent</h2>
   <% [
-       ["text-amber-400", "text-amber-600"],
-       ["text-blue-400", "text-blue-600"],
-       ["text-green-400", "text-green-600"],
-       ["text-red-400", "text-red-600"],
-       ["text-violet-400", "text-violet-600"]
+       [ "text-amber-400", "text-amber-600" ],
+       [ "text-blue-400", "text-blue-600" ],
+       [ "text-green-400", "text-green-600" ],
+       [ "text-red-400", "text-red-600" ],
+       [ "text-violet-400", "text-violet-600" ]
     ].each_with_index do |colors| %>
     <p class="<%= colors[0] %> hover:<%= colors[1] %>">
       Wrapped in a div specifying text and hover colors (<%= colors[0] %>, <%= colors[1] %>)
@@ -33,11 +33,11 @@
 <p>
   <h2>Icons::XCloseComponent</h2>
   <% [
-       ["text-amber-400", "text-amber-600"],
-       ["text-blue-400", "text-blue-600"],
-       ["text-green-400", "text-green-600"],
-       ["text-red-400", "text-red-600"],
-       ["text-violet-400", "text-violet-600"]
+       [ "text-amber-400", "text-amber-600" ],
+       [ "text-blue-400", "text-blue-600" ],
+       [ "text-green-400", "text-green-600" ],
+       [ "text-red-400", "text-red-600" ],
+       [ "text-violet-400", "text-violet-600" ]
     ].each_with_index do |colors| %>
     <p class="<%= colors[0] %> hover:<%= colors[1] %>">
       Wrapped in a div specifying text and hover colors (<%= colors[0] %>, <%= colors[1] %>)
@@ -60,5 +60,11 @@
 </p>
 <p>
   <h2>Grids::HeaderComponent</h2>
-  <%= render(Grids::HeaderComponent.new(columns: [:name, :qualifiers, actions: {css_class: "text-right" }])) %>
+  <%= render(Grids::HeaderComponent.new(columns: [ :name, :qualifiers, actions: { css_class: "text-right" } ])) %>
+</p>
+<p>
+  <h2>Icons::DownloadComponent</h2>
+  <p class="text-blue-400 hover:text-blue-600">
+    <%= render(Icons::DownloadComponent.new) %>
+  </p>
 </p>

@@ -7,6 +7,12 @@ class UserFood < ApplicationRecord
 
   scope :ordered, -> { joins(:food).order("foods.food_name") }
 
+  def to_h
+    attributes.symbolize_keys.tap do |hash|
+      hash[:food] = food.to
+    end
+  end
+
   private
 
   def food_not_already_selected

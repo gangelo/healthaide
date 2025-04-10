@@ -14,6 +14,11 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  # Exports
+  get "exports" => "exports#index", as: :exports
+  post "exports" => "exports#export", as: :export
+  get "exports/preview" => "exports#preview", as: :export_preview
+
   # Foods
   resources :foods do
     member do

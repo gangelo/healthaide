@@ -28,7 +28,10 @@ class ApplicationController < ActionController::Base
 
   def authenticate_admin!
     authenticate_user!
-    # TODO: Send alert error message if not admin.
-    redirect_to root_path, status: :forbidden unless current_user.admin?
+    return if current_user.admin?
+
+    redirect_to root_path,
+      flash: { error: "You are not authorized to access this page." },
+      status: :forbidden
   end
 end

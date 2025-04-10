@@ -2,7 +2,7 @@
   <% if user_health_conditions.any? %>
     <div class="divide-y divide-gray-100">
       <!-- Table header -->
-      <%= render(Grids::HeaderComponent.new(columns: ["health condition", actions: {css_class: "text-right" }])) %>
+      <%= render(Grids::HeaderComponent.new(columns: [ "health condition", actions: { css_class: "text-right" } ])) %>
       <!-- Table rows -->
       <%= render partial: "user_health_conditions/list/row", locals: { user_health_conditions: user_health_conditions } %>
     </div>
@@ -17,7 +17,7 @@
         <%= render partial: "shared/links/add_new_link",
           locals: {
             link_path: new_user_health_condition_path,
-            link_text: "Add Health Condition",
+            link_text: "Add Health Condition"
           } %>
       </div>
     </div>

@@ -20,7 +20,7 @@
       <% if @foods.any? %>
         <div class="divide-y divide-gray-100">
           <!-- Table header -->
-          <%= render(Grids::HeaderComponent.new(columns: ["food name", "qualifier", actions: { css_class: "text-right" }])) %>
+          <%= render(Grids::HeaderComponent.new(columns: [ "food name", "qualifier", actions: { css_class: "text-right" } ])) %>
           <!-- Table rows -->
           <ul role="list">
             <% @foods.each_with_index do |food, index| %>

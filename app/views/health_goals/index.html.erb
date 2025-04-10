@@ -18,7 +18,7 @@
     <% if @health_goals.any? %>
       <div class="divide-y divide-gray-100">
         <!-- Table header -->
-        <%= render(Grids::HeaderComponent.new(columns: ["health goal name", actions: { css_class: "text-right" }])) %>
+        <%= render(Grids::HeaderComponent.new(columns: [ "health goal name", actions: { css_class: "text-right" } ])) %>
         <!-- Table rows -->
         <ul role="list">
           <% @health_goals.each_with_index do |health_goal, index| %>

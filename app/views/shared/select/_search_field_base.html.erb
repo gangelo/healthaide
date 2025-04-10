@@ -8,8 +8,8 @@
         placeholder: placeholder || "Search...",
         autocomplete: "off",
         data: {
-          "#{search_controller || 'search-form'}_target": "input",
-          action: "input->#{search_controller || 'search-form'}#search"
+          "#{search_controller || "search-form"}_target": "input",
+          action: "input->#{search_controller || "search-form"}#search"
         } %>
 
     <% if params[:search].present? %>
