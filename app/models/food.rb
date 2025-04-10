@@ -67,7 +67,7 @@ class Food < ApplicationRecord
 
     # Check if any other food has the same signature
     duplicate_food = Food.where.not(id: id || 0)
-                         .find { |f| f.unique_signature == unique_signature }
+                         .find { x.unique_signature == unique_signature }
 
     if duplicate_food
       if duplicate_food.discarded?

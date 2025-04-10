@@ -18,17 +18,15 @@ export default class extends Controller {
     // Get the selected user
     const userId = this.userSelectTarget.value;
 
-    if (userId && selectedOptions.length > 0) {
-      // Build the URL with query parameters
-      const url =
-        `/exports/preview?user_id=${userId}&` +
-        selectedOptions.map((opt) => `export_options[]=${opt}`).join("&");
+    // Build the URL with query parameters
+    const url =
+      `/exports/preview?user_id=${userId}&` +
+      selectedOptions.map((opt) => `export_options[]=${opt}`).join("&");
 
-      // Find the Turbo Frame and update its source
-      const frame = document.getElementById("main_content");
-      if (frame) {
-        frame.src = url;
-      }
+    // Find the Turbo Frame and update its source
+    const frame = document.getElementById("main_content");
+    if (frame) {
+      frame.src = url;
     }
   }
 
