@@ -33,6 +33,18 @@ class Food < ApplicationRecord
     results
   end
 
+  def to_export_hash
+    {
+    food: attributes.symbolize_keys.tap do |hash|
+      hash[:food_qualifiers] = []
+
+      food_qualifiers.each_with_index do |food_qualifier, index|
+        hash[:food_qualifiers][index] = food_qualifier.to_export_hash
+      end
+    end
+    }
+  end
+
   def self.find_by_food_name_normalized(food_name)
     find_by(food_name: normalize_name(food_name))
   end
@@ -67,7 +79,7 @@ class Food < ApplicationRecord
 
     # Check if any other food has the same signature
     duplicate_food = Food.where.not(id: id || 0)
-                         .find { x.unique_signature == unique_signature }
+                         .find { it.unique_signature == unique_signature }
 
     if duplicate_food
       if duplicate_food.discarded?

@@ -12,6 +12,12 @@ class FoodQualifier < ApplicationRecord
 
   scope :ordered, -> { order(:qualifier_name) }
 
+  def to_export_hash
+    {
+    food_qualifier: attributes.symbolize_keys
+    }
+  end
+
   private
 
   def normalize_name

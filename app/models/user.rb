@@ -22,7 +22,6 @@ class User < ApplicationRecord
   has_many :user_health_goals, dependent: :destroy
   has_many :health_goals, through: :user_health_goals
 
-  # enum :role, [ ROLE_USER, ROLE_ADMIN ], default: ROLE_USER
   enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER
 
   attr_accessor :email_or_username
@@ -72,10 +71,10 @@ class User < ApplicationRecord
 
   def to_export_hash
     {
-    username => attributes.symbolize_keys.tap do |hash|
-      hash[:foods] = foods.map { it.attributes.symbolize_keys }
-      hash[:health_conditions] = health_conditions.map { it.attributes.symbolize_keys }
-      hash[:health_goals] = health_goals.map { it.attributes.symbolize_keys }
+    user: attributes.symbolize_keys.tap do |hash|
+      hash[:user_foods] = user_foods.map { it.to_export_hash }
+      hash[:user_health_conditions] = user_health_conditions.map { it.to_export_hash }
+      hash[:user_health_goals] = user_health_goals.map { it.to_export_hash }
     end
     }
   end

@@ -12,6 +12,14 @@ class UserHealthCondition < ApplicationRecord
 
   scope :ordered, -> { joins(:health_condition).order("health_conditions.health_condition_name") }
 
+  def to_export_hash
+    {
+    user_health_condition: attributes.symbolize_keys.tap do |hash|
+        hash.merge!(health_condition.to_export_hash)
+      end
+    }
+  end
+
   def health_condition_name
     health_condition&.health_condition_name
   end

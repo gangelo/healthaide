@@ -15,6 +15,12 @@ class HealthGoal < ApplicationRecord
     health_goal_name
   end
 
+  def to_export_hash
+    {
+    health_goal: attributes.symbolize_keys
+    }
+  end
+
   private
 
   def normalize_name

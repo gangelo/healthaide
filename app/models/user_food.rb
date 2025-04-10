@@ -7,10 +7,12 @@ class UserFood < ApplicationRecord
 
   scope :ordered, -> { joins(:food).order("foods.food_name") }
 
-  def to_h
-    attributes.symbolize_keys.tap do |hash|
-      hash[:food] = food.to
+  def to_export_hash
+    {
+    user_food: attributes.symbolize_keys.tap do |hash|
+      hash.merge!(food.to_export_hash)
     end
+    }
   end
 
   private

@@ -16,6 +16,12 @@ class HealthCondition < ApplicationRecord
     health_condition_name
   end
 
+  def to_export_hash
+    {
+      health_condition: attributes.symbolize_keys
+    }
+  end
+
   private
 
   def normalize_name
