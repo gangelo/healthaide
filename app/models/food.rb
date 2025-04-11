@@ -33,6 +33,10 @@ class Food < ApplicationRecord
     results
   end
 
+  def self.find_by_food_name_normalized(food_name)
+    find_by(food_name: normalize_name(food_name))
+  end
+
   def to_export_hash
     {
     food: attributes.symbolize_keys.tap do |hash|
@@ -43,10 +47,6 @@ class Food < ApplicationRecord
       end
     end
     }
-  end
-
-  def self.find_by_food_name_normalized(food_name)
-    find_by(food_name: normalize_name(food_name))
   end
 
   def includes_qualifier?(qualifier)
