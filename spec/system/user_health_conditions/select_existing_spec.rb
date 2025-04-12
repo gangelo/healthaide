@@ -15,59 +15,56 @@ RSpec.describe "Selecting existing health conditions", type: :system do
     create(:user_health_condition, user: user, health_condition: health_condition1)
   end
 
-  scenario "User can see available health conditions in dropdown" do
+  scenario "User can see available health conditions", js: true do
     visit new_user_health_condition_path
 
-    # Check dropdown options
-    within("#select-existing-form") do
-      dropdown_options = page.all('select#user_health_condition_health_condition_id option').map(&:text)
-      expect(dropdown_options).to include(health_condition2.health_condition_name)
-      expect(dropdown_options).to include(health_condition3.health_condition_name)
-      expect(dropdown_options).not_to include(health_condition1.health_condition_name) # Already added
+    # Check available conditions
+    within("[data-health-condition-selection-target='availableList']") do
+      expect(page).to have_content(health_condition2.health_condition_name)
+      expect(page).to have_content(health_condition3.health_condition_name)
+      expect(page).not_to have_content(health_condition1.health_condition_name) # Already added
     end
   end
 
-  scenario "User can select an existing health condition" do
+  scenario "User can select an existing health condition", js: true do
     visit new_user_health_condition_path
 
-    # Select from dropdown
-    within("#select-existing-form") do
-      select health_condition2.health_condition_name, from: "user_health_condition[health_condition_id]"
-      click_button "Add Selected Health Condition"
+    # Click on a condition to select it
+    find("[data-condition-id='#{health_condition2.id}']").click
+    
+    # Verify it moved to selected list
+    within("[data-health-condition-selection-target='selectedList']") do
+      expect(page).to have_content(health_condition2.health_condition_name)
     end
-
-    expect(page).to have_current_path(user_health_conditions_path)
+    
+    # Submit the form
+    click_button "Add Selected Conditions"
 
     # Verify the result
-    expect(page).to have_content("Health condition was successfully added")
+    expect(page).to have_current_path(user_health_conditions_path)
+    expect(page).to have_content("successfully added")
     expect(page).to have_content(health_condition2.health_condition_name)
   end
 
-  scenario "User must select a health condition" do
+  scenario "User cannot submit without selecting a condition", js: true do
     visit new_user_health_condition_path
 
-    # Try to submit without selecting a condition
-    within("#select-existing-form") do
-      # Don't select anything from dropdown
-      click_button "Add Selected Health Condition"
-    end
-
-    # Should see validation error
-    expect(page).to have_content("Health condition can't be blank")
+    # Don't select any conditions
+    # Add button should be disabled
+    expect(page).to have_button("Add Selected Conditions", disabled: true)
   end
 
-  scenario "User cannot add a health condition they already have" do
+  scenario "User cannot add a health condition they already have", js: true do
     # First add health_condition2
     create(:user_health_condition, user: user, health_condition: health_condition2)
 
     visit new_user_health_condition_path
 
-    # Check dropdown options
-    within("#select-existing-form") do
-      dropdown_options = page.all('select#user_health_condition_health_condition_id option').map(&:text)
-      expect(dropdown_options).not_to include(health_condition1.health_condition_name) # Already added
-      expect(dropdown_options).not_to include(health_condition2.health_condition_name) # Already added
-      expect(dropdown_options).to include(health_condition3.health_condition_name) # Available
+    # Check available conditions
+    within("[data-health-condition-selection-target='availableList']") do
+      expect(page).not_to have_content(health_condition1.health_condition_name) # Already added
+      expect(page).not_to have_content(health_condition2.health_condition_name) # Already added
+      expect(page).to have_content(health_condition3.health_condition_name) # Available
     end
   end
 end

@@ -16,16 +16,15 @@ RSpec.describe "Selecting multiple health goals", type: :system do
     create(:user_health_goal, user: user, health_goal: health_goal1)
   end
 
-  scenario "User can open the multiple selection modal", js: true do
+  scenario "User can see available health goals", js: true do
     visit new_user_health_goal_path
 
-    click_link "Choose Multiple Health Goals"
-
-    within("turbo-frame#modal") do
-      expect(page).to have_content("Select Health Goals")
-    end
-
-    within("turbo-frame#health_goals_list") do
+    # The new interface is always showing the selection UI directly on the page
+    expect(page).to have_content("Available Health Goals")
+    expect(page).to have_content("Selected Health Goals")
+    
+    # Check goals are displayed
+    within("[data-health-goal-selection-target='availableList']") do
       expect(page).to have_content(health_goal2.health_goal_name)
       expect(page).to have_content(health_goal3.health_goal_name)
       expect(page).to have_content(health_goal4.health_goal_name)
@@ -33,39 +32,39 @@ RSpec.describe "Selecting multiple health goals", type: :system do
     end
   end
 
-  scenario "User can search for health goals in the modal", js: true do
+  scenario "User can search for health goals", js: true do
     visit new_user_health_goal_path
-
-    click_link "Choose Multiple Health Goals"
 
     # Search for specific term
     fill_in "Search health goals...", with: "flex"
 
     # Wait for results to update
-    within("turbo-frame#health_goals_list") do
-      expect(page).to have_text(health_goal4.health_goal_name) # "Improved Flexibility"
-      expect(page).to_not have_text(health_goal2.health_goal_name) # "Muscle Gain"
-      expect(page).to_not have_text(health_goal3.health_goal_name) # "Better Sleep"
+    within("[data-health-goal-selection-target='availableList']") do
+      expect(page).to have_content(health_goal4.health_goal_name) # "Improved Flexibility"
+      expect(page).not_to have_content(health_goal2.health_goal_name) # "Muscle Gain"
+      expect(page).not_to have_content(health_goal3.health_goal_name) # "Better Sleep"
     end
   end
 
-  scenario "User can Choose Multiple Health Goals", js: true do
+  scenario "User can select multiple health goals", js: true do
     visit new_user_health_goal_path
 
-    click_link "Choose Multiple Health Goals"
+    # Select multiple goals by clicking them
+    find("[data-goal-id='#{health_goal2.id}']").click
+    find("[data-goal-id='#{health_goal4.id}']").click
 
-    # Select multiple goals using checkboxes
-    check "health_goal_ids_#{health_goal2.id}"
-    check "health_goal_ids_#{health_goal4.id}"
+    # Verify they moved to selected list
+    within("[data-health-goal-selection-target='selectedList']") do
+      expect(page).to have_content(health_goal2.health_goal_name)
+      expect(page).to have_content(health_goal4.health_goal_name)
+    end
 
     # Click add button
-    click_button "Add Selected Health Goals"
+    click_button "Add Selected Goals"
 
     # Verify result
-    expect(page).to have_current_path(new_user_health_goal_path)
-    expect(page).to have_content("2 health goals successfully added")
-
-    visit user_health_goals_path
+    expect(page).to have_current_path(user_health_goals_path)
+    expect(page).to have_content("successfully added")
     expect(page).to have_content(health_goal2.health_goal_name)
     expect(page).to have_content(health_goal4.health_goal_name)
   end
@@ -73,64 +72,50 @@ RSpec.describe "Selecting multiple health goals", type: :system do
   scenario "User cannot submit without selecting any goals", js: true do
     visit new_user_health_goal_path
 
-    click_link "Choose Multiple Health Goals"
-
-    # Don't select any checkboxes
-
+    # Don't select any goals
     # Add button should be disabled
-    expect(page).to have_button("Add Selected Health Goals", disabled: true)
+    expect(page).to have_button("Add Selected Goals", disabled: true)
   end
 
-  scenario "User can use select all button", js: true do
+  scenario "User can use the Clear All button", js: true do
     visit new_user_health_goal_path
 
-    click_link "Choose Multiple Health Goals"
-
-    # Use select all button
-    click_button "Select All"
-
-    # All available checkboxes should be checked
-    expect(page).to have_checked_field("health_goal_ids_#{health_goal2.id}")
-    expect(page).to have_checked_field("health_goal_ids_#{health_goal3.id}")
-    expect(page).to have_checked_field("health_goal_ids_#{health_goal4.id}")
-
-    # Add button should be enabled
-    expect(page).to have_button("Add Selected Health Goals", disabled: false)
-  end
-
-  scenario "User can use select none button", js: true do
-    visit new_user_health_goal_path
-
-    click_link "Choose Multiple Health Goals"
-
-    # First select all
-    click_button "Select All"
-
-    # Then deselect all
-    click_button "Select None"
-
-    # No checkboxes should be checked
-    expect(page).to have_unchecked_field("health_goal_ids_#{health_goal2.id}")
-    expect(page).to have_unchecked_field("health_goal_ids_#{health_goal3.id}")
-    expect(page).to have_unchecked_field("health_goal_ids_#{health_goal4.id}")
+    # Select a couple goals first
+    find("[data-goal-id='#{health_goal2.id}']").click
+    find("[data-goal-id='#{health_goal4.id}']").click
+    
+    # Verify selection
+    within("[data-health-goal-selection-target='selectedList']") do
+      expect(page).to have_content(health_goal2.health_goal_name)
+      expect(page).to have_content(health_goal4.health_goal_name)
+    end
+    
+    # Now clear all
+    click_button "Clear All"
+    
+    # No goals should be in the selected list
+    within("[data-health-goal-selection-target='selectedList']") do
+      expect(page).not_to have_content(health_goal2.health_goal_name)
+      expect(page).not_to have_content(health_goal4.health_goal_name)
+    end
+    
+    # Goals should be back in the available list
+    within("[data-health-goal-selection-target='availableList']") do
+      expect(page).to have_content(health_goal2.health_goal_name)
+      expect(page).to have_content(health_goal4.health_goal_name)
+    end
 
     # Add button should be disabled again
-    expect(page).to have_button("Add Selected Health Goals", disabled: true)
+    expect(page).to have_button("Add Selected Goals", disabled: true)
   end
 
-  scenario "User can cancel the modal", js: true do
+  scenario "User can navigate back to health goals list", js: true do
     visit new_user_health_goal_path
 
-    click_link "Choose Multiple Health Goals"
+    # Click the back link
+    click_link "Back to My Health Goals"
 
-    # Check modal is open
-    expect(page).to have_content("Select Health Goals")
-
-    # Click cancel
-    click_link "Cancel"
-
-    # Modal should be closed
-    expect(page).not_to have_content("Select Health Goals")
+    # Should return to health goals list
     expect(page).to have_current_path(user_health_goals_path)
   end
 end

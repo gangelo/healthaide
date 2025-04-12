@@ -23,32 +23,34 @@ RSpec.describe "Selecting multiple foods", type: :system do
     create(:user_food, user: user, food: food1)
   end
 
-  scenario "User can open the multiple selection modal", js: true do
+  scenario "User can see available foods", js: true do
     visit new_user_food_path
 
-    click_link "Choose Multiple Foods"
-
-    expect(page).to have_content("Select Foods")
-    expect(page).to have_content(food2.food_name)
-    expect(page).to have_content(food3.food_name)
-    expect(page).to have_content(food4.food_name)
-    expect(page).to have_content(food_with_qualifier.food_name)
-    expect(page).not_to have_content(food1.food_name) # Already added
-
-    # Should display qualifiers if present
-    expect(page).to have_content("Organic")
+    # The new interface is always showing the selection UI directly on the page
+    expect(page).to have_content("Available Foods")
+    expect(page).to have_content("Selected Foods")
+    
+    # Check foods are displayed
+    within("[data-food-selection-target='availableList']") do
+      expect(page).to have_content(food2.food_name)
+      expect(page).to have_content(food3.food_name)
+      expect(page).to have_content(food4.food_name)
+      expect(page).to have_content(food_with_qualifier.food_name)
+      expect(page).not_to have_content(food1.food_name) # Already added
+    
+      # Should display qualifiers if present
+      expect(page).to have_content("Organic")
+    end
   end
 
-  scenario "User can search for foods in the modal", js: true do
+  scenario "User can search for foods", js: true do
     visit new_user_food_path
-
-    click_link "Choose Multiple Foods"
 
     # Search for specific term
     fill_in "Search foods...", with: "dragon"
 
     # Wait for results to update
-    within("turbo-frame#foods_list") do
+    within("[data-food-selection-target='availableList']") do
       expect(page).to have_content(food4.food_name) # "Dragon Fruit"
       expect(page).not_to have_content(food2.food_name) # "Banana"
       expect(page).not_to have_content(food3.food_name) # "Cherry"
@@ -58,18 +60,22 @@ RSpec.describe "Selecting multiple foods", type: :system do
   scenario "User can select multiple foods", js: true do
     visit new_user_food_path
 
-    click_link "Choose Multiple Foods"
+    # Select multiple foods by clicking them
+    find("[data-food-id='#{food2.id}']").click
+    find("[data-food-id='#{food4.id}']").click
 
-    # Select multiple foods using checkboxes
-    check "food_ids_#{food2.id}"
-    check "food_ids_#{food4.id}"
+    # Verify they moved to selected list
+    within("[data-food-selection-target='selectedList']") do
+      expect(page).to have_content(food2.food_name)
+      expect(page).to have_content(food4.food_name)
+    end
 
     # Click add button
     click_button "Add Selected Foods"
 
     # Verify result
-    expect(page).to have_current_path(new_user_food_path)
-    expect(page).to have_content("2 foods successfully added")
+    expect(page).to have_current_path(user_foods_path)
+    expect(page).to have_content("successfully added")
     expect(page).to have_content(food2.food_name)
     expect(page).to have_content(food4.food_name)
   end
@@ -77,65 +83,50 @@ RSpec.describe "Selecting multiple foods", type: :system do
   scenario "User cannot submit without selecting any foods", js: true do
     visit new_user_food_path
 
-    click_link "Choose Multiple Foods"
-
-    # Don't select any checkboxes
-
+    # Don't select any foods
     # Add button should be disabled
     expect(page).to have_button("Add Selected Foods", disabled: true)
   end
 
-  scenario "User can use select all button", js: true do
+  scenario "User can use the Clear All button", js: true do
     visit new_user_food_path
 
-    click_link "Choose Multiple Foods"
-
-    # Use select all button
-    click_button "Select All"
-
-    # All available checkboxes should be checked
-    expect(page).to have_checked_field("food_ids_#{food2.id}")
-    expect(page).to have_checked_field("food_ids_#{food3.id}")
-    expect(page).to have_checked_field("food_ids_#{food4.id}")
-    expect(page).to have_checked_field("food_ids_#{food_with_qualifier.id}")
-
-    # Add button should be enabled
-    expect(page).to have_button("Add Selected Foods", disabled: false)
-  end
-
-  scenario "User can use select none button", js: true do
-    visit new_user_food_path
-
-    click_link "Choose Multiple Foods"
-
-    # First select all
-    click_button "Select All"
-
-    # Then deselect all
-    click_button "Select None"
-
-    # No checkboxes should be checked
-    expect(page).to have_unchecked_field("food_ids_#{food2.id}")
-    expect(page).to have_unchecked_field("food_ids_#{food3.id}")
-    expect(page).to have_unchecked_field("food_ids_#{food4.id}")
+    # Select a couple foods first
+    find("[data-food-id='#{food2.id}']").click
+    find("[data-food-id='#{food4.id}']").click
+    
+    # Verify selection
+    within("[data-food-selection-target='selectedList']") do
+      expect(page).to have_content(food2.food_name)
+      expect(page).to have_content(food4.food_name)
+    end
+    
+    # Now clear all
+    click_button "Clear All"
+    
+    # No foods should be in the selected list
+    within("[data-food-selection-target='selectedList']") do
+      expect(page).not_to have_content(food2.food_name)
+      expect(page).not_to have_content(food4.food_name)
+    end
+    
+    # Foods should be back in the available list
+    within("[data-food-selection-target='availableList']") do
+      expect(page).to have_content(food2.food_name)
+      expect(page).to have_content(food4.food_name)
+    end
 
     # Add button should be disabled again
     expect(page).to have_button("Add Selected Foods", disabled: true)
   end
 
-  scenario "User can cancel the modal", js: true do
+  scenario "User can navigate back to food list", js: true do
     visit new_user_food_path
 
-    click_link "Choose Multiple Foods"
+    # Click the back link
+    click_link "Back to My Foods"
 
-    # Check modal is open
-    expect(page).to have_content("Select Foods")
-
-    # Click cancel
-    click_link "Cancel"
-
-    # Modal should be closed
-    expect(page).not_to have_content("Select Foods")
+    # Should return to food list
     expect(page).to have_current_path(user_foods_path)
   end
 end

@@ -17,58 +17,78 @@ RSpec.describe "Adding new foods", type: :system do
 
     # NOTE: We need to match: :first because there are no foods in the list yet
     # and the "Add" button appears twice in the UI.
-    click_link "Add Food", match: :first
+    click_link "Add Foods", match: :first
 
-    expect(page).to have_content("Add Food")
-    expect(page).to have_content("Create New Food")
-    expect(page).to have_content("Select Existing Food")
-    expect(page).to have_content("Add Multiple Foods")
+    expect(page).to have_content("Add Foods")
+    expect(page).to have_content("Available Foods")
+    expect(page).to have_content("Selected Foods")
+    expect(page).to have_button("Add Selected Foods", disabled: true)
   end
 
-  scenario "User can create a new food" do
+  scenario "User can create a new food", js: true do
     visit new_user_food_path
 
-    # Choose the create new food option
-    within("#create-new-food") do
-      fill_in "user_food[new_food_name]", with: "Broccoli"
-      click_button "Create & Add New Food"
+    # First search for a non-existent food to trigger the new food form
+    fill_in "Search foods...", with: "Broccoli"
+    
+    # Add New Food form should appear
+    expect(page).to have_content("Add New Food")
+    
+    # Create new food
+    within("[data-food-selection-target='newFoodForm']") do
+      fill_in "Enter food name", with: "Broccoli"
+      click_button "Add"
     end
+    
+    # Submit the form
+    click_button "Add Selected Foods"
 
     # Verify the result
     expect(page).to have_current_path(user_foods_path)
-    expect(page).to have_content("Food was successfully added to your list")
+    expect(page).to have_content("successfully added")
     expect(page).to have_content("Broccoli")
   end
 
-  scenario "User cannot create a food with an empty name" do
+  scenario "User cannot create a food with an empty name", js: true do
     visit new_user_food_path
 
-    # Try to submit with empty name
-    within("#create-new-food") do
-      fill_in "user_food[new_food_name]", with: ""
-      click_button "Create & Add New Food"
+    # First search for a non-existent food to trigger the new food form
+    fill_in "Search foods...", with: "EmptyFood"
+    
+    # Add New Food form should appear
+    expect(page).to have_content("Add New Food")
+    
+    # Try to create new food with empty name
+    within("[data-food-selection-target='newFoodForm']") do
+      fill_in "Enter food name", with: ""
+      click_button "Add"
     end
-
-    # Should see validation error
-    expect(page).to have_content("Please select an existing food or enter a new food name")
+    
+    # The empty food won't be added to selected foods
+    expect(page).to have_button("Add Selected Foods", disabled: true)
   end
 
-  scenario "User can restore a soft-deleted food" do
+  scenario "User can restore a soft-deleted food", js: true do
     visit new_user_food_path
 
+    # Search for soft-deleted food
+    fill_in "Search foods...", with: soft_deleted_food.food_name
+    
+    # Add New Food form should appear
+    expect(page).to have_content("Add New Food")
+    
     # Create food with same name as soft-deleted food
-    within("#create-new-food") do
-      fill_in "user_food[new_food_name]", with: soft_deleted_food.food_name
-      click_button "Create & Add New Food"
+    within("[data-food-selection-target='newFoodForm']") do
+      expect(page).to have_field("Enter food name", with: soft_deleted_food.food_name)
+      click_button "Add"
     end
+    
+    # Submit the form
+    click_button "Add Selected Foods"
 
     expect(page).to have_current_path(user_foods_path)
 
-    # Should see restoration message
-    within("#flash_messages") do
-      expect(page).to have_content("Food was successfully added to your list.")
-    end
-
+    # Should see food in the list
     within("#main_content") do
       expect(page).to have_content(soft_deleted_food.food_name)
     end

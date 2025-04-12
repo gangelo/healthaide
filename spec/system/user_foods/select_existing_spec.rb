@@ -20,52 +20,49 @@ RSpec.describe "Selecting existing foods", type: :system do
     create(:user_food, user: user, food: food1)
   end
 
-  scenario "User can see available foods in dropdown" do
+  scenario "User can see available foods", js: true do
     visit new_user_food_path
 
-    # Check dropdown options
-    within("#select-existing-food-form") do
-      dropdown_options = page.all('select#user_food_food_id option').map(&:text)
-
+    # Check available foods list
+    within("[data-food-selection-target='availableList']") do
       # Should include foods not already added
-      expect(dropdown_options).to include(food2.display_name_with_qualifiers)
-      expect(dropdown_options).to include(food3.display_name_with_qualifiers)
-      expect(dropdown_options).to include(food_with_qualifiers.display_name_with_qualifiers)
+      expect(page).to have_content(food2.food_name)
+      expect(page).to have_content(food3.food_name)
+      expect(page).to have_content(food_with_qualifiers.food_name)
 
       # Should show qualifiers if present
-      expect(dropdown_options).to include("Avocado (Organic)")
+      expect(page).to have_content("Organic")
 
       # Should not include already added foods
-      expect(dropdown_options).not_to include(food1.display_name_with_qualifiers)
+      expect(page).not_to have_content(food1.food_name)
     end
   end
 
-  scenario "User can select an existing food" do
+  scenario "User can select an existing food", js: true do
     visit new_user_food_path
 
-    # Select from dropdown
-    within("#select-existing-food-form") do
-      select food2.display_name_with_qualifiers, from: "user_food[food_id]"
-      click_button "Add Selected Food"
+    # Click on a food to select it
+    find("[data-food-id='#{food2.id}']").click
+    
+    # Check it's moved to the selected foods list
+    within("[data-food-selection-target='selectedList']") do
+      expect(page).to have_content(food2.food_name)
     end
+    
+    # Submit the form
+    click_button "Add Selected Foods"
 
     # Verify the result
     expect(page).to have_current_path(user_foods_path)
-    expect(page).to have_content("Food was successfully added to your list")
+    expect(page).to have_content("successfully added")
     expect(page).to have_content(food2.food_name)
   end
 
-  scenario "User must select a food" do
+  scenario "User must select a food", js: true do
     visit new_user_food_path
 
-    # Try to submit without selecting a food
-    within("#select-existing-food-form") do
-      # Don't select anything from dropdown
-      click_button "Add Selected Food"
-    end
-
-    # Should see validation error
-    expect(page).to have_content("Please select an existing food or enter a new food name")
+    # Don't select any foods
+    expect(page).to have_button("Add Selected Foods", disabled: true)
   end
 
   scenario "User can navigate back to list" do
