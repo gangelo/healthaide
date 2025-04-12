@@ -149,10 +149,31 @@ RSpec.describe "Foods Management", type: :system do
   end
 
   context "when deleting a food" do
-    it "deletes the food and displays a success message"
-  end
-
-  context "when restoring a food" do
-    it "restores the food and displays a success message"
+    let!(:food) { create(:food, food_name: "Lettuce") }
+    
+    it "deletes the food and displays a success message", js: true do
+      visit foods_path
+      
+      # Find the row containing the food name and click its delete button
+      within("li", text: food.food_name) do
+        click_button "Delete"
+      end
+      
+      # Accept the confirmation dialog
+      accept_confirm
+      
+      # Check for success message
+      expect(page).to have_content("Food was successfully deleted")
+      
+      # Currently foods are soft-deleted, so they still appear but with a "Deleted" label
+      # We'd change this expectation once we switch to hard deletion
+      expect(page).to have_content("Lettuce")
+      expect(page).to have_content("Deleted") 
+      
+      # For now, the food still exists in the database but is marked as soft-deleted
+      # We'd change this expectation once we switch to hard deletion
+      expect(Food.find_by(id: food.id)).to be_present
+      expect(Food.find_by(id: food.id).discarded?).to be true
+    end
   end
 end
