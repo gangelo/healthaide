@@ -69,24 +69,24 @@ RSpec.describe "Health Conditions Management", type: :system do
 
   context "when deleting a health condition" do
     let!(:health_condition) { create(:health_condition, health_condition_name: "Arthritis") }
-    
+
     it "deletes the health condition and displays a success message", js: true do
       visit health_conditions_path
-      
+
       # Find the row containing the health condition name and click its delete button
       within("li", text: health_condition.health_condition_name) do
         click_button "Delete"
       end
-      
+
       # Accept the confirmation dialog
       accept_confirm
-      
+
       # Check for success message
       expect(page).to have_content("Health condition was successfully deleted")
-      
+
       # Health condition should be completely removed
       expect(page).not_to have_content("Arthritis")
-      
+
       # Health condition should be deleted from the database
       expect(HealthCondition.find_by(id: health_condition.id)).to be_nil
     end

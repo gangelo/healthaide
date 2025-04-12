@@ -43,12 +43,12 @@ RSpec.describe "Selecting existing foods", type: :system do
 
     # Click on a food to select it
     find("[data-food-id='#{food2.id}']").click
-    
+
     # Check it's moved to the selected foods list
     within("[data-food-selection-target='selectedList']") do
       expect(page).to have_content(food2.food_name)
     end
-    
+
     # Submit the form
     click_button "Add Selected Foods"
 

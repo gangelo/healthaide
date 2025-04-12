@@ -10,7 +10,7 @@ class FoodQualifier < ApplicationRecord
   validates :qualifier_name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 64 }
 
   scope :ordered, -> { order(:qualifier_name) }
-  
+
   def self.find_by_qualifier_name_normalized(qualifier_name)
     find_by(qualifier_name: normalize_name(qualifier_name))
   end

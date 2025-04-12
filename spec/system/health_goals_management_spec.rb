@@ -69,24 +69,24 @@ RSpec.describe "Health Goals Management", type: :system do
 
   context "when deleting a health goal" do
     let!(:health_goal) { create(:health_goal, health_goal_name: "Flexibility") }
-    
+
     it "deletes the health goal and displays a success message", js: true do
       visit health_goals_path
-      
+
       # Find the row containing the health goal name and click its delete button
       within("li", text: health_goal.health_goal_name) do
         click_button "Delete"
       end
-      
+
       # Accept the confirmation dialog
       accept_confirm
-      
+
       # Check for success message
       expect(page).to have_content("Health goal was successfully deleted")
-      
+
       # Verify health goal is no longer visible in the list
       expect(page).not_to have_content("Flexibility")
-      
+
       # Verify health goal is deleted from the database
       # Note: Health goals appear to use regular deletion, not soft deletion based on the controller
       expect(HealthGoal.find_by(id: health_goal.id)).to be_nil

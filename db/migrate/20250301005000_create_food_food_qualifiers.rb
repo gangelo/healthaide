@@ -7,6 +7,6 @@ class CreateFoodFoodQualifiers < ActiveRecord::Migration[7.2]
     end
 
     # Keep the unique index on food_id and food_qualifier_id
-    add_index :food_food_qualifiers, [:food_id, :food_qualifier_id], unique: true, name: 'idx_food_qualifier_unique'
+    add_index :food_food_qualifiers, [ :food_id, :food_qualifier_id ], unique: true, name: 'idx_food_qualifier_unique'
   end
 end

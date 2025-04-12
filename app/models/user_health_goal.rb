@@ -1,5 +1,4 @@
 class UserHealthGoal < ApplicationRecord
-
   belongs_to :user
   belongs_to :health_goal
 

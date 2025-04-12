@@ -31,12 +31,12 @@ RSpec.describe "Selecting existing health goals", type: :system do
 
     # Click on a goal to select it
     find("[data-goal-id='#{health_goal2.id}']").click
-    
+
     # Verify it moved to selected list
     within("[data-health-goal-selection-target='selectedList']") do
       expect(page).to have_content(health_goal2.health_goal_name)
     end
-    
+
     # Submit the form
     click_button "Add Selected Goals"
 

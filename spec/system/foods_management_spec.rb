@@ -118,34 +118,34 @@ RSpec.describe "Foods Management", type: :system do
       expect(page).to have_content("Organic") # Original qualifier still there
       expect(page).to have_content("Local") # New qualifier added
     end
-    
+
     it "validates uniqueness of food signatures" do
       # First verify our test food exists with the expected qualifier
       expect(food.food_name).to eq("Carrot")
       expect(food.food_qualifiers).to include(qualifier1)
-      
+
       # Try to create another food with the exact same name and qualifier
       # This should fail due to uniqueness validation
       second_food = Food.new(food_name: "Carrot")
       second_food.food_qualifiers << qualifier1
-      
+
       # This should be invalid
       expect(second_food).not_to be_valid
       expect(second_food.errors[:unique_signature]).to include("A food with this name and the same qualifiers already exists")
     end
-    
+
     it "enforces unique combinations of food names and qualifiers", js: true do
       # Try to create a new food with the same name but without qualifiers
       visit new_food_path
-      
+
       # Enter the same name as our existing food
       fill_in "Food name", with: "Carrot"
-      
+
       # Don't select any qualifiers
-      
+
       # Submit the form
       click_button "Create Food"
-      
+
       # Should see error about duplicate signature
       expect(page).to have_content("A food with this name and the same qualifiers already exists")
     end
@@ -182,24 +182,24 @@ RSpec.describe "Foods Management", type: :system do
 
   context "when deleting a food" do
     let!(:food) { create(:food, food_name: "Lettuce") }
-    
+
     it "deletes the food and displays a success message", js: true do
       visit foods_path
-      
+
       # Find the row containing the food name and click its delete button
       within("li", text: food.food_name) do
         click_button "Delete"
       end
-      
+
       # Accept the confirmation dialog
       accept_confirm
-      
+
       # Check for success message
       expect(page).to have_content("Food was successfully deleted")
-      
+
       # Food should be completely removed
       expect(page).not_to have_content("Lettuce")
-      
+
       # Food should be deleted from the database
       expect(Food.find_by(id: food.id)).to be_nil
     end

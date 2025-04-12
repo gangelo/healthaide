@@ -4,6 +4,5 @@ FactoryBot.define do
   factory :user_health_condition do
     user
     health_condition
-
   end
 end

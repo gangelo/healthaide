@@ -1,5 +1,4 @@
 class FoodFoodQualifier < ApplicationRecord
-
   belongs_to :food, inverse_of: :food_food_qualifiers
   belongs_to :food_qualifier, inverse_of: :food_food_qualifiers
 

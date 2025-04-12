@@ -22,7 +22,7 @@ RSpec.describe "Selecting multiple health conditions", type: :system do
     # The new interface is always showing the selection UI directly on the page
     expect(page).to have_content("Available Health Conditions")
     expect(page).to have_content("Selected Health Conditions")
-    
+
     # Check conditions are displayed
     within("[data-health-condition-selection-target='availableList']") do
       expect(page).to have_content(health_condition2.health_condition_name)
@@ -83,22 +83,22 @@ RSpec.describe "Selecting multiple health conditions", type: :system do
     # Select a couple conditions first
     find("[data-condition-id='#{health_condition2.id}']").click
     find("[data-condition-id='#{health_condition4.id}']").click
-    
+
     # Verify selection
     within("[data-health-condition-selection-target='selectedList']") do
       expect(page).to have_content(health_condition2.health_condition_name)
       expect(page).to have_content(health_condition4.health_condition_name)
     end
-    
+
     # Now clear all
     click_button "Clear All"
-    
+
     # No conditions should be in the selected list
     within("[data-health-condition-selection-target='selectedList']") do
       expect(page).not_to have_content(health_condition2.health_condition_name)
       expect(page).not_to have_content(health_condition4.health_condition_name)
     end
-    
+
     # Conditions should be back in the available list
     within("[data-health-condition-selection-target='availableList']") do
       expect(page).to have_content(health_condition2.health_condition_name)

@@ -22,7 +22,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
     # The new interface is always showing the selection UI directly on the page
     expect(page).to have_content("Available Health Goals")
     expect(page).to have_content("Selected Health Goals")
-    
+
     # Check goals are displayed
     within("[data-health-goal-selection-target='availableList']") do
       expect(page).to have_content(health_goal2.health_goal_name)
@@ -83,22 +83,22 @@ RSpec.describe "Selecting multiple health goals", type: :system do
     # Select a couple goals first
     find("[data-goal-id='#{health_goal2.id}']").click
     find("[data-goal-id='#{health_goal4.id}']").click
-    
+
     # Verify selection
     within("[data-health-goal-selection-target='selectedList']") do
       expect(page).to have_content(health_goal2.health_goal_name)
       expect(page).to have_content(health_goal4.health_goal_name)
     end
-    
+
     # Now clear all
     click_button "Clear All"
-    
+
     # No goals should be in the selected list
     within("[data-health-goal-selection-target='selectedList']") do
       expect(page).not_to have_content(health_goal2.health_goal_name)
       expect(page).not_to have_content(health_goal4.health_goal_name)
     end
-    
+
     # Goals should be back in the available list
     within("[data-health-goal-selection-target='availableList']") do
       expect(page).to have_content(health_goal2.health_goal_name)

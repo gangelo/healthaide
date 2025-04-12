@@ -29,16 +29,16 @@ RSpec.describe "Adding new foods", type: :system do
 
     # First search for a non-existent food to trigger the new food form
     fill_in "Search foods...", with: "Broccoli"
-    
+
     # Add New Food form should appear
     expect(page).to have_content("Add New Food")
-    
+
     # Create new food
     within("[data-food-selection-target='newFoodForm']") do
       fill_in "Enter food name", with: "Broccoli"
       click_button "Add"
     end
-    
+
     # Submit the form
     click_button "Add Selected Foods"
 
@@ -53,18 +53,17 @@ RSpec.describe "Adding new foods", type: :system do
 
     # First search for a non-existent food to trigger the new food form
     fill_in "Search foods...", with: "EmptyFood"
-    
+
     # Add New Food form should appear
     expect(page).to have_content("Add New Food")
-    
+
     # Try to create new food with empty name
     within("[data-food-selection-target='newFoodForm']") do
       fill_in "Enter food name", with: ""
       click_button "Add"
     end
-    
+
     # The empty food won't be added to selected foods
     expect(page).to have_button("Add Selected Foods", disabled: true)
   end
-
 end

@@ -31,17 +31,17 @@ RSpec.describe "Adding new health goals", type: :system do
 
     # Search for a goal that doesn't exist
     fill_in "Search health goals...", with: "Improve Flexibility"
-    
+
     # Wait for the "Add New Health Goal" form to appear
     expect(page).to have_content("This health goal doesn't exist yet")
-    
+
     # Create new goal through the "Add New" form
     within("[data-health-goal-selection-target='newGoalForm']") do
       # The input should be pre-filled with the search term
       expect(find("[data-health-goal-selection-target='newGoalInput']").value).to eq("Improve Flexibility")
       click_button "Add"
     end
-    
+
     # Submit the form to add the new goal
     click_button "Add Selected Goals"
 
@@ -56,7 +56,7 @@ RSpec.describe "Adding new health goals", type: :system do
 
     # Try to search with empty string, which shouldn't show the "Add New" form
     fill_in "Search health goals...", with: ""
-    
+
     # The "Add New" form should not be visible
     expect(page).not_to have_css("[data-health-goal-selection-target='newGoalForm']:not(.hidden)")
   end
@@ -66,7 +66,7 @@ RSpec.describe "Adding new health goals", type: :system do
 
     # Search for an existing goal
     fill_in "Search health goals...", with: existing_health_goal.health_goal_name
-    
+
     # The goal should appear in the available list and not in the "Add New" form
     expect(page).to have_content(existing_health_goal.health_goal_name)
     expect(page).not_to have_css("[data-health-goal-selection-target='newGoalForm']:not(.hidden)")

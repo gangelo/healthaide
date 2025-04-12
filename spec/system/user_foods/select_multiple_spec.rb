@@ -29,7 +29,7 @@ RSpec.describe "Selecting multiple foods", type: :system do
     # The new interface is always showing the selection UI directly on the page
     expect(page).to have_content("Available Foods")
     expect(page).to have_content("Selected Foods")
-    
+
     # Check foods are displayed
     within("[data-food-selection-target='availableList']") do
       expect(page).to have_content(food2.food_name)
@@ -37,7 +37,7 @@ RSpec.describe "Selecting multiple foods", type: :system do
       expect(page).to have_content(food4.food_name)
       expect(page).to have_content(food_with_qualifier.food_name)
       expect(page).not_to have_content(food1.food_name) # Already added
-    
+
       # Should display qualifiers if present
       expect(page).to have_content("Organic")
     end
@@ -94,22 +94,22 @@ RSpec.describe "Selecting multiple foods", type: :system do
     # Select a couple foods first
     find("[data-food-id='#{food2.id}']").click
     find("[data-food-id='#{food4.id}']").click
-    
+
     # Verify selection
     within("[data-food-selection-target='selectedList']") do
       expect(page).to have_content(food2.food_name)
       expect(page).to have_content(food4.food_name)
     end
-    
+
     # Now clear all
     click_button "Clear All"
-    
+
     # No foods should be in the selected list
     within("[data-food-selection-target='selectedList']") do
       expect(page).not_to have_content(food2.food_name)
       expect(page).not_to have_content(food4.food_name)
     end
-    
+
     # Foods should be back in the available list
     within("[data-food-selection-target='availableList']") do
       expect(page).to have_content(food2.food_name)

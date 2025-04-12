@@ -31,17 +31,17 @@ RSpec.describe "Adding new health conditions", type: :system do
 
     # Search for a condition that doesn't exist
     fill_in "Search health conditions...", with: "Arthritis"
-    
+
     # Wait for the "Add New Health Condition" form to appear
     expect(page).to have_content("This health condition doesn't exist yet")
-    
+
     # Create new condition through the "Add New" form
     within("[data-health-condition-selection-target='newConditionForm']") do
       # The input should be pre-filled with the search term
       expect(find("[data-health-condition-selection-target='newConditionInput']").value).to eq("Arthritis")
       click_button "Add"
     end
-    
+
     # Submit the form to add the new condition
     click_button "Add Selected Conditions"
 
@@ -56,7 +56,7 @@ RSpec.describe "Adding new health conditions", type: :system do
 
     # Try to search with empty string, which shouldn't show the "Add New" form
     fill_in "Search health conditions...", with: ""
-    
+
     # The "Add New" form should not be visible
     expect(page).not_to have_css("[data-health-condition-selection-target='newConditionForm']:not(.hidden)")
   end
@@ -66,7 +66,7 @@ RSpec.describe "Adding new health conditions", type: :system do
 
     # Search for an existing condition
     fill_in "Search health conditions...", with: existing_health_condition.health_condition_name
-    
+
     # The condition should appear in the available list and not in the "Add New" form
     expect(page).to have_content(existing_health_condition.health_condition_name)
     expect(page).not_to have_css("[data-health-condition-selection-target='newConditionForm']:not(.hidden)")

@@ -77,7 +77,6 @@ RSpec.describe Food do
         expect { food.save }.to change(food, :food_name).from('chicken NUGGETS').to('Chicken nuggets')
       end
     end
-
   end
 
   describe 'scopes' do

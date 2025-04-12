@@ -31,12 +31,12 @@ RSpec.describe "Selecting existing health conditions", type: :system do
 
     # Click on a condition to select it
     find("[data-condition-id='#{health_condition2.id}']").click
-    
+
     # Verify it moved to selected list
     within("[data-health-condition-selection-target='selectedList']") do
       expect(page).to have_content(health_condition2.health_condition_name)
     end
-    
+
     # Submit the form
     click_button "Add Selected Conditions"
 
