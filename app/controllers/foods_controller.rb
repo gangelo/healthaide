@@ -1,6 +1,6 @@
 class FoodsController < ApplicationController
   before_action :authenticate_admin!
-  before_action :set_food, only: %i[ show edit update destroy add_qualifier remove_qualifier restore ]
+  before_action :set_food, only: %i[ show edit update destroy add_qualifier remove_qualifier ]
 
   # GET /foods or /foods.json
   def index
@@ -14,19 +14,19 @@ class FoodsController < ApplicationController
 
   # GET /foods/1 or /foods/1.json
   def show
-    @food_qualifiers = @food.food_qualifiers.kept.ordered
-    @available_qualifiers = FoodQualifier.kept.ordered.where.not(id: @food.food_qualifier_ids)
+    @food_qualifiers = @food.food_qualifiers.ordered
+    @available_qualifiers = FoodQualifier.ordered.where.not(id: @food.food_qualifier_ids)
   end
 
   # GET /foods/new
   def new
     @food = Food.new
-    @food_qualifiers = FoodQualifier.kept.ordered
+    @food_qualifiers = FoodQualifier.ordered
   end
 
   # GET /foods/1/edit
   def edit
-    @food_qualifiers = FoodQualifier.kept.ordered
+    @food_qualifiers = FoodQualifier.ordered
   end
 
   # POST /foods or /foods.json
@@ -41,7 +41,7 @@ class FoodsController < ApplicationController
         format.html { redirect_to @food, notice: "Food was successfully created." }
         format.json { render :show, status: :created, location: @food }
       else
-        @food_qualifiers = FoodQualifier.kept.ordered
+        @food_qualifiers = FoodQualifier.ordered
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
       end
@@ -61,7 +61,7 @@ class FoodsController < ApplicationController
         format.html { redirect_to @food, notice: "Food was successfully updated." }
         format.json { render :show, status: :ok, location: @food }
       else
-        @food_qualifiers = FoodQualifier.kept.ordered
+        @food_qualifiers = FoodQualifier.ordered
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
       end
@@ -70,33 +70,13 @@ class FoodsController < ApplicationController
 
   # DELETE /foods/1 or /foods/1.json
   def destroy
-    @food.soft_delete
+    @food.destroy
     @foods = Food.ordered
 
     respond_to do |format|
       format.html { redirect_to foods_path, status: :see_other, flash: { notice: "Food was successfully deleted." } }
       format.turbo_stream do
         flash.now[:notice] = "Food was successfully deleted."
-        render turbo_stream: [
-          turbo_stream.update("main_content",
-            partial: "foods/list/list",
-            locals: { foods: @foods }),
-          turbo_stream.update("flash_messages",
-            partial: "shared/flash_messages")
-        ]
-      end
-    end
-  end
-
-  # PATCH /foods/1 or /foods/1.json
-  def restore
-    @food.restore
-    @foods = Food.ordered
-
-    respond_to do |format|
-      format.html { redirect_to foods_path, status: :see_other, flash: { notice: "Food was successfully restored." } }
-      format.turbo_stream do
-        flash.now[:notice] = "Food was successfully restored."
         render turbo_stream: [
           turbo_stream.update("main_content",
             partial: "foods/list/list",
@@ -116,12 +96,21 @@ class FoodsController < ApplicationController
       message = "#{@qualifier.qualifier_name} is already associated with this food."
       flash[:notice] = message
     else
-      @food.food_qualifiers << @qualifier
-      message = "Added #{@qualifier.qualifier_name} to #{@food.food_name}."
-      flash[:success] = message
+      # Create a temporary food with the new qualifier to check uniqueness
+      temp_food = Food.new(food_name: @food.food_name)
+      temp_food.food_qualifiers = @food.food_qualifiers + [ @qualifier ]
+
+      if temp_food.valid?
+        @food.food_qualifiers << @qualifier
+        message = "Added #{@qualifier.qualifier_name} to #{@food.food_name}."
+        flash[:success] = message
+      else
+        message = temp_food.errors.full_messages.to_sentence
+        flash[:alert] = message
+      end
     end
 
-    @available_qualifiers = FoodQualifier.kept.where.not(id: @food.food_qualifier_ids)
+    @available_qualifiers = FoodQualifier.where.not(id: @food.food_qualifier_ids)
 
     respond_to do |format|
       format.turbo_stream do
@@ -140,15 +129,24 @@ class FoodsController < ApplicationController
     @qualifier = FoodQualifier.find(params[:qualifier_id])
 
     if @food.includes_qualifier?(@qualifier)
-      @food.food_qualifiers.delete(@qualifier)
-      message = "Removed #{@qualifier.qualifier_name} from #{@food.food_name}."
-      flash[:success] = message
+      # Create a temporary food without this qualifier to check uniqueness
+      temp_food = Food.new(food_name: @food.food_name)
+      temp_food.food_qualifiers = @food.food_qualifiers.reject { |q| q.id == @qualifier.id }
+
+      if temp_food.valid?
+        @food.food_qualifiers.delete(@qualifier)
+        message = "Removed #{@qualifier.qualifier_name} from #{@food.food_name}."
+        flash[:success] = message
+      else
+        message = temp_food.errors.full_messages.to_sentence
+        flash[:alert] = message
+      end
     else
       message = "#{@qualifier.qualifier_name} is not associated with this food."
       flash[:notice] = message
     end
 
-    @available_qualifiers = FoodQualifier.kept.where.not(id: @food.food_qualifier_ids)
+    @available_qualifiers = FoodQualifier.where.not(id: @food.food_qualifier_ids)
 
     respond_to do |format|
       format.turbo_stream do
@@ -176,6 +174,9 @@ class FoodsController < ApplicationController
 
   # Process qualifiers from params
   def process_qualifiers
+    # Save the original qualifiers to restore in case validation fails
+    original_qualifiers = @food.food_qualifiers.to_a
+
     # Clear existing qualifiers first
     @food.food_qualifiers.clear if @food.persisted?
 
@@ -193,6 +194,14 @@ class FoodsController < ApplicationController
         # Find or create the qualifier
         qualifier = FoodQualifier.find_or_create_by(qualifier_name: qualifier_name)
         @food.food_qualifiers << qualifier unless @food.includes_qualifier?(qualifier)
+      end
+    end
+
+    # If the food's uniqueness validation fails, restore the original qualifiers
+    unless @food.valid?
+      @food.food_qualifiers.clear
+      original_qualifiers.each do |qualifier|
+        @food.food_qualifiers << qualifier
       end
     end
   end

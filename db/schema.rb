@@ -14,10 +14,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
   create_table "food_food_qualifiers", force: :cascade do |t|
     t.integer "food_id", null: false
     t.integer "food_qualifier_id", null: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_food_food_qualifiers_on_deleted_at"
     t.index ["food_id", "food_qualifier_id"], name: "idx_food_qualifier_unique", unique: true
     t.index ["food_id"], name: "index_food_food_qualifiers_on_food_id"
     t.index ["food_qualifier_id"], name: "index_food_food_qualifiers_on_food_qualifier_id"
@@ -25,27 +23,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
 
   create_table "food_qualifiers", force: :cascade do |t|
     t.string "qualifier_name", null: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_food_qualifiers_on_deleted_at"
+    t.index ["qualifier_name"], name: "index_food_qualifiers_on_qualifier_name", unique: true
   end
 
   create_table "foods", force: :cascade do |t|
     t.string "food_name", null: false
-    t.datetime "deleted_at"
+    t.string "unique_signature"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_foods_on_deleted_at"
+    t.index ["food_name", "unique_signature"], name: "index_foods_on_unique_signature", unique: true
   end
 
   create_table "health_conditions", force: :cascade do |t|
     t.string "health_condition_name", limit: 64, null: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_health_conditions_on_deleted_at"
-    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/"
+    t.index ["health_condition_name"], name: "index_health_conditions_on_health_condition_name", unique: true
   end
 
   create_table "health_goals", force: :cascade do |t|
@@ -59,23 +54,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.integer "user_id", null: false
     t.integer "food_id", null: false
     t.boolean "favorite", default: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_user_foods_on_deleted_at"
     t.index ["food_id"], name: "index_user_foods_on_food_id"
+    t.index ["user_id", "food_id"], name: "index_user_foods_on_user_id_and_food_id", unique: true
     t.index ["user_id"], name: "index_user_foods_on_user_id"
   end
 
   create_table "user_health_conditions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "health_condition_id", null: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_user_health_conditions_on_deleted_at"
     t.index ["health_condition_id"], name: "index_user_health_conditions_on_health_condition_id"
-    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true, where: "deleted_at IS NULL /*application='HealthAIde'*/"
+    t.index ["user_id", "health_condition_id"], name: "idx_user_health_conditions_unique", unique: true
     t.index ["user_id"], name: "index_user_health_conditions_on_user_id"
   end
 
@@ -83,10 +75,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.integer "user_id", null: false
     t.integer "health_goal_id", null: false
     t.integer "order_of_importance", default: 0, null: false
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["deleted_at"], name: "index_user_health_goals_on_deleted_at"
     t.index ["health_goal_id"], name: "index_user_health_goals_on_health_goal_id"
     t.index ["user_id", "health_goal_id"], name: "index_user_health_goals_on_user_id_and_health_goal_id", unique: true
     t.index ["user_id"], name: "index_user_health_goals_on_user_id"

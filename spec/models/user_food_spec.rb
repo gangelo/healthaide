@@ -37,17 +37,6 @@ RSpec.describe UserFood do
 
   describe 'callbacks' do
     describe 'before_save_validations' do
-      context 'when food is soft-deleted' do
-        let(:user) { create(:user) }
-        let(:food) { create(:food, :soft_deleted) }
-        let(:user_food) { build(:user_food, user: user, food: food) }
-
-        it 'prevents saving with an error message' do
-          expect(user_food).not_to be_valid
-          expect(user_food.errors[:food]).to include("'#{food.food_name}' is unavailable")
-        end
-      end
-
       context 'when food already exists for user' do
         let(:user) { create(:user) }
         let(:food) { create(:food) }

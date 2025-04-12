@@ -15,6 +15,8 @@ class UserFoodsController < ApplicationController
   def new
     @user_food = current_user.user_foods.new
     @foods = Food.available_for(current_user, include_qualifiers: true)
+    # TODO: Incorporate search to include qualifiers
+    # @foods = Food.having_qualifiers([ 12 ]).available_for(current_user, include_qualifiers: true)
 
     # Handle AJAX search requests
     if request.xhr? && params[:search].present?
@@ -41,15 +43,11 @@ class UserFoodsController < ApplicationController
     # From Create & Add New Food
     @user_food.food = if new_food_name.present?
       food = Food.find_by_food_name_normalized(new_food_name)
-      if food&.discarded?
-        food.restore
-        flash[:notice] = "Existing food '#{new_food_name}' was restored."
-      end
       food = Food.create!(food_name: new_food_name) if food.nil?
       food
     else
       # From Select Existing Food
-      Food.kept.find(food_id)
+      Food.find(food_id)
     end
 
     if @user_food.save
@@ -117,11 +115,9 @@ class UserFoodsController < ApplicationController
     # First handle creating any new foods that don't exist
     if new_food_names.present?
       new_food_names.each do |food_name|
-        # Check if food exists but is soft-deleted
+        # Check if food exists
         food = Food.find_by_food_name_normalized(food_name)
-        if food&.discarded?
-          food.restore
-        elsif food.nil?
+        if food.nil?
           # Create a new food
           food = Food.create!(food_name: food_name)
         end
@@ -141,8 +137,8 @@ class UserFoodsController < ApplicationController
       new_food_ids = food_ids.map(&:to_i) - existing_food_ids
 
       if new_food_ids.any?
-        # Filter out any soft-deleted foods
-        available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
+        # Get available food IDs
+        available_food_ids = Food.where(id: new_food_ids).pluck(:id)
 
         records_to_insert = available_food_ids.map do |food_id|
           { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }

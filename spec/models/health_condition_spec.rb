@@ -9,20 +9,13 @@ RSpec.describe HealthCondition, type: :model do
 
     context 'uniqueness' do
       subject { create(:health_condition) }
-      it 'validates uniqueness of health_condition_name with deleted_at condition' do
+      it 'validates uniqueness of health_condition_name' do
         # Create a health condition
         health_condition = create(:health_condition, health_condition_name: 'Test Condition')
 
         # Try to create another with the same name
         duplicate = build(:health_condition, health_condition_name: 'Test Condition')
         expect(duplicate).not_to be_valid
-
-        # Soft delete the original
-        health_condition.soft_delete
-
-        # Now we should be able to create one with the same name
-        new_condition = build(:health_condition, health_condition_name: 'Test Condition')
-        expect(new_condition).to be_valid
       end
     end
   end

@@ -5,8 +5,5 @@ FactoryBot.define do
     user
     health_condition
 
-    trait :deleted do
-      deleted_at { 1.day.ago }
-    end
   end
 end

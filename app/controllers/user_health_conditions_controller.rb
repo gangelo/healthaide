@@ -92,11 +92,9 @@ class UserHealthConditionsController < ApplicationController
     # First handle creating any new conditions that don't exist
     if new_condition_names.present?
       new_condition_names.each do |condition_name|
-        # Check if condition exists but is soft-deleted
+        # Check if condition exists
         condition = HealthCondition.find_by(health_condition_name: HealthCondition.normalize_name(condition_name))
-        if condition&.discarded?
-          condition.restore
-        elsif condition.nil?
+        if condition.nil?
           # Create a new condition
           condition = HealthCondition.create!(health_condition_name: condition_name)
         end
@@ -116,8 +114,8 @@ class UserHealthConditionsController < ApplicationController
       new_health_condition_ids = health_condition_ids.map(&:to_i) - existing_health_condition_ids
 
       if new_health_condition_ids.any?
-        # Filter out any soft-deleted conditions
-        available_condition_ids = HealthCondition.where(id: new_health_condition_ids).kept.pluck(:id)
+        # Get available condition IDs
+        available_condition_ids = HealthCondition.where(id: new_health_condition_ids).pluck(:id)
 
         records_to_insert = available_condition_ids.map do |health_condition_id|
           { user_id: current_user.id, health_condition_id: health_condition_id, created_at: Time.current, updated_at: Time.current }

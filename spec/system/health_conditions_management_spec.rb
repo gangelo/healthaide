@@ -84,13 +84,11 @@ RSpec.describe "Health Conditions Management", type: :system do
       # Check for success message
       expect(page).to have_content("Health condition was successfully deleted")
       
-      # Currently, health conditions appear to be soft-deleted but still visible in the UI
-      # We'd change this expectation once we switch to hard deletion
-      expect(page).to have_content("Arthritis")
+      # Health condition should be completely removed
+      expect(page).not_to have_content("Arthritis")
       
-      # For now, the health condition still exists in the database 
-      # We'd change this expectation once we switch to hard deletion
-      expect(HealthCondition.find_by(id: health_condition.id)).to be_present
+      # Health condition should be deleted from the database
+      expect(HealthCondition.find_by(id: health_condition.id)).to be_nil
     end
   end
 end

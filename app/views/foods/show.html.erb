@@ -1,4 +1,7 @@
 <% content_for :title, "Food Details" %>
+<%
+used_count = @food.user_foods.count
+%>
 <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
   <%= render "shared/flash_messages" %>
   <div class="md:flex md:items-center md:justify-between mb-6">
@@ -7,9 +10,15 @@
       <p class="mt-1 text-sm text-gray-500">Added on <%= @food.created_at.strftime("%B %d, %Y") %></p>
     </div>
     <div class="mt-4 md:ml-4 md:mt-0">
-      <span class="<%= @food.discarded? ? 'badge-red-full' : 'badge-green-full' %>">
-        <%= @food.discarded? ? 'Deleted' : 'Active' %>
-      </span>
+      <% if used_count.positive? %>
+        <span class="badge-red-full">
+          In use (<%= used_count %>)
+        </span>
+      <% else %>
+        <span class="badge-green-full">
+          Unused
+        </span>
+      <% end %>
     </div>
   </div>
   <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
@@ -39,10 +48,11 @@
     <%= link_to "Edit this food", edit_food_path(@food), class: "edit-button" %>
     <%= link_to "Back to foods", foods_path, class: "back-button" %>
     <%= button_to "Delete this food", @food,
-      method: :delete,
-      class: "delete-button",
-      form_class: "inline-block",
-      data: { turbo_confirm: "Are you sure?" } %>
+          method: :delete,
+          class: "delete-button",
+          form_class: "inline-block",
+          disabled: used_count.positive?,
+          form: { data: { turbo: false } },
+          onclick: "return confirm('Are you sure?');" %>
   </div>
-</div>
 </div>

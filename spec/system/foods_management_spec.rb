@@ -47,6 +47,7 @@ RSpec.describe "Foods Management", type: :system do
       # Create an existing food with qualifier1
       existing_food = create(:food, food_name: "Apple")
       existing_food.food_qualifiers << qualifier1
+      existing_food.save!  # Make sure it's saved
 
       visit new_food_path
 
@@ -56,7 +57,7 @@ RSpec.describe "Foods Management", type: :system do
 
       click_button "Create Food"
 
-      # Should see an error
+      # Should see an error - this can appear in either the flash message or the form errors
       expect(page).to have_content("A food with this name and the same qualifiers already exists")
     end
 
@@ -117,6 +118,37 @@ RSpec.describe "Foods Management", type: :system do
       expect(page).to have_content("Organic") # Original qualifier still there
       expect(page).to have_content("Local") # New qualifier added
     end
+    
+    it "validates uniqueness of food signatures" do
+      # First verify our test food exists with the expected qualifier
+      expect(food.food_name).to eq("Carrot")
+      expect(food.food_qualifiers).to include(qualifier1)
+      
+      # Try to create another food with the exact same name and qualifier
+      # This should fail due to uniqueness validation
+      second_food = Food.new(food_name: "Carrot")
+      second_food.food_qualifiers << qualifier1
+      
+      # This should be invalid
+      expect(second_food).not_to be_valid
+      expect(second_food.errors[:unique_signature]).to include("A food with this name and the same qualifiers already exists")
+    end
+    
+    it "enforces unique combinations of food names and qualifiers", js: true do
+      # Try to create a new food with the same name but without qualifiers
+      visit new_food_path
+      
+      # Enter the same name as our existing food
+      fill_in "Food name", with: "Carrot"
+      
+      # Don't select any qualifiers
+      
+      # Submit the form
+      click_button "Create Food"
+      
+      # Should see error about duplicate signature
+      expect(page).to have_content("A food with this name and the same qualifiers already exists")
+    end
   end
 
   describe "viewing a food" do
@@ -165,15 +197,11 @@ RSpec.describe "Foods Management", type: :system do
       # Check for success message
       expect(page).to have_content("Food was successfully deleted")
       
-      # Currently foods are soft-deleted, so they still appear but with a "Deleted" label
-      # We'd change this expectation once we switch to hard deletion
-      expect(page).to have_content("Lettuce")
-      expect(page).to have_content("Deleted") 
+      # Food should be completely removed
+      expect(page).not_to have_content("Lettuce")
       
-      # For now, the food still exists in the database but is marked as soft-deleted
-      # We'd change this expectation once we switch to hard deletion
-      expect(Food.find_by(id: food.id)).to be_present
-      expect(Food.find_by(id: food.id).discarded?).to be true
+      # Food should be deleted from the database
+      expect(Food.find_by(id: food.id)).to be_nil
     end
   end
 end

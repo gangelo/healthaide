@@ -35,7 +35,7 @@ class HealthConditionsController < ApplicationController
   end
 
   def destroy
-    @health_condition.soft_delete
+    @health_condition.destroy
     redirect_to health_conditions_path, notice: "Health condition was successfully deleted."
   end
 

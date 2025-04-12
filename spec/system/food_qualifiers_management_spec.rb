@@ -33,6 +33,7 @@ RSpec.describe "Food Qualifiers Management", type: :system do
 
   describe "editing a food qualifier" do
     let!(:qualifier) { create(:food_qualifier, qualifier_name: "Fresh") }
+    let!(:existing_qualifier) { create(:food_qualifier, qualifier_name: "Organic") }
 
     it "updates food qualifier name" do
       visit edit_food_qualifier_path(qualifier)
@@ -42,6 +43,16 @@ RSpec.describe "Food Qualifiers Management", type: :system do
 
       expect(page).to have_content("Food qualifier was successfully updated")
       expect(page).to have_content("Extra fresh") # Normalized name
+    end
+    
+    it "prevents renaming to an existing qualifier name" do
+      visit edit_food_qualifier_path(qualifier)
+
+      fill_in "Qualifier name", with: "Organic" # Already exists
+      click_button "Update Food qualifier"
+
+      expect(page).to have_content("Qualifier name has already been taken")
+      expect(qualifier.reload.qualifier_name).to eq("Fresh") # Name didn't change
     end
   end
 

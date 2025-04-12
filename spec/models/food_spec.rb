@@ -78,19 +78,6 @@ RSpec.describe Food do
       end
     end
 
-    describe 'after_update' do
-      context 'when soft-deleting a food' do
-        let!(:user) { create(:user) }
-        let!(:food) { create(:food) }
-        let!(:user_food) { create(:user_food, user: user, food: food) }
-
-        it 'deletes all associated user_foods' do
-          expect {
-            food.soft_delete
-          }.to change { user.user_foods.count }.from(1).to(0)
-        end
-      end
-    end
   end
 
   describe 'scopes' do
@@ -122,7 +109,6 @@ RSpec.describe Food do
       let(:user) { create(:user) }
       let!(:food1) { create(:food, food_name: "Unique Food 1") }
       let!(:food2) { create(:food, food_name: "Unique Food 2") }
-      let!(:food3) { create(:food, food_name: "Unique Food 3").tap(&:soft_delete) }
       let!(:user_food) { create(:user_food, user: user, food: food1) }
 
       it 'returns available foods for the user' do
@@ -130,7 +116,6 @@ RSpec.describe Food do
 
         expect(available_foods).to include(food2)
         expect(available_foods).not_to include(food1)
-        expect(available_foods).not_to include(food3)
       end
     end
   end
@@ -165,8 +150,8 @@ RSpec.describe Food do
       let(:food) { create(:food, food_name: 'Apple') }
 
       context 'when food has no qualifiers' do
-        it 'returns signature with just the food name' do
-          expect(food.unique_signature).to eq('"apple"')
+        it 'returns an empty string' do
+          expect(food.unique_signature).to eq("")
         end
       end
 
@@ -177,11 +162,13 @@ RSpec.describe Food do
         before do
           food.food_qualifiers << qualifier1
           food.food_qualifiers << qualifier2
+          # Save to ensure IDs are available
+          food.save!
         end
 
-        it 'returns signature with food name and sorted qualifiers' do
-          # Qualifiers are alphabetically sorted
-          expect(food.unique_signature).to eq('"apple":"fresh":"organic"')
+        it 'returns signature with sorted qualifier IDs' do
+          expect(food.unique_signature).to include(qualifier1.id.to_s)
+          expect(food.unique_signature).to include(qualifier2.id.to_s)
         end
       end
     end

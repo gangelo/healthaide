@@ -1,5 +1,4 @@
 class UserHealthGoal < ApplicationRecord
-  include SoftDeletable
 
   belongs_to :user
   belongs_to :health_goal

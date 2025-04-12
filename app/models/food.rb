@@ -1,28 +1,31 @@
 class Food < ApplicationRecord
   include NameNormalizable
-  include SoftDeletable
 
   UNIQUE_SIGNATURE_SEPARATOR = ":".freeze
 
-  after_update :cleanup_user_foods, if: -> { saved_change_to_deleted_at? && deleted_at.present? }
+  before_validation :update_unique_signature
+  validate :validate_unique_signature
 
   has_many :user_foods, inverse_of: :food, dependent: :destroy
   has_many :users, through: :user_foods
 
   has_many :food_food_qualifiers, inverse_of: :food, dependent: :destroy
-  has_many :food_qualifiers, -> { kept }, through: :food_food_qualifiers
+  has_many :food_qualifiers, through: :food_food_qualifiers
 
   validates :food_name, presence: true, length: { maximum: 64 }
-  validate :food_uniqueness
 
   scope :ordered, -> { order(:food_name) }
   scope :not_selected_by, ->(user) { where.not(id: user.user_foods.select(:food_id)) }
   scope :available_for, ->(user, include_qualifiers: false) do
-    results = kept.ordered.not_selected_by(user)
-    results = results.includes(:food_qualifiers) if include_qualifiers
-    results
+    scope = ordered.not_selected_by(user)
+    include_qualifiers ? scope.with_qualifiers : scope
+  end
+  scope :with_qualifiers, -> { includes(:food_qualifiers) }
+  scope :having_qualifiers, ->(qualifier_ids) do
+    joins(:food_qualifiers).where(food_qualifiers: qualifier_ids)
   end
 
+  # Find a food by its normalized name
   def self.find_by_food_name_normalized(food_name)
     find_by(food_name: normalize_name(food_name))
   end
@@ -54,48 +57,70 @@ class Food < ApplicationRecord
   end
 
   # Returns a unique string signature for this food combining name and qualifiers
+  # This is now for display purposes - the actual signature is stored in the database
   def unique_signature
-    "\"#{food_name.downcase}\"#{food_qualifiers_unique_signature}"
+    self[:unique_signature] || calculate_unique_signature
   end
 
   private
+
+  # Updates the stored unique_signature attribute
+  def update_unique_signature
+    self[:unique_signature] = calculate_unique_signature
+  end
+
+  # Calculates the unique signature based on food qualifier IDs only
+  def calculate_unique_signature
+    # Just use sorted qualifier IDs for the signature
+    if food_qualifiers.any?
+      # Convert to array to handle both saved and unsaved qualifiers
+      qualifier_ids = food_qualifiers.map(&:id).compact.sort
+
+      if qualifier_ids.any?
+        qualifier_ids.join(UNIQUE_SIGNATURE_SEPARATOR)
+      else
+        # If we have qualifiers but they're not saved yet, use a placeholder
+        ""
+      end
+    else
+      # No qualifiers
+      ""
+    end
+  end
+
+  # Custom validation for unique combination of food name and qualifiers
+  def validate_unique_signature
+    return if food_name.blank?
+
+    # Calculate signature based on current state (just the qualifier IDs)
+    signature = calculate_unique_signature
+
+    # Check for duplicates with same name and same signature (qualifiers)
+    # For persisted records, exclude self
+    query = Food.where(food_name: food_name)
+    query = query.where.not(id: id) if persisted?
+
+    if signature.present?
+      # If we have a signature, check for foods with the same signature
+      duplicate = query.where(unique_signature: signature).exists?
+    else
+      # If no signature (no qualifiers), check for foods with no qualifiers
+      duplicate = query.where(unique_signature: [ nil, "" ]).exists?
+    end
+
+    if duplicate
+      errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
+    end
+  end
 
   def normalize_name
     self.food_name = self.class.normalize_name(self.food_name)
   end
 
-  def food_qualifiers_unique_signature
-    return "" if food_qualifiers.empty?
 
-    signature = food_qualifiers.map do |food_qualifier|
-      "\"#{food_qualifier.qualifier_name.downcase}\""
-    end.sort.join(UNIQUE_SIGNATURE_SEPARATOR)
-
-    signature.prepend(UNIQUE_SIGNATURE_SEPARATOR)
-  end
-
-  def food_uniqueness
-    return if food_name.blank?
-
-    # Check if any other food has the same signature
-    duplicate_food = Food.where.not(id: id || 0)
-                         .find { it.unique_signature == unique_signature }
-
-    if duplicate_food
-      if duplicate_food.discarded?
-        errors.add(:base, "A deleted food with this name and the same qualifiers already exists")
-      else
-        errors.add(:base, "A food with this name and the same qualifiers already exists")
-      end
-    end
-  end
 
   # Keep this method for backward compatibility, but it's no longer used
   def food_qualifiers_updated?
     true
-  end
-
-  def cleanup_user_foods
-    user_foods.destroy_all if discarded?
   end
 end

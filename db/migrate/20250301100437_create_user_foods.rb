@@ -4,11 +4,10 @@ class CreateUserFoods < ActiveRecord::Migration[7.2]
       t.references :user, null: false, foreign_key: true
       t.references :food, null: false, foreign_key: true
       t.boolean :favorite, default: false
-      t.datetime :deleted_at
 
       t.timestamps
     end
 
-    add_index :user_foods, :deleted_at
+    add_index :user_foods, [:user_id, :food_id], unique: true
   end
 end

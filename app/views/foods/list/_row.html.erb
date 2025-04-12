@@ -1,13 +1,8 @@
 <ul role="list">
   <% foods.each_with_index do |food, index| %>
-    <li class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> <%= food.discarded? ? 'bg-red-50' : '' %> hover:bg-gray-100">
+    <li class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
       <div class="text-sm font-semibold text-gray-900">
         <%= food.food_name %>
-        <% if food.discarded? %>
-          <span class="ml-2 inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-            Deleted
-          </span>
-        <% end %>
       </div>
       <div>
         <%= render partial: "foods/list/row_food_qualifiers", locals: { food: food } %>
@@ -20,16 +15,10 @@
           <%= link_to "Edit", edit_food_path(food),
                       class: "edit-button-sm",
                       data: { turbo_frame: "_top" } %>
-          <% if food.kept? %>
-            <%= button_to "Delete", food_path(food),
-                          method: :delete,
-                          class: "delete-button-sm",
-                          form: { data: { turbo_confirm: "Are you sure? This will remove the food from all users who have added it." } } %>
-          <% else %>
-            <%= button_to "Restore", restore_food_path(food),
-                          method: :patch,
-                          class: "restore-button-sm" %>
-          <% end %>
+          <%= button_to "Delete", food_path(food),
+                        method: :delete,
+                        class: "delete-button-sm",
+                        form: { data: { turbo_confirm: "Are you sure? This will remove the food from all users who have added it." } } %>
         </div>
       </div>
     </li>

@@ -9,7 +9,7 @@ class FoodQualifiersController < ApplicationController
 
   # GET /food_qualifiers/1 or /food_qualifiers/1.json
   def show
-    @foods = @food_qualifier.foods.kept
+    @foods = @food_qualifier.foods
   end
 
   # GET /food_qualifiers/new
@@ -78,7 +78,7 @@ class FoodQualifiersController < ApplicationController
   # POST /food_qualifiers/find_or_create
   def find_or_create
     name = params[:qualifier_name].to_s.strip
-    @food_qualifier = FoodQualifier.kept.find_by("LOWER(qualifier_name) = ?", name.downcase)
+    @food_qualifier = FoodQualifier.find_by_qualifier_name_normalized(name)
 
     if @food_qualifier.nil? && name.present?
       @food_qualifier = FoodQualifier.create(qualifier_name: name)
@@ -86,7 +86,7 @@ class FoodQualifiersController < ApplicationController
 
     if @food_qualifier&.persisted? && params[:food_id].present?
       # We're adding a qualifier to a food
-      @food = Food.kept.find(params[:food_id])
+      @food = Food.find(params[:food_id])
 
       if @food.includes_qualifier?(@food_qualifier)
         # Qualifier is already associated with this food
@@ -97,7 +97,7 @@ class FoodQualifiersController < ApplicationController
         flash[:success] = "Added #{@food_qualifier.qualifier_name} to #{@food.food_name}."
       end
 
-      @available_qualifiers = FoodQualifier.kept.where.not(id: @food.food_qualifier_ids)
+      @available_qualifiers = FoodQualifier.where.not(id: @food.food_qualifier_ids)
 
       respond_to do |format|
         format.turbo_stream do
@@ -148,7 +148,7 @@ class FoodQualifiersController < ApplicationController
   end
 
   def set_food_qualifiers
-    @food_qualifiers = FoodQualifier.kept.order(:qualifier_name)
+    @food_qualifiers = FoodQualifier.ordered
   end
 
   # Only allow a list of trusted parameters through.
