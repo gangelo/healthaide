@@ -25,4 +25,13 @@ class ApplicationController < ActionController::Base
       render json: { error: "session_expired" }, status: :unauthorized
     end
   end
+
+  def authenticate_admin!
+    authenticate_user!
+    return if current_user.admin?
+
+    redirect_to root_path,
+      flash: { error: "You are not authorized to access this page." },
+      status: :forbidden
+  end
 end

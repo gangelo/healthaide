@@ -1,0 +1,50 @@
+@layer components {
+  .choose-multiple-button {
+    @apply w-full block rounded-lg py-3 px-5 bg-blue-600 text-white text-center font-medium cursor-pointer hover:bg-blue-500 transition-colors;
+  }
+
+  .add-existing-button {
+    @apply w-full rounded-lg py-3 px-5 bg-green-600 text-white font-medium cursor-pointer hover:bg-green-500 transition-colors;
+  }
+
+  .create-and-add-new-button {
+    @apply w-full rounded-lg py-3 px-5 bg-amber-600 text-white font-medium cursor-pointer hover:bg-amber-500 transition-colors;
+  }
+
+  .submit-button,
+  .add-new-button {
+    @apply w-full rounded-lg py-3 px-5 bg-blue-600 text-white text-center font-medium cursor-pointer hover:bg-blue-500 transition-colors;
+  }
+
+  .submit-button-sm {
+    @apply w-full rounded-lg py-2 px-4 bg-blue-600 text-white text-center font-medium cursor-pointer hover:bg-blue-500 transition-colors;
+  }
+
+  .back-button,
+  .edit-button,
+  .show-button {
+    @apply rounded-lg py-3 px-5 bg-gray-300 inline-block font-medium cursor-pointer;
+  }
+
+  .back-button-sm,
+  .edit-button-sm,
+  .show-button-sm {
+    @apply rounded-lg py-2 px-4 bg-gray-300 inline-block font-medium cursor-pointer;
+  }
+
+  .delete-button {
+    @apply rounded-lg py-3 px-5 bg-red-600 text-white font-medium cursor-pointer;
+  }
+
+  .delete-button-sm {
+    @apply rounded-lg py-2 px-4 bg-red-600 text-white font-medium cursor-pointer;
+  }
+
+  .restore-button {
+    @apply rounded-lg py-3 px-5 text-white bg-green-600 hover:bg-green-500 font-medium cursor-pointer;
+  }
+
+  .restore-button-sm {
+    @apply rounded-lg py-2 px-4 text-white bg-green-600 hover:bg-green-500 font-medium cursor-pointer;
+  }
+}

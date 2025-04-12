@@ -1,0 +1,6 @@
+<%= link_to link_path,
+        class: "add-new-button",
+        data: { turbo_frame: "_top" } do %>
+  <%= render partial: "shared/icons/plus_sign" %>
+  <%= link_text %>
+<% end %>

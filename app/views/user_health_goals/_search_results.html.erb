@@ -1,0 +1,12 @@
+<%# This partial is used to render search results for the health goal selection interface %>
+<% if goals.any? %>
+  <%= render partial: "available_goal", collection: goals, as: :goal %>
+<% else %>
+  <div class="text-center py-10 text-gray-500">
+    <% if params[:search].present? %>
+      <p>No health goals found matching "<%= params[:search] %>". Try a different search term or add it as a new health goal.</p>
+    <% else %>
+      <p>No more health goals available to add.</p>
+    <% end %>
+  </div>
+<% end %>

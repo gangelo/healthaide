@@ -1,0 +1,17 @@
+<% content_for :yield do %>
+  <%# This will be placed in the slot in the search_field_base partial %>
+  <%= turbo_frame_tag "health_conditions_list" do %>
+    <%# Search scroll %>
+    <div class="h-60 min-h-[15rem] max-h-60 border border-gray-200 rounded-md" data-health-condition-search-form-target="container">
+      <%= render "user_health_conditions/select/list", health_conditions: @items %>
+    </div>
+  <% end %>
+<% end %>
+<%= render "shared/select/search_field_base",
+  search_controller: "health-condition-search-form",
+  resource_type: "health_condition",
+  search_path: select_multiple_user_health_conditions_path,
+  list_frame_id: "health_conditions_list",
+  placeholder: "Search health conditions..." do %>
+  <%= yield :yield %>
+<% end %>
