@@ -66,3 +66,7 @@
 - Always ensure fallbacks for non-JavaScript scenarios
 
 ## TODO: We need to change the "modal" turbo_frame_tag for multiple user_xxx selection to something less generic; we may have other modals in the future; for example, we may have a modal for confirmations, rather than a javascript confirmation.
+
+## Deprecations
+
+Do not use the components found in `app/views/components`; prefer components found in `app/components` or rails partials instead.

@@ -14,6 +14,13 @@ class UserHealthConditionsController < ApplicationController
 
   def new
     @user_health_condition = current_user.user_health_conditions.build
+    @health_conditions = HealthCondition.ordered.where.not(id: current_user.user_health_conditions.pluck(:health_condition_id))
+
+    # Handle AJAX search requests
+    if request.xhr? && params[:search].present?
+      @health_conditions = @health_conditions.where("health_condition_name LIKE ?", "%#{params[:search]}%")
+      render partial: "search_results", locals: { conditions: @health_conditions }
+    end
   end
 
   def edit
@@ -69,6 +76,69 @@ class UserHealthConditionsController < ApplicationController
         ]
       end
     end
+  end
+
+  # Custom add_multiple action for the new health condition selection UI
+  def add_multiple
+    health_condition_ids = params[:health_condition_ids]&.reject(&:blank?)
+    new_condition_names = params[:new_condition_names]&.reject(&:blank?)
+
+    if health_condition_ids.blank? && new_condition_names.blank?
+      flash[:alert] = "Please select at least one health condition to add."
+      redirect_to new_user_health_condition_path
+      return
+    end
+
+    conditions_added = 0
+
+    # First handle creating any new conditions that don't exist
+    if new_condition_names.present?
+      new_condition_names.each do |condition_name|
+        # Check if condition exists but is soft-deleted
+        condition = HealthCondition.find_by(health_condition_name: HealthCondition.normalize_name(condition_name))
+        if condition&.discarded?
+          condition.restore
+        elsif condition.nil?
+          # Create a new condition
+          condition = HealthCondition.create!(health_condition_name: condition_name)
+        end
+
+        # Add the condition to the user's list if it's not already there
+        unless current_user.user_health_conditions.exists?(health_condition_id: condition.id)
+          current_user.user_health_conditions.create!(health_condition_id: condition.id)
+          conditions_added += 1
+        end
+      end
+    end
+
+    # Then handle existing conditions
+    if health_condition_ids.present?
+      # Get existing health_condition_ids to avoid duplicates
+      existing_health_condition_ids = current_user.user_health_conditions.pluck(:health_condition_id)
+      new_health_condition_ids = health_condition_ids.map(&:to_i) - existing_health_condition_ids
+
+      if new_health_condition_ids.any?
+        # Filter out any soft-deleted conditions
+        available_condition_ids = HealthCondition.where(id: new_health_condition_ids).kept.pluck(:id)
+
+        records_to_insert = available_condition_ids.map do |health_condition_id|
+          { user_id: current_user.id, health_condition_id: health_condition_id, created_at: Time.current, updated_at: Time.current }
+        end
+
+        # Use insert_all for better performance
+        UserHealthCondition.insert_all(records_to_insert) if records_to_insert.any?
+        conditions_added += records_to_insert.size
+      end
+    end
+
+    # Set success message and redirect
+    if conditions_added > 0
+      flash[:notice] = "#{conditions_added} #{conditions_added == 1 ? "health condition" : "health conditions"} successfully added."
+    else
+      flash[:alert] = "No new health conditions were added to your list."
+    end
+
+    redirect_to user_health_conditions_path
   end
 
   # Implementation of the MultipleSelection concern methods

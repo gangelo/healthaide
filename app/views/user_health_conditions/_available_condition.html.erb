@@ -1,0 +1,20 @@
+<div class="condition-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1"
+     data-health-condition-selection-target="availableCondition"
+     data-condition-id="<%= condition.id %>"
+     data-condition-name="<%= condition.health_condition_name %>"
+     data-action="click->health-condition-selection#selectCondition">
+  <div class="flex items-center">
+    <div class="flex-1">
+      <div class="flex items-center">
+        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-sm font-medium text-purple-700">
+          <%= condition.health_condition_name %>
+        </span>
+      </div>
+    </div>
+    <div class="ml-2 text-blue-600">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+  </div>
+</div>

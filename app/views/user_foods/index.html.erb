@@ -7,13 +7,17 @@
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h2>My Foods</h2>
+      <p class="mt-1 text-sm text-gray-500 max-w-3xl">
+        Track your regular foods to export them with health goals and conditions.
+      </p>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <%= render partial: "shared/links/add_new_link",
-          locals: {
-            link_path: new_user_food_path,
-            link_text: "Add Food"
-          } %>
+      <%= link_to new_user_food_path,
+          class: "add-new-button",
+          data: { turbo_frame: "_top" } do %>
+        <%= render partial: "shared/icons/plus_sign" %>
+        Add Foods
+      <% end %>
     </div>
   </div>
   <!-- Single content frame -->

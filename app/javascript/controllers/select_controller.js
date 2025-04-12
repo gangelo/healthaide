@@ -11,6 +11,7 @@ export default class SelectController extends Controller {
     "selectAllButton",
     "selectNoneButton",
     "selectionCount",
+    "hiddenContainer"
   ];
   static values = {
     itemType: String,
@@ -18,11 +19,94 @@ export default class SelectController extends Controller {
   };
 
   connect() {
+    // Initialize selected items storage
+    this.selectedItemsMap = new Map(); // Map for quick lookups by ID
     this.updateButtonState();
+    
+    // Wait a small amount of time to ensure all checkboxes are rendered
+    setTimeout(() => {
+      this.applyCheckboxStates();
+    }, 50);
   }
 
   // Handle a checkbox being toggled
   checkboxChanged(event) {
+    const checkbox = event.target;
+    const itemId = checkbox.value;
+    
+    // When a checkbox is checked
+    if (checkbox.checked) {
+      this.addSelectedItem(itemId);
+    } else {
+      this.removeSelectedItem(itemId);
+    }
+    
+    this.updateButtonState();
+  }
+
+  // Add a selected item to our storage
+  addSelectedItem(itemId) {
+    if (!this.selectedItemsMap.has(itemId)) {
+      this.selectedItemsMap.set(itemId, true);
+      this.updateHiddenFields();
+    }
+  }
+
+  // Remove a selected item from our storage
+  removeSelectedItem(itemId) {
+    if (this.selectedItemsMap.has(itemId)) {
+      this.selectedItemsMap.delete(itemId);
+      this.updateHiddenFields();
+    }
+  }
+
+  // Update hidden fields to preserve selection state across Turbo refreshes
+  updateHiddenFields() {
+    // Clear existing hidden fields
+    const container = this.hasHiddenContainerTarget ? 
+                       this.hiddenContainerTarget : 
+                       this.createHiddenContainer();
+    
+    container.innerHTML = '';
+    
+    // Create hidden fields for all selected items
+    this.selectedItemsMap.forEach((_, itemId) => {
+      const hiddenField = document.createElement('input');
+      hiddenField.type = 'hidden';
+      hiddenField.name = `_selected_items[]`;
+      hiddenField.value = itemId;
+      hiddenField.dataset.selectTarget = "hiddenField";
+      container.appendChild(hiddenField);
+    });
+  }
+  
+  // Create a container for our hidden fields if it doesn't exist
+  createHiddenContainer() {
+    const container = document.createElement('div');
+    container.dataset.selectTarget = "hiddenContainer";
+    container.style.display = 'none';
+    this.element.querySelector('form').appendChild(container);
+    return container;
+  }
+
+  // Apply checkbox states from our storage
+  applyCheckboxStates() {
+    // First check if we have hidden fields and restore from them
+    if (this.hasHiddenContainerTarget) {
+      const hiddenFields = this.hiddenContainerTarget.querySelectorAll('input[type="hidden"]');
+      
+      hiddenFields.forEach(field => {
+        this.selectedItemsMap.set(field.value, true);
+      });
+    }
+    
+    // Now apply these states to visible checkboxes
+    this.checkboxes.forEach(checkbox => {
+      if (this.selectedItemsMap.has(checkbox.value)) {
+        checkbox.checked = true;
+      }
+    });
+    
     this.updateButtonState();
   }
 
@@ -31,6 +115,7 @@ export default class SelectController extends Controller {
     event.preventDefault();
     this.checkboxes.forEach((checkbox) => {
       checkbox.checked = true;
+      this.addSelectedItem(checkbox.value);
     });
     this.updateButtonState();
   }
@@ -40,7 +125,12 @@ export default class SelectController extends Controller {
     event.preventDefault();
     this.checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
+      this.removeSelectedItem(checkbox.value);
     });
+    
+    // Clear all selected items
+    this.selectedItemsMap.clear();
+    this.updateHiddenFields();
     this.updateButtonState();
   }
 
@@ -52,7 +142,7 @@ export default class SelectController extends Controller {
       event.target.classList.contains("inset-0")
     ) {
       const closeButton = this.element.querySelector(
-        'a[data-turbo-frame="modal"]'
+        'a[data-turbo-frame="_top"]'
       );
       if (closeButton) closeButton.click();
     }
@@ -64,11 +154,6 @@ export default class SelectController extends Controller {
 
     // Update selection counter
     const label = this.itemTypeLabelValue || this.itemTypeValue || "items";
-
-    console.log(
-      `select_controller.js: itemTypeLabelValue: ${this.itemTypeLabelValue}`
-    );
-    console.log(`select_controller.js: itemTypeValue: ${this.itemTypeValue}`);
 
     this.selectionCountTarget.textContent = `${count} ${label}${count !== 1 ? "s" : ""} selected`;
 
@@ -87,17 +172,10 @@ export default class SelectController extends Controller {
     );
 
     // Update the select all button
-    const allSelected = count === this.checkboxes.length;
-    this.selectAllButtonTarget.disabled =
-      allSelected && this.checkboxes.length > 0;
-    this.selectAllButtonTarget.classList.toggle(
-      "opacity-50",
-      allSelected && this.checkboxes.length > 0
-    );
-    this.selectAllButtonTarget.classList.toggle(
-      "cursor-not-allowed",
-      allSelected && this.checkboxes.length > 0
-    );
+    const allSelected = count === this.checkboxes.length && this.checkboxes.length > 0;
+    this.selectAllButtonTarget.disabled = allSelected;
+    this.selectAllButtonTarget.classList.toggle("opacity-50", allSelected);
+    this.selectAllButtonTarget.classList.toggle("cursor-not-allowed", allSelected);
   }
 
   // Get all checkboxes in the form
@@ -107,6 +185,6 @@ export default class SelectController extends Controller {
 
   // Get the count of selected checkboxes
   get selectedCount() {
-    return this.checkboxes.filter((checkbox) => checkbox.checked).length;
+    return this.selectedItemsMap.size;
   }
 }

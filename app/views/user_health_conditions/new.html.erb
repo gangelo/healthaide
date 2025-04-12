@@ -1,4 +1,4 @@
-<% content_for :title, "Add Health Condition" %>
+<% content_for :title, "Add Health Conditions" %>
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
@@ -6,58 +6,103 @@
   <%= render partial: "shared/active_record_errors", locals: { resource: @user_health_condition } %>
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
-      <h2>Add Health Condition</h2>
-      <p class="mt-1 text-sm text-gray-500 max-w-3xl">Choose from one of the following options to add health conditions to your personal list.</p>
+      <h2>Add Health Conditions</h2>
+      <p class="mt-1 text-sm text-gray-500 max-w-3xl">Add health conditions to your personal list. Click on a condition to select it.</p>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
       <%= link_to "Back to My Health Conditions",
           user_health_conditions_path,
-          class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" %>
+          class: "back-button-sm" %>
     </div>
   </div>
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Add Multiple Health Conditions Card -->
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 flex flex-col">
-      <div>
-        <%= render partial: "shared/icons/add_multiple" %>
-        <h3 class="mt-4 text-lg font-semibold leading-6 text-gray-900">Add Multiple Health Conditions</h3>
-        <p class="mt-2 text-sm text-gray-500">Select multiple health conditions from our database to add to your list at once.</p>
+  <div data-controller="health-condition-selection">
+    <!-- Two column layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Available Health Conditions Column -->
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6">
+        <h3 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Available Health Conditions</h3>
+        <!-- Search box -->
+        <div class="mb-4">
+          <div class="relative rounded-md shadow-sm">
+            <input type="text"
+                  placeholder="Search health conditions..."
+                  class="block w-full rounded-md border-0 py-2 pl-4 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
+                  autocomplete="off"
+                  data-health-condition-selection-target="searchInput"
+                  data-action="input->health-condition-selection#search">
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Add New Condition form (initially hidden) -->
+        <div class="mb-4 hidden" data-health-condition-selection-target="newConditionForm">
+          <div class="border border-gray-200 rounded-md p-4 bg-gray-50">
+            <div class="flex justify-between items-center w-full">
+              <h4 class="font-medium text-gray-900 mb-2">Add New Health Condition</h4>
+              <div class="text-amber-600 hover:text-amber-500 cursor-pointer"
+                          data-action="click->health-condition-selection#closeNewConditionForm">
+                <%= render(Icons::CloseComponent.new) %>
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">This health condition doesn't exist yet. Create and add it to your list:</p>
+            <div class="flex">
+              <input type="text"
+                    class="block w-full rounded-l-md border-0 py-2 pl-3 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
+                    placeholder="Enter health condition name"
+                    autocomplete="off"
+                    data-health-condition-selection-target="newConditionInput">
+              <button type="button"
+                    class="create-and-add-new-button rounded-l-none py-2"
+                    data-action="click->health-condition-selection#addNewCondition">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Available health conditions list -->
+        <%= turbo_frame_tag "available_health_conditions_list" do %>
+          <div class="h-[350px] overflow-y-auto border border-gray-200 rounded-md p-2" data-health-condition-selection-target="availableList">
+            <% if @health_conditions.any? %>
+              <%= render partial: "available_condition", collection: @health_conditions, as: :condition %>
+            <% else %>
+              <div class="text-center py-10 text-gray-500">
+                <p>No more health conditions available to add.</p>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
-      <div class="mt-auto pt-6">
-        <%= link_to "Choose Multiple Health Conditions",
-            select_multiple_user_health_conditions_path,
-            class: "choose-multiple-button",
-            data: {
-              turbo_frame: "modal",
-              turbo_prefetch: false
-              } %>
-      </div>
-    </div>
-    <!-- Select Existing Health Condition Card -->
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 flex flex-col">
-      <div>
-        <%= render partial: "shared/icons/select_existing" %>
-        <h3 class="mt-4 text-lg font-semibold leading-6 text-gray-900">Select Existing Health Condition</h3>
-        <p class="mt-2 text-sm text-gray-500">Choose a single health condition from our database to add to your list.</p>
-      </div>
-      <div class="mt-auto pt-6">
-        <%= render partial: "select_existing_condition", locals: {
-            user_health_condition: @user_health_condition,
-            health_conditions: HealthCondition.ordered.where.not(id: current_user.user_health_conditions.pluck(:health_condition_id))
-        } %>
-      </div>
-    </div>
-    <!-- Create New Health Condition Card -->
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6 flex flex-col">
-      <div>
-        <%= render partial: "shared/icons/create_new" %>
-        <h3 class="mt-4 text-lg font-semibold leading-6 text-gray-900">Create New Health Condition</h3>
-        <p class="mt-2 text-sm text-gray-500">Add a new health condition that doesn't exist in our database yet.</p>
-      </div>
-      <div class="mt-auto pt-6">
-        <%= render partial: "create_new_condition" %>
+      <!-- Selected Health Conditions Column -->
+      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6">
+        <h3 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Selected Health Conditions</h3>
+        <div class="h-[350px] overflow-y-auto border border-gray-200 rounded-md p-2 mb-4" data-health-condition-selection-target="selectedList">
+          <div class="text-center py-10 text-gray-500" data-health-condition-selection-target="emptySelectedMessage">
+            <p>No health conditions selected yet. Click on conditions from the list on the left to select them.</p>
+          </div>
+          <!-- Selected conditions will be added here dynamically -->
+        </div>
+        <%= form_with(url: add_multiple_user_health_conditions_path, method: :post, data: { health_condition_selection_target: "form" }) do |form| %>
+          <div data-health-condition-selection-target="hiddenInputs">
+            <!-- Hidden inputs will be added here dynamically -->
+          </div>
+          <div class="flex justify-between">
+            <button type="button"
+                  class="delete-button-sm"
+                  data-action="click->health-condition-selection#clearSelections"
+              data-health-condition-selection-target="clearButton"
+              disabled>
+              Clear All
+            </button>
+            <%= form.submit "Add Selected Conditions",
+                class: "add-existing-button py-2 w-auto",
+                data: { health_condition_selection_target: "submitButton" },
+                disabled: true %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
-  <%= turbo_frame_tag "modal" %>
 </div>

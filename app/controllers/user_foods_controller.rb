@@ -17,6 +17,12 @@ class UserFoodsController < ApplicationController
   def new
     @user_food = current_user.user_foods.new
     @foods = Food.available_for(current_user, include_qualifiers: true)
+
+    # Handle AJAX search requests
+    if request.xhr? && params[:search].present?
+      @foods = @foods.where("food_name LIKE ?", "%#{params[:search]}%")
+      render partial: "search_results", locals: { foods: @foods }
+    end
   end
 
   # POST /user_foods or /user_foods.json
@@ -111,6 +117,69 @@ class UserFoodsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     redirect_to @user_food, alert: e.record.errors.full_messages.to_sentence
+  end
+
+  # Custom add_multiple action for the new food selection UI
+  def add_multiple
+    food_ids = params[:food_ids]&.reject(&:blank?)
+    new_food_names = params[:new_food_names]&.reject(&:blank?)
+
+    if food_ids.blank? && new_food_names.blank?
+      flash[:alert] = "Please select at least one food to add."
+      redirect_to new_user_food_path
+      return
+    end
+
+    foods_added = 0
+
+    # First handle creating any new foods that don't exist
+    if new_food_names.present?
+      new_food_names.each do |food_name|
+        # Check if food exists but is soft-deleted
+        food = Food.find_by_food_name_normalized(food_name)
+        if food&.discarded?
+          food.restore
+        elsif food.nil?
+          # Create a new food
+          food = Food.create!(food_name: food_name)
+        end
+
+        # Add the food to the user's list if it's not already there
+        unless current_user.user_foods.exists?(food_id: food.id)
+          current_user.user_foods.create!(food_id: food.id)
+          foods_added += 1
+        end
+      end
+    end
+
+    # Then handle existing foods
+    if food_ids.present?
+      # Process existing food IDs
+      existing_food_ids = current_user.user_foods.pluck(:food_id)
+      new_food_ids = food_ids.map(&:to_i) - existing_food_ids
+
+      if new_food_ids.any?
+        # Filter out any soft-deleted foods
+        available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
+
+        records_to_insert = available_food_ids.map do |food_id|
+          { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
+        end
+
+        # Use insert_all for better performance
+        UserFood.insert_all(records_to_insert) if records_to_insert.any?
+        foods_added += records_to_insert.size
+      end
+    end
+
+    # Set success message and redirect
+    if foods_added > 0
+      flash[:notice] = "#{foods_added} #{foods_added == 1 ? "food" : "foods"} successfully added."
+    else
+      flash[:alert] = "No new foods were added to your list."
+    end
+
+    redirect_to user_foods_path
   end
 
   # These methods provide the required implementation for the MultipleSelection concern
