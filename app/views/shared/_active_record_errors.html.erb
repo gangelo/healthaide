@@ -14,7 +14,7 @@
         <span class="sr-only">Dismiss</span>
       </button>
     </div>
-    <ul class="mt-2 list-disc pl-5">
+    <ul class="mt-2 list-disc pl-5 active-record-errors-list">
       <% resource.errors.each do |error| %>
         <li><%= error.full_message %></li>
       <% end %>

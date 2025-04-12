@@ -30,6 +30,7 @@ class ApplicationController < ActionController::Base
     authenticate_user!
     return if current_user.admin?
 
+    # TODO: Redirects are not occurring when auth fails; could be upon turbo request.
     redirect_to root_path,
       flash: { error: "You are not authorized to access this page." },
       status: :forbidden

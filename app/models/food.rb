@@ -71,56 +71,41 @@ class Food < ApplicationRecord
 
   # Calculates the unique signature based on food qualifier IDs only
   def calculate_unique_signature
-    # Just use sorted qualifier IDs for the signature
-    if food_qualifiers.any?
-      # Convert to array to handle both saved and unsaved qualifiers
-      qualifier_ids = food_qualifiers.map(&:id).compact.sort
+    # Convert to array to handle both saved and unsaved qualifiers
+    qualifier_ids = food_qualifiers.filter_map(&:id).sort
+    return "" if qualifier_ids.empty?
 
-      if qualifier_ids.any?
-        qualifier_ids.join(UNIQUE_SIGNATURE_SEPARATOR)
-      else
-        # If we have qualifiers but they're not saved yet, use a placeholder
-        ""
-      end
-    else
-      # No qualifiers
-      ""
-    end
+    qualifier_ids.join(UNIQUE_SIGNATURE_SEPARATOR)
   end
 
   # Custom validation for unique combination of food name and qualifiers
   def validate_unique_signature
     return if food_name.blank?
 
-    # Calculate signature based on current state (just the qualifier IDs)
-    signature = calculate_unique_signature
+    # Food must be unique by name and qualifiers.
+    # For a new food, check if a food with this name and exact set of qualifiers exists,
+    # if it exists, this is an error.
+    # For example, "Apple" with qualifiers "Organic" and "Fresh" should be unique if
+    # "Apple" with qualifiers "Organic" and "<anything but 'Fresh'>" already exists.
 
-    # Check for duplicates with same name and same signature (qualifiers)
-    # For persisted records, exclude self
-    query = Food.where(food_name: food_name)
-    query = query.where.not(id: id) if persisted?
+    # First, check for existing foods with the same name
+    existing_foods = Food.where.not(id: id).where(food_name: food_name)
 
-    if signature.present?
-      # If we have a signature, check for foods with the same signature
-      duplicate = query.where(unique_signature: signature).exists?
-    else
-      # If no signature (no qualifiers), check for foods with no qualifiers
-      duplicate = query.where(unique_signature: [ nil, "" ]).exists?
-    end
+    return if existing_foods.none?
 
-    if duplicate
-      errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
+    # If there's a food with the same name, check if it has the same qualifiers
+    current_qualifier_ids = food_qualifiers.filter_map(&:id).sort
+
+    existing_foods.each do |existing_food|
+      # If the qualifier collections are identical, it's a duplicate
+      if current_qualifier_ids == existing_food.food_qualifiers.map(&:id).sort
+        errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
+        break
+      end
     end
   end
 
   def normalize_name
     self.food_name = self.class.normalize_name(self.food_name)
-  end
-
-
-
-  # Keep this method for backward compatibility, but it's no longer used
-  def food_qualifiers_updated?
-    true
   end
 end

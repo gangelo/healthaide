@@ -38,6 +38,7 @@ RSpec.describe Food do
           food = create(:food, food_name: food_name)
           food.food_qualifiers << qualifier1
           food.food_qualifiers << qualifier2
+          food.save!  # Make sure it's saved
         end
 
         it 'prevents creation of the new food' do
@@ -46,7 +47,7 @@ RSpec.describe Food do
           new_food.food_qualifiers << qualifier2
 
           expect(new_food).not_to be_valid
-          expect(new_food.errors[:base]).to include('A food with this name and the same qualifiers already exists')
+          expect(new_food.errors[:unique_signature]).to include('A food with this name and the same qualifiers already exists')
         end
       end
 
@@ -55,6 +56,7 @@ RSpec.describe Food do
           food = create(:food, food_name: food_name)
           food.food_qualifiers << qualifier1
           food.food_qualifiers << qualifier2
+          food.save!  # Make sure it's saved
         end
 
         it 'prevents creation of the new food' do
@@ -63,7 +65,7 @@ RSpec.describe Food do
           new_food.food_qualifiers << qualifier1
 
           expect(new_food).not_to be_valid
-          expect(new_food.errors[:base]).to include('A food with this name and the same qualifiers already exists')
+          expect(new_food.errors[:unique_signature]).to include('A food with this name and the same qualifiers already exists')
         end
       end
     end

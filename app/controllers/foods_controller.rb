@@ -37,10 +37,22 @@ class FoodsController < ApplicationController
     process_qualifiers
 
     respond_to do |format|
-      if @food.save
-        format.html { redirect_to @food, notice: "Food was successfully created." }
-        format.json { render :show, status: :created, location: @food }
-      else
+      begin
+        if @food.save
+          format.html { redirect_to @food, notice: "Food was successfully created." }
+          format.json { render :show, status: :created, location: @food }
+        else
+          @food_qualifiers = FoodQualifier.ordered
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @food.errors, status: :unprocessable_entity }
+        end
+      rescue ActiveRecord::RecordNotUnique => e
+        # Add debug information to understand what's happening
+        Rails.logger.error("Food uniqueness error: #{e.message}")
+        Rails.logger.error("Food name: #{@food.food_name}, Qualifiers: #{@food.food_qualifiers.map(&:qualifier_name).join(", ")}")
+
+        # Add a validation error for the unique constraint failure
+        @food.errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
         @food_qualifiers = FoodQualifier.ordered
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
@@ -57,10 +69,18 @@ class FoodsController < ApplicationController
     process_qualifiers
 
     respond_to do |format|
-      if @food.save
-        format.html { redirect_to @food, notice: "Food was successfully updated." }
-        format.json { render :show, status: :ok, location: @food }
-      else
+      begin
+        if @food.save
+          format.html { redirect_to @food, notice: "Food was successfully updated." }
+          format.json { render :show, status: :ok, location: @food }
+        else
+          @food_qualifiers = FoodQualifier.ordered
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @food.errors, status: :unprocessable_entity }
+        end
+      rescue ActiveRecord::RecordNotUnique => e
+        # Add a validation error for the unique constraint failure
+        @food.errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
         @food_qualifiers = FoodQualifier.ordered
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
