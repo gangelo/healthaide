@@ -1,5 +1,5 @@
 class FoodQualifiersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
   before_action :set_food_qualifier, only: %i[ show edit update destroy ]
   before_action :set_food_qualifiers, only: %i[ index ]
 

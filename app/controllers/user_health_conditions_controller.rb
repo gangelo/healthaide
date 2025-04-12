@@ -1,6 +1,4 @@
 class UserHealthConditionsController < ApplicationController
-  include MultipleSelection
-
   before_action :authenticate_user!
   before_action :set_user_health_condition, only: %i[show edit update destroy]
   before_action :set_user_health_conditions, only: %i[index]
@@ -18,7 +16,7 @@ class UserHealthConditionsController < ApplicationController
 
     # Handle AJAX search requests
     if request.xhr? && params[:search].present?
-      @health_conditions = @health_conditions.where("health_condition_name LIKE ?", "%#{params[:search]}%")
+      @health_conditions = SearchService.search_health_conditions(current_user, params[:search])
       render partial: "search_results", locals: { conditions: @health_conditions }
     end
   end
@@ -139,62 +137,6 @@ class UserHealthConditionsController < ApplicationController
     end
 
     redirect_to user_health_conditions_path
-  end
-
-  # Implementation of the MultipleSelection concern methods
-  private
-
-  def resource_type
-    :health_condition
-  end
-
-  def resource_path
-    "user_health_conditions"
-  end
-
-  def search_items_for_user(query)
-    SearchService.search_health_conditions(current_user, query)
-  end
-
-  def add_items_to_user(health_condition_ids)
-    # Get existing health_condition_ids to avoid duplicates
-    existing_health_condition_ids = current_user.user_health_conditions.pluck(:health_condition_id)
-    new_health_condition_ids = health_condition_ids.map(&:to_i) - existing_health_condition_ids
-
-    conditions_added = 0
-
-    # Batch create records for efficiency
-    if new_health_condition_ids.any?
-      records_to_insert = new_health_condition_ids.map do |health_condition_id|
-        {
-          user_id: current_user.id,
-          health_condition_id: health_condition_id,
-          created_at: Time.current,
-          updated_at: Time.current
-        }
-      end
-
-      # Use insert_all for better performance
-      UserHealthCondition.insert_all(records_to_insert) if records_to_insert.any?
-      conditions_added = records_to_insert.size
-    end
-
-    conditions_added
-  end
-
-  # Override the items_local_name to use the correct variable name in view templates
-  def items_local_name
-    "health_conditions"
-  end
-
-  # Override the list_frame_id to use the correct frame ID
-  def list_frame_id
-    "health_conditions_list"
-  end
-
-  # Override the current_user_items method to ensure proper ordering
-  def current_user_items
-    current_user.user_health_conditions.ordered
   end
 
   private

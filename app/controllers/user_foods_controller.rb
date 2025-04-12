@@ -1,8 +1,6 @@
 class UserFoodsController < ApplicationController
-  include MultipleSelection
-
   before_action :authenticate_user!
-  before_action :set_user_food, only: %i[ show edit update destroy add_qualifier ]
+  before_action :set_user_food, only: %i[ show edit update destroy ]
   before_action :set_user_foods, only: [ :index ]
 
   # GET /user_foods or /user_foods.json
@@ -20,7 +18,7 @@ class UserFoodsController < ApplicationController
 
     # Handle AJAX search requests
     if request.xhr? && params[:search].present?
-      @foods = @foods.where("food_name LIKE ?", "%#{params[:search]}%")
+      @foods = SearchService.search_foods(current_user, params[:search])
       render partial: "search_results", locals: { foods: @foods }
     end
   end
@@ -103,22 +101,6 @@ class UserFoodsController < ApplicationController
     end
   end
 
-  def add_qualifier
-    if params[:food_qualifier_id].present?
-      qualifier = FoodQualifier.find(params[:food_qualifier_id])
-      @user_food.food.food_qualifiers << qualifier unless @user_food.food.includes_qualifier?(qualifier)
-      redirect_to @user_food, notice: "Qualifier was successfully added."
-    elsif params[:new_qualifier_name].present?
-      qualifier = FoodQualifier.create!(qualifier_name: params[:new_qualifier_name])
-      @user_food.food.food_qualifiers << qualifier
-      redirect_to @user_food, notice: "New qualifier was successfully created and added."
-    else
-      redirect_to @user_food, alert: "Please select an existing qualifier or enter a new one."
-    end
-  rescue ActiveRecord::RecordInvalid => e
-    redirect_to @user_food, alert: e.record.errors.full_messages.to_sentence
-  end
-
   # Custom add_multiple action for the new food selection UI
   def add_multiple
     food_ids = params[:food_ids]&.reject(&:blank?)
@@ -180,46 +162,6 @@ class UserFoodsController < ApplicationController
     end
 
     redirect_to user_foods_path
-  end
-
-  # These methods provide the required implementation for the MultipleSelection concern
-  private
-
-  def resource_type
-    :food
-  end
-
-  def resource_path
-    "user_foods"
-  end
-
-  def search_items_for_user(query)
-    SearchService.search_foods(current_user, query)
-  end
-
-  def add_items_to_user(food_ids)
-    # Use bulk insert for efficiency
-    foods_added = 0
-
-    # Get existing food_ids to avoid duplicates
-    existing_food_ids = current_user.user_foods.pluck(:food_id)
-    new_food_ids = food_ids.map(&:to_i) - existing_food_ids
-
-    # Batch create records for efficiency
-    if new_food_ids.any?
-      # Filter out any soft-deleted foods
-      available_food_ids = Food.where(id: new_food_ids).kept.pluck(:id)
-
-      records_to_insert = available_food_ids.map do |food_id|
-        { user_id: current_user.id, food_id: food_id, created_at: Time.current, updated_at: Time.current }
-      end
-
-      # Use insert_all for better performance
-      UserFood.insert_all(records_to_insert) if records_to_insert.any?
-      foods_added = records_to_insert.size
-    end
-
-    foods_added
   end
 
   private

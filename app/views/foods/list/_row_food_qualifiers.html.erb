@@ -1,0 +1,9 @@
+<% if food.food_qualifiers.any? %>
+  <div class="flex flex-wrap gap-1">
+    <% food.food_qualifiers.each do |food_qualifier| %>
+      <span><%= render(FoodQualifiers::BadgeComponent.new(name: food_qualifier.qualifier_name, size: :md)) %></span>
+    <% end %>
+  </div>
+<% else %>
+  <span class="text-sm text-gray-500">&nbsp;</span>
+<% end %>

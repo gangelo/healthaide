@@ -1,14 +1,15 @@
 class FoodsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
   before_action :set_food, only: %i[ show edit update destroy add_qualifier remove_qualifier restore ]
 
   # GET /foods or /foods.json
   def index
-    @foods = if params[:query].present?
-      Food.where("food_name ILIKE ?", "%#{params[:query]}%").order(:food_name).limit(10)
-    else
-      Food.order(:food_name)
-    end
+    # @foods = if params[:query].present?
+    #   Food.where("food_name ILIKE ?", "%#{params[:query]}%").order(:food_name).limit(10)
+    # else
+    #   Food.order(:food_name)
+    # end
+    @foods = Food.ordered
   end
 
   # GET /foods/1 or /foods/1.json
@@ -70,20 +71,40 @@ class FoodsController < ApplicationController
   # DELETE /foods/1 or /foods/1.json
   def destroy
     @food.soft_delete
+    @foods = Food.ordered
 
     respond_to do |format|
-      format.html { redirect_to foods_path, status: :see_other, notice: "Food was successfully deleted." }
-      format.json { head :no_content }
+      format.html { redirect_to foods_path, status: :see_other, flash: { notice: "Food was successfully deleted." } }
+      format.turbo_stream do
+        flash.now[:notice] = "Food was successfully deleted."
+        render turbo_stream: [
+          turbo_stream.update("main_content",
+            partial: "foods/list/list",
+            locals: { foods: @foods }),
+          turbo_stream.update("flash_messages",
+            partial: "shared/flash_messages")
+        ]
+      end
     end
   end
 
   # PATCH /foods/1 or /foods/1.json
   def restore
     @food.restore
+    @foods = Food.ordered
 
     respond_to do |format|
-      format.html { redirect_to foods_path, status: :see_other, notice: "Food was successfully restored." }
-      format.json { head :no_content }
+      format.html { redirect_to foods_path, status: :see_other, flash: { notice: "Food was successfully restored." } }
+      format.turbo_stream do
+        flash.now[:notice] = "Food was successfully restored."
+        render turbo_stream: [
+          turbo_stream.update("main_content",
+            partial: "foods/list/list",
+            locals: { foods: @foods }),
+          turbo_stream.update("flash_messages",
+            partial: "shared/flash_messages")
+        ]
+      end
     end
   end
 

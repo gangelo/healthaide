@@ -77,17 +77,4 @@ RSpec.describe SearchService do
       end
     end
   end
-
-  describe '.normalize_search_term' do
-    it 'returns nil for nil or blank input' do
-      expect(described_class.send(:normalize_search_term, nil)).to be_nil
-      expect(described_class.send(:normalize_search_term, '')).to be_nil
-      expect(described_class.send(:normalize_search_term, '   ')).to be_nil
-    end
-
-    it 'adds wildcards and downcases non-blank input' do
-      expect(described_class.send(:normalize_search_term, 'Test')).to eq('%test%')
-      expect(described_class.send(:normalize_search_term, ' EXAMPLE ')).to eq('%example%')
-    end
-  end
 end

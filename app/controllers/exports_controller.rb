@@ -1,12 +1,12 @@
 class ExportsController < ApplicationController
-  USER_FOODS_EXPORT_OPTION = 1
-  USER_HEALTH_CONDITIONS_EXPORT_OPTION = 2
-  USER_HEALTH_GOALS_EXPORT_OPTION = 3
-
   before_action :authenticate_admin!
   before_action :set_users, only: [ :index ]
   before_action :set_export_options, only: [ :index ]
   before_action :set_export_user, only: [ :export, :preview ]
+
+  USER_FOODS_EXPORT_OPTION = 1
+  USER_HEALTH_CONDITIONS_EXPORT_OPTION = 2
+  USER_HEALTH_GOALS_EXPORT_OPTION = 3
 
   def index
     @user_export_hash = redact_user_export_hash(current_user.to_export_hash)

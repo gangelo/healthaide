@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Foods Management", type: :system do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :admin) }
 
   before do
     # Confirm the user and sign in using helper
@@ -146,5 +146,13 @@ RSpec.describe "Foods Management", type: :system do
       expect(page).to have_content("Fresh")
       expect(page).to have_content("Imported")
     end
+  end
+
+  context "when deleting a food" do
+    it "deletes the food and displays a success message"
+  end
+
+  context "when restoring a food" do
+    it "restores the food and displays a success message"
   end
 end

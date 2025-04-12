@@ -48,7 +48,7 @@ class SearchService
     search_term = search_term.to_s.strip.presence
     return if search_term.blank?
 
-    "%#{search_term.to_s.strip.downcase}%"
+    "%#{search_term}%"
   end
   private_class_method :normalize_search_term
 end

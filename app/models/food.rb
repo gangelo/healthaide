@@ -15,16 +15,6 @@ class Food < ApplicationRecord
   validates :food_name, presence: true, length: { maximum: 64 }
   validate :food_uniqueness
 
-  # Returns a human-readable display name including qualifiers
-  def display_name_with_qualifiers
-    if food_qualifiers.any?
-      qualifier_text = food_qualifiers.map(&:qualifier_name).sort.join(", ")
-      "#{food_name} (#{qualifier_text})"
-    else
-      food_name
-    end
-  end
-
   scope :ordered, -> { order(:food_name) }
   scope :not_selected_by, ->(user) { where.not(id: user.user_foods.select(:food_id)) }
   scope :available_for, ->(user, include_qualifiers: false) do
@@ -47,6 +37,16 @@ class Food < ApplicationRecord
       end
     end
     }
+  end
+
+  # Returns a human-readable display name including qualifiers
+  def display_name_with_qualifiers
+    if food_qualifiers.any?
+      qualifier_text = food_qualifiers.map(&:qualifier_name).sort.join(", ")
+      "#{food_name} (#{qualifier_text})"
+    else
+      food_name
+    end
   end
 
   def includes_qualifier?(qualifier)

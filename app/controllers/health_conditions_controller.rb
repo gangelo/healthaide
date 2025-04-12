@@ -1,5 +1,5 @@
 class HealthConditionsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
   before_action :set_health_condition, only: %i[show edit update destroy]
 
   def index
