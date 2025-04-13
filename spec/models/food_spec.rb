@@ -122,12 +122,12 @@ RSpec.describe Food do
   end
 
   describe 'instance methods' do
-    describe '#display_name_with_qualifiers' do
+    describe '#display_food_qualifiers' do
       let(:food) { create(:food, food_name: 'Apple') }
 
       context 'when food has no qualifiers' do
-        it 'returns just the food name' do
-          expect(food.display_name_with_qualifiers).to eq('Apple')
+        it 'returns an empty string' do
+          expect(food.display_food_qualifiers).to eq('')
         end
       end
 
@@ -140,9 +140,9 @@ RSpec.describe Food do
           food.food_qualifiers << qualifier2
         end
 
-        it 'returns food name with sorted qualifiers in parentheses' do
+        it 'returns sorted qualifiers' do
           # Qualifiers are alphabetically sorted
-          expect(food.display_name_with_qualifiers).to eq('Apple (Fresh, Organic)')
+          expect(food.display_food_qualifiers).to eq('Fresh, Organic')
         end
       end
     end

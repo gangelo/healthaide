@@ -48,7 +48,18 @@ export default class extends Controller {
       // Filter the available foods
       this.availableFoodTargets.forEach((food) => {
         const foodName = food.dataset.foodName.toLowerCase();
-        const displayName = food.dataset.foodDisplayName.toLowerCase();
+        const displayName =
+          food.dataset.foodDisplayQualifierNames.toLowerCase();
+
+        console.log("FoodSelectionController.js#search: foodName", foodName);
+        console.log(
+          "FoodSelectionController.js#search: displayName",
+          displayName
+        );
+        console.log(
+          "FoodSelectionController.js#search: searchTermLower",
+          searchTermLower
+        );
 
         if (
           foodName.includes(searchTermLower) ||
@@ -121,7 +132,7 @@ export default class extends Controller {
     const foodElement = event.currentTarget;
     const foodId = foodElement.dataset.foodId;
     const foodName = foodElement.dataset.foodName;
-    const displayName = foodElement.dataset.foodDisplayName;
+    const displayName = foodElement.dataset.foodDisplayQualifierNames;
 
     // Extract qualifiers from the display name, if any
     let qualifiers = [];

@@ -43,13 +43,8 @@ class Food < ApplicationRecord
   end
 
   # Returns a human-readable display name including qualifiers
-  def display_name_with_qualifiers
-    if food_qualifiers.any?
-      qualifier_text = food_qualifiers.map(&:qualifier_name).sort.join(", ")
-      "#{food_name} (#{qualifier_text})"
-    else
-      food_name
-    end
+  def display_food_qualifiers
+    food_qualifiers.map(&:qualifier_name).sort.join(", ")
   end
 
   def includes_qualifier?(qualifier)
