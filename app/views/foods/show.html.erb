@@ -6,7 +6,6 @@
     locals: {
       turbo: false,
       resource: @food,
-      include_delete_button: true,
       disable_delete: @food.user_foods.count.positive?
     }
   %>

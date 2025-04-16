@@ -2,13 +2,10 @@
 <div class="mx-auto md:w-2/3 w-full">
   <%= render "shared/flash_messages" %>
   <%= render @health_condition %>
-  <div class="button-group-container">
-    <%= link_to "Edit this health condition", edit_health_condition_path(@health_condition), class: "edit-button" %>
-    <%= link_to "Back to health conditions", health_conditions_path, class: "back-button" %>
-    <%= button_to "Delete this health condition", @health_condition,
-      method: :delete,
-      class: "delete-button",
-      form_class: "w-full md:w-auto",
-      data: { turbo_confirm: "Are you sure?" } %>
-  </div>
+   <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @health_condition
+    }
+  %>
 </div>

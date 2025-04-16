@@ -1,13 +1,11 @@
 <% content_for :title, "Showing food qualifier" %>
 <div class="mx-auto md:w-2/3 w-full">
   <%= render "shared/flash_messages" %>
-    <%= render @food_qualifier %>
-  <div class="button-group-container">
-    <%= link_to "Edit this food qualifier", edit_food_qualifier_path(@food_qualifier), class: "edit-button" %>
-    <%= link_to "Back to food qualifiers", food_qualifiers_path, class: "back-button" %>
-    <%= button_to "Delete this food qualifier", @food_qualifier,
-      method: :delete,
-      class: "delete-button",
-      form_class: "w-full md:w-auto",
-      data: { turbo_confirm: "Are you sure?" } %>
-  </div>
+  <%= render @food_qualifier %>
+  <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @food_qualifier
+    }
+  %>
+</div>
