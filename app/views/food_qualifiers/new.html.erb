@@ -1,6 +1,5 @@
 <% content_for :title, "New food qualifier" %>
 <div class="mx-auto md:w-2/3 w-full">
-  <%= render partial: "shared/active_record_errors", locals: { resource: @food_qualifier } %>
   <h1>New food qualifier</h1>
   <%= render "form", food_qualifier: @food_qualifier %>
   <%= link_to "Back to food qualifiers", food_qualifiers_path, class: "back-button" %>

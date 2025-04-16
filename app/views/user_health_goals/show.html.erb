@@ -1,34 +1,12 @@
 <% content_for :title, "Health Goal Details" %>
-<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+<div class="mx-auto md:w-2/3 w-full">
   <%= render "shared/flash_messages" %>
-  <div class="md:flex md:items-center md:justify-between mb-6">
-    <div class="min-w-0 flex-1">
-      <h1><%= @user_health_goal.health_goal.health_goal_name %></h1>
-      <p class="mt-1 text-sm text-gray-500">Added on <%= @user_health_goal.created_at.strftime("%B %d, %Y") %></p>
-    </div>
-    <div class="mt-4 md:ml-4 md:mt-0">
-      <span class="<%= @user_health_goal.discarded? ? 'badge-red-full' : 'badge-green-full' %>">
-        <%= @user_health_goal.discarded? ? 'Deleted' : 'Active' %>
-      </span>
-    </div>
-  </div>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
-    <!-- Health goal details section -->
-    <div class="p-6">
-      <div class="my-5">
-        <h2>Order of importance</h2>
-        <%= @user_health_goal.order_of_importance %>
-      </div>
-    </div>
-  </div>
-  <!-- Action buttons -->
-  <div class="inline-block mt-4">
-    <%= link_to "Edit this food", edit_user_health_goal_path(@user_health_goal), class: "edit-button" %>
-    <%= link_to "Back to foods", user_health_goals_path, class: "back-button" %>
-    <%= button_to "Delete this food", @user_health_goal,
-      method: :delete,
-      class: "delete-button",
-      form_class: "inline-block",
-      data: { turbo_confirm: "Are you sure?" } %>
-  </div>
+  <%= render @user_health_goal %>
+  <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @user_health_goal,
+      include_delete_button: true
+    }
+  %>
 </div>

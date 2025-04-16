@@ -1,77 +1,71 @@
 <%= form_with(model: food, class: "contents") do |form| %>
-  <%= render partial: "shared/active_record_errors", locals: { resource: food } %>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6">
-    <div class="mb-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-1">
-        <%= food.new_record? ? "Add a New Food" : "Edit Food" %>
-      </h3>
-      <p class="text-sm text-gray-500">
-        Enter food details and select applicable qualifiers
+  <%= render "shared/active_record_errors", resource: food %>
+  <div class="my-5">
+    <%= form.label :food_name, "Food name", class: "block font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :food_name,
+                  class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                  maxlength: 64,
+                  required: true,
+                  placeholder: "Enter food name",
+                  autocomplete: "off" %>
+    <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: Food, css_class: "text-xs" } %>
+  </div>
+  <div class="my-5">
+    <fieldset>
+      <legend class="block font-medium text-gray-700 mb-1">Qualifiers</legend>
+      <p class="text-sm text-gray-500 mb-3">
+        Select qualifiers that apply to this food.
       </p>
-    </div>
-    <div class="space-y-6">
-      <div>
-        <%= form.label :food_name, "Food name", class: "block font-medium text-gray-700 mb-1" %>
-        <%= form.text_field :food_name,
-                      class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                      maxlength: 64,
-                      required: true,
-                      placeholder: "Enter food name",
-                      autocomplete: "off" %>
-        <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: Food, css_class: "text-xs" } %>
-      </div>
-      <div class="border-t border-gray-200 pt-4">
-        <fieldset>
-          <legend class="block font-medium text-gray-700 mb-2">Qualifiers</legend>
-          <p class="text-sm text-gray-500 mb-3">
-            Select qualifiers that apply to this food. Foods with the same name but different qualifiers
-            are considered unique.
-          </p>
-          <div class="h-60 overflow-y-auto border rounded-md p-3 bg-gray-50">
-            <% if @food_qualifiers.any? %>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                <% @food_qualifiers.each do |qualifier| %>
-                  <div class="relative flex items-start py-1 px-2 rounded-md hover:bg-gray-100">
-                    <div class="flex h-5 items-center">
-                      <%= check_box_tag "qualifier_ids[]",
-                                    qualifier.id,
-                                    food.includes_qualifier?(qualifier),
-                                    id: "qualifier_#{qualifier.id}",
-                                    class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
-                    </div>
-                    <div class="ml-3 text-sm">
-                      <%= label_tag "qualifier_#{qualifier.id}", qualifier.qualifier_name, class: "font-medium text-gray-700 cursor-pointer" %>
-                    </div>
+      <div class="h-60 overflow-y-auto border rounded-md p-3 bg-gray-50">
+        <% if @food_qualifiers.any? %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <% @food_qualifiers.each do |qualifier| %>
+              <%
+                # Find existing association or use the one built in the controller
+                food_food_qualifier = food.food_food_qualifiers.find { |ffq| ffq.food_qualifier_id == qualifier.id }
+
+                # Check if this qualifier is actively associated (exists and not marked for deletion)
+                existing_association = food.food_qualifiers.include?(qualifier)
+
+                # For form re-rendering after validation error, check params
+                if food_food_qualifier && params[:food] && params[:food][:food_food_qualifiers_attributes]
+                  # Find this qualifier in the parameters
+                  params[:food][:food_food_qualifiers_attributes].each do |_, attrs|
+                    if attrs[:food_qualifier_id].to_i == qualifier.id
+                      # If _destroy is "0", it should be checked
+                      existing_association = (attrs[:_destroy] == "0")
+                      break
+                    end
+                  end
+                end
+              %>
+              <%= form.fields_for :food_food_qualifiers, food_food_qualifier do |qualifier_form| %>
+                <div class="relative flex items-start py-1 px-2 rounded-md hover:bg-gray-100">
+                  <div class="flex h-5 items-center">
+                    <%= qualifier_form.check_box :_destroy,
+                                            {checked: existing_association, inverted: true, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"},
+                                            "0", "1" %>
+                    <%= qualifier_form.hidden_field :food_qualifier_id %>
+                    <%= qualifier_form.hidden_field :id if qualifier_form.object.persisted? %>
                   </div>
-                <% end %>
-              </div>
-            <% else %>
-              <div class="flex items-center justify-center h-full">
-                <p class="text-gray-500 italic text-sm">No existing qualifiers available. Create a new one below.</p>
-              </div>
+                  <div class="ml-3 text-sm">
+                    <%= label_tag nil, qualifier.qualifier_name, class: "font-medium text-gray-700 cursor-pointer" %>
+                  </div>
+                </div>
+              <% end %>
             <% end %>
           </div>
-        </fieldset>
-        <div class="mt-4">
-          <label for="new_qualifier_name" class="block font-medium text-gray-700 mb-1">Add a New Qualifier</label>
-          <div class="flex space-x-2">
-            <%= text_field_tag :new_qualifier_name,
-                  nil,
-                  id: "new_qualifier_name",
-                  class: "flex-grow rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                  autocomplete: "off",
-                  placeholder: "Enter a new qualifier name (optional)" %>
+        <% else %>
+          <div class="flex items-center justify-center h-full">
+            <p class="text-gray-500 italic text-sm">No existing qualifiers available.</p>
           </div>
-          <p class="text-xs text-gray-500 mt-1">Leave blank if you don't want to add a new qualifier</p>
-        </div>
+        <% end %>
       </div>
-    </div>
-    <div class="mt-8 border-t border-gray-200 pt-5 flex justify-end">
-      <div class="flex space-x-3">
-        <%= form.submit food.new_record? ? "Create Food" : "Update Food",
-                     class: "rounded-md px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white shadow-sm inline-block font-medium cursor-pointer" %>
-        <%= link_to "Back to foods", foods_path, class: "back-button" %>
-      </div>
-    </div>
+    </fieldset>
   </div>
+  <%= render partial: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: food,
+    back_path: foods_path
+  } %>
 <% end %>

@@ -1,6 +1,4 @@
 <div class="mx-auto md:w-2/3 w-full">
-  <%= render partial: "shared/active_record_errors", locals: { resource: @health_condition } %>
   <h1>New health condition</h1>
   <%= render "form", health_condition: @health_condition %>
-  <%= link_to "Back to health conditions", health_conditions_path, class: "back-button" %>
 </div>

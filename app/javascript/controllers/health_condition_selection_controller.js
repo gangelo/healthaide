@@ -214,7 +214,7 @@ export default class extends Controller {
   // Generate HTML for a selected condition
   renderSelectedConditionHtml(conditionId, conditionName) {
     return `
-      <div class="condition-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1 bg-green-50"
+      <div class="condition-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1 bg-gray-100"
            data-health-condition-selection-target="selectedCondition"
            data-condition-id="${conditionId}"
            data-condition-name="${conditionName}"

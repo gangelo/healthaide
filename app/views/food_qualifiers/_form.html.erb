@@ -5,7 +5,9 @@
     <%= form.text_field :qualifier_name, class: "block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 w-full", maxlength: 64, required: true %>
     <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: FoodQualifier } %>
   </div>
-  <div class="inline">
-    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-  </div>
+  <%= render partial: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: food_qualifier,
+    back_path: food_qualifiers_path
+  } %>
 <% end %>

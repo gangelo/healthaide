@@ -7,7 +7,15 @@ class FoodQualifier < ApplicationRecord
   has_many :food_food_qualifiers, inverse_of: :food_qualifier, dependent: :destroy
   has_many :foods, through: :food_food_qualifiers
 
-  validates :qualifier_name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 64 }
+  validates :qualifier_name,
+    presence: true,
+    uniqueness: { case_sensitive: false },
+    length: { maximum: 64 },
+    format: {
+      with: VALID_NAME_REGEX,
+      message: INVALID_NAME_REGEX_MESSAGE
+    }
+
 
   scope :ordered, -> { order(:qualifier_name) }
 

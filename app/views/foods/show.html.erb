@@ -1,58 +1,13 @@
-<% content_for :title, "Food Details" %>
-<%
-used_count = @food.user_foods.count
-%>
-<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
+<% content_for :title, "Showing food" %>
+<div class="mx-auto md:w-2/3 w-full">
   <%= render "shared/flash_messages" %>
-  <div class="md:flex md:items-center md:justify-between mb-6">
-    <div class="min-w-0 flex-1">
-      <h1><%= @food.food_name %></h1>
-      <p class="mt-1 text-sm text-gray-500">Added on <%= @food.created_at.strftime("%B %d, %Y") %></p>
-    </div>
-    <div class="mt-4 md:ml-4 md:mt-0">
-      <% if used_count.positive? %>
-        <span class="badge-red-full">
-          In use (<%= used_count %>)
-        </span>
-      <% else %>
-        <span class="badge-green-full">
-          Unused
-        </span>
-      <% end %>
-    </div>
-  </div>
-  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
-    <!-- Food qualifiers section -->
-    <div class="p-6">
-      <h2>Qualifiers</h2>
-      <% if @food.food_qualifiers.any? %>
-        <div class="flex flex-wrap">
-          <% @food.food_qualifiers.ordered.each_with_index do |qualifier, index| %>
-            <span class="badge-red-md mr-2"><%= qualifier.qualifier_name %></span>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-gray-500 italic">No qualifiers for this food.</p>
-      <% end %>
-    </div>
-    <!-- Unique identifier section -->
-    <div class="p-6">
-      <h2>Unique Identifier</h2>
-      <div class="font-mono text-sm overflow-auto">
-        <%= @food.unique_signature %>
-      </div>
-    </div>
-  </div>
-  <!-- Action buttons -->
-  <div class="inline-block mt-4">
-    <%= link_to "Edit this food", edit_food_path(@food), class: "edit-button" %>
-    <%= link_to "Back to foods", foods_path, class: "back-button" %>
-    <%= button_to "Delete this food", @food,
-          method: :delete,
-          class: "delete-button",
-          form_class: "inline-block",
-          disabled: used_count.positive?,
-          form: { data: { turbo: false } },
-          onclick: "return confirm('Are you sure?');" %>
-  </div>
+  <%= render @food %>
+  <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @food,
+      include_delete_button: true,
+      disable_delete: @food.user_foods.count.positive?
+    }
+  %>
 </div>

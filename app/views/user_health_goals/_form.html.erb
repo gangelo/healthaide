@@ -15,7 +15,9 @@
                   { class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" } %>
     <p class="text-sm text-gray-500 mt-1">1 is highest importance, 25 is lowest</p>
   </div>
-  <div class="inline">
-    <%= form.submit "Update health goal", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
-  </div>
+  <%= render partial: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: user_health_goal,
+    back_path: user_health_goals_path
+  } %>
 <% end %>

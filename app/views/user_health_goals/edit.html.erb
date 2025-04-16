@@ -2,8 +2,4 @@
   <%= render partial: "shared/active_record_errors", locals: { resource: @user_health_goal } %>
   <h1>Editing health goal</h1>
   <%= render "form", user_health_goal: @user_health_goal %>
-  <div class="inline-block ml-2 mt-4">
-    <%= link_to "Show this health goal", @user_health_goal, class: "show-button" %>
-    <%= link_to "Back to health goals", user_health_goals_path, class: "back-button" %>
-  </div>
 </div>

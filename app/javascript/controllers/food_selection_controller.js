@@ -48,23 +48,7 @@ export default class extends Controller {
       // Filter the available foods
       this.availableFoodTargets.forEach((food) => {
         const foodName = food.dataset.foodName.toLowerCase();
-        const displayName =
-          food.dataset.foodDisplayQualifierNames.toLowerCase();
-
-        console.log("FoodSelectionController.js#search: foodName", foodName);
-        console.log(
-          "FoodSelectionController.js#search: displayName",
-          displayName
-        );
-        console.log(
-          "FoodSelectionController.js#search: searchTermLower",
-          searchTermLower
-        );
-
-        if (
-          foodName.includes(searchTermLower) ||
-          displayName.includes(searchTermLower)
-        ) {
+        if (foodName.includes(searchTermLower)) {
           food.classList.remove("hidden");
           anyVisible = true;
         } else {
@@ -132,22 +116,11 @@ export default class extends Controller {
     const foodElement = event.currentTarget;
     const foodId = foodElement.dataset.foodId;
     const foodName = foodElement.dataset.foodName;
-    const displayName = foodElement.dataset.foodDisplayQualifierNames;
-
-    // Extract qualifiers from the display name, if any
-    let qualifiers = [];
-    const regex = /\((.*?)\)$/;
-    const match = displayName.match(regex);
-    if (match && match[1]) {
-      qualifiers = match[1].split(",").map((q) => q.trim());
-    }
 
     // Add to selected foods
     this.selectedFoods.set(foodId, {
       food_id: foodId,
       food_name: foodName,
-      display_name: displayName,
-      qualifiers: qualifiers,
     });
 
     // Hide this food from the available list
@@ -224,7 +197,7 @@ export default class extends Controller {
 
       // Add hidden input for form submission
       if (food.food_id.startsWith("new-")) {
-        // This is a new food to create
+        // This is a new food to create using nested attributes
         const input = document.createElement("input");
         input.type = "hidden";
         input.name = "new_food_names[]";
@@ -242,18 +215,16 @@ export default class extends Controller {
   }
 
   // Generate HTML for a selected food
-  renderSelectedFoodHtml(foodId, foodName, displayName, qualifiers) {
+  renderSelectedFoodHtml(foodId, foodName) {
     return `
-      <div class="food-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1 bg-green-50"
+      <div class="food-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1 bg-gray-100"
            data-food-selection-target="selectedFood"
            data-food-id="${foodId}"
            data-food-name="${foodName}"
-           data-food-display-name="${displayName}"
            data-action="click->food-selection#removeFood">
         <div class="flex items-center">
           <div class="flex-1">
             <div class="text-sm font-medium text-gray-900">${foodName}</div>
-            ${this.renderQualifiersHtml(qualifiers)}
           </div>
           <div class="ml-2 text-red-600">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -263,23 +234,6 @@ export default class extends Controller {
         </div>
       </div>
     `;
-  }
-
-  // Generate HTML for qualifiers
-  renderQualifiersHtml(qualifiers) {
-    if (!qualifiers || qualifiers.length === 0) return "";
-
-    let html = '<div class="mt-1 flex flex-wrap gap-1">';
-    qualifiers.forEach((qualifier) => {
-      html += `
-        <span class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium text-blue-700">
-          ${qualifier}
-        </span>
-      `;
-    });
-    html += "</div>";
-
-    return html;
   }
 
   // Update the submit and clear buttons state

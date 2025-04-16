@@ -14,9 +14,8 @@ class UserFoodsController < ApplicationController
   # GET /user_foods/new
   def new
     @user_food = current_user.user_foods.new
+    @user_food.build_food # Build a new food for the nested form
     @foods = Food.available_for(current_user, include_qualifiers: true)
-    # TODO: Incorporate search to include qualifiers
-    # @foods = Food.having_qualifiers([ 12 ]).available_for(current_user, include_qualifiers: true)
 
     # Handle AJAX search requests
     if request.xhr? && params[:search].present?
@@ -27,31 +26,31 @@ class UserFoodsController < ApplicationController
 
   # POST /user_foods or /user_foods.json
   def create
-    @user_food = current_user.user_foods.new
+    @user_food = current_user.user_foods.new(user_food_params)
 
-    new_food_name = params[:user_food][:new_food_name]
-    food_id = params[:user_food][:food_id]
+    # Set the user_id explicitly
+    @user_food.user_id = current_user.id
 
-    if food_id.blank? && new_food_name.blank?
-      @user_food.errors.add(:base, "Please select an existing food or enter a new food name")
-      @foods = Food.available_for(current_user)
-      render :new, status: :unprocessable_entity
-
-      return
+    # Handle the case when food_id is provided (existing food)
+    if params[:user_food][:food_id].present?
+      @user_food.food_id = params[:user_food][:food_id]
+      @user_food.food = nil # Don't create a new food in this case
     end
 
-    # From Create & Add New Food
-    @user_food.food = if new_food_name.present?
-      food = Food.find_by_food_name_normalized(new_food_name)
-      food = Food.create!(food_name: new_food_name) if food.nil?
-      food
-    else
-      # From Select Existing Food
-      Food.find(food_id)
+    # Handle case when food attributes are provided (new food)
+    if params[:user_food][:food_attributes].present? && params[:user_food][:food_attributes][:food_name].present?
+      food_name = params[:user_food][:food_attributes][:food_name]
+      # Check if food already exists with normalized name
+      existing_food = Food.find_by_food_name_normalized(food_name)
+
+      if existing_food
+        # Use existing food instead of creating new one
+        @user_food.food = existing_food
+      end
+      # If food doesn't exist, the nested attributes will create it
     end
 
     if @user_food.save
-      @foods = Food.available_for(current_user)
       redirect_to user_foods_path, notice: "Food was successfully added to your list."
     else
       @foods = Food.available_for(current_user)
@@ -59,6 +58,7 @@ class UserFoodsController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     @user_food.errors.add(:base, e.record.errors.full_messages.to_sentence)
+    @foods = Food.available_for(current_user)
     render :new, status: :unprocessable_entity
   end
 
@@ -99,7 +99,6 @@ class UserFoodsController < ApplicationController
     end
   end
 
-  # Custom add_multiple action for the new food selection UI
   def add_multiple
     food_ids = params[:food_ids]&.reject(&:blank?)
     new_food_names = params[:new_food_names]&.reject(&:blank?)
@@ -115,22 +114,31 @@ class UserFoodsController < ApplicationController
     # First handle creating any new foods that don't exist
     if new_food_names.present?
       new_food_names.each do |food_name|
-        # Check if food exists
+        # Build a new user_food with nested food attributes
+        user_food = current_user.user_foods.new
+
+        # Look for existing food with normalized name first
         food = Food.find_by_food_name_normalized(food_name)
-        if food.nil?
-          # Create a new food
-          food = Food.create!(food_name: food_name)
+
+        if food
+          # Use existing food
+          user_food.food = food
+        else
+          # Create new food through nested attributes
+          user_food.build_food(food_name: food_name)
         end
 
-        # Add the food to the user's list if it's not already there
-        unless current_user.user_foods.exists?(food_id: food.id)
-          current_user.user_foods.create!(food_id: food.id)
+        # Skip if the user already has this food
+        next if user_food.food && current_user.user_foods.exists?(food_id: user_food.food.id)
+
+        # Save with validation
+        if user_food.save
           foods_added += 1
         end
       end
     end
 
-    # Then handle existing foods
+    # Then handle existing foods - this part stays mostly the same
     if food_ids.present?
       # Process existing food IDs
       existing_food_ids = current_user.user_foods.pluck(:food_id)
@@ -171,8 +179,10 @@ class UserFoodsController < ApplicationController
     @user_foods = current_user.user_foods.includes(:food).ordered
   end
 
-  # Only allow a list of trusted parameters through.
-  def user_food_params
-    params.require(:user_food).permit(:food_id, :new_food_name)
+  def food_params
+    params.require(:food).permit(
+      :food_name,
+      food_food_qualifiers_attributes: [ :id, :food_qualifier_id, :_destroy ]
+    )
   end
 end

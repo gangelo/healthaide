@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   add_flash_types :info, :warning, :error
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_session_timeout
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
@@ -23,6 +24,14 @@ class ApplicationController < ActionController::Base
     else
       response.headers["Turbo-Stream-Location"] = new_user_session_path
       render json: { error: "session_expired" }, status: :unauthorized
+    end
+  end
+
+  def handle_record_not_found
+    if request.format.html?
+      redirect_to root_path, alert: "The requested resource was not found."
+    else
+      render json: { error: "not_found" }, status: :not_found
     end
   end
 

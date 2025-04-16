@@ -30,10 +30,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
 
   create_table "foods", force: :cascade do |t|
     t.string "food_name", null: false
-    t.string "unique_signature"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["food_name", "unique_signature"], name: "index_foods_on_unique_signature", unique: true
+    t.index ["food_name"], name: "index_foods_on_food_name", unique: true
   end
 
   create_table "health_conditions", force: :cascade do |t|

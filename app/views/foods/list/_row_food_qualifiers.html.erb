@@ -1,6 +1,6 @@
 <% if food.food_qualifiers.any? %>
   <div class="flex flex-wrap gap-1">
-    <% food.food_qualifiers.each do |food_qualifier| %>
+    <% food.food_qualifiers.ordered.each do |food_qualifier| %>
       <span><%= render(FoodQualifiers::BadgeComponent.new(name: food_qualifier.qualifier_name, size: :md)) %></span>
     <% end %>
   </div>

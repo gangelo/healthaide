@@ -7,6 +7,10 @@ module ApplicationHelper
     end
   end
 
+  def titleize(model_object)
+    model_object.class.name.underscore.titleize
+  end
+
   private
 
   def active_path?(path)

@@ -214,7 +214,7 @@ export default class extends Controller {
   // Generate HTML for a selected goal
   renderSelectedGoalHtml(goalId, goalName) {
     return `
-      <div class="goal-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1 bg-green-50"
+      <div class="goal-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1 bg-gray-100"
            data-health-goal-selection-target="selectedGoal"
            data-goal-id="${goalId}"
            data-goal-name="${goalName}"

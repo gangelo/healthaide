@@ -1,21 +1,11 @@
-<div class="food-item py-2 px-3 hover:bg-gray-50 rounded cursor-pointer mb-1"
+<div class="food-item py-2 px-3 bg-gray-100 hover:bg-gray-50 rounded cursor-pointer mb-1"
      data-food-selection-target="availableFood"
      data-food-id="<%= food.id %>"
      data-food-name="<%= food.food_name %>"
-     data-food-display-qualifier-names="<%= food.display_food_qualifiers %>"
      data-action="click->food-selection#selectFood">
   <div class="flex items-center">
     <div class="flex-1">
       <div class="text-sm font-medium text-gray-900"><%= food.food_name %></div>
-      <% if food.food_qualifiers.any? %>
-        <div class="mt-1 flex flex-wrap gap-1">
-          <% food.food_qualifiers.each do |qualifier| %>
-            <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
-              <%= qualifier.qualifier_name %>
-            </span>
-          <% end %>
-        </div>
-      <% end %>
     </div>
     <div class="ml-2 text-blue-600">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">

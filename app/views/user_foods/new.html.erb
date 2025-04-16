@@ -88,7 +88,7 @@
           <div data-food-selection-target="hiddenInputs">
             <!-- Hidden inputs will be added here dynamically -->
           </div>
-          <div class="flex justify-between">
+          <div class="button-group-container">
             <button type="button"
                   class="delete-button-sm"
                   data-action="click->food-selection#clearSelections"
@@ -97,7 +97,7 @@
               Clear All
             </button>
             <%= form.submit "Add Selected Foods",
-                class: "add-existing-button py-2 w-auto",
+                class: "add-selected-button-sm",
                 data: { food_selection_target: "submitButton" },
                 disabled: true %>
           </div>

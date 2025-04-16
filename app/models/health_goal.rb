@@ -7,7 +7,11 @@ class HealthGoal < ApplicationRecord
   validates :health_goal_name,
             presence: true,
             length: { minimum: 2, maximum: 64 },
-            uniqueness: { case_sensitive: false }
+            uniqueness: { case_sensitive: false },
+            format: {
+              with: VALID_NAME_REGEX,
+              message: INVALID_NAME_REGEX_MESSAGE
+            }
 
   scope :ordered, -> { order(:health_goal_name) }
 

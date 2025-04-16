@@ -1,10 +1,5 @@
-<% content_for :title, "New Food" %>
-<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
-  <div class="md:flex md:items-center md:justify-between mb-6">
-    <div class="min-w-0 flex-1">
-      <h1>New Food</h1>
-      <p class="mt-1 text-sm text-gray-500 max-w-3xl">Create a new food with optional qualifiers.</p>
-    </div>
-  </div>
+<% content_for :title, "New food" %>
+<div class="mx-auto md:w-2/3 w-full">
+  <h1>New Food</h1>
   <%= render "form", food: @food %>
 </div>

@@ -1,10 +1,13 @@
 <%= form_with(model: health_condition, class: "contents") do |form| %>
+  <%= render "shared/active_record_errors", resource: health_condition %>
   <div class="my-5">
     <%= form.label :health_condition_name %>
     <%= form.text_field :health_condition_name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
     <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: HealthCondition } %>
   </div>
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
-  </div>
+  <%= render partial: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: health_condition,
+    back_path: health_conditions_path
+  } %>
 <% end %>

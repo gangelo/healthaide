@@ -1,90 +1,66 @@
 class FoodsController < ApplicationController
   before_action :authenticate_admin!
-  before_action :set_food, only: %i[ show edit update destroy add_qualifier remove_qualifier ]
+  before_action :set_food, only: %i[ show edit update destroy ]
+  before_action :set_food_qualifiers, only: %i[ new edit create update ]
 
   # GET /foods or /foods.json
   def index
-    # @foods = if params[:query].present?
-    #   Food.where("food_name ILIKE ?", "%#{params[:query]}%").order(:food_name).limit(10)
-    # else
-    #   Food.order(:food_name)
-    # end
-    @foods = Food.ordered
+    @foods = Food.ordered.with_qualifiers
   end
 
   # GET /foods/1 or /foods/1.json
   def show
     @food_qualifiers = @food.food_qualifiers.ordered
-    @available_qualifiers = FoodQualifier.ordered.where.not(id: @food.food_qualifier_ids)
   end
 
   # GET /foods/new
   def new
     @food = Food.new
-    @food_qualifiers = FoodQualifier.ordered
-  end
-
-  # GET /foods/1/edit
-  def edit
-    @food_qualifiers = FoodQualifier.ordered
+    # Build associations for checkboxes that don't exist yet
+    @food_qualifiers.each do |qualifier|
+      @food.food_food_qualifiers.build(food_qualifier_id: qualifier.id)
+    end
   end
 
   # POST /foods or /foods.json
   def create
     @food = Food.new(food_params)
 
-    # Handle qualifiers
-    process_qualifiers
-
     respond_to do |format|
-      begin
-        if @food.save
-          format.html { redirect_to @food, notice: "Food was successfully created." }
-          format.json { render :show, status: :created, location: @food }
-        else
-          @food_qualifiers = FoodQualifier.ordered
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @food.errors, status: :unprocessable_entity }
-        end
-      rescue ActiveRecord::RecordNotUnique => e
-        # Add debug information to understand what's happening
-        Rails.logger.error("Food uniqueness error: #{e.message}")
-        Rails.logger.error("Food name: #{@food.food_name}, Qualifiers: #{@food.food_qualifiers.map(&:qualifier_name).join(", ")}")
-
-        # Add a validation error for the unique constraint failure
-        @food.errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
-        @food_qualifiers = FoodQualifier.ordered
+      if @food.save
+        format.html { redirect_to @food, notice: "Food was successfully created." }
+        format.json { render :show, status: :created, location: @food }
+      else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @food.errors, status: :unprocessable_entity }
       end
     end
   end
 
+  # GET /foods/1/edit
+  def edit
+    # Build associations for checkboxes that don't exist yet
+    @food_qualifiers.each do |qualifier|
+      unless @food.food_food_qualifiers.exists?(food_qualifier_id: qualifier.id)
+        @food.food_food_qualifiers.build(food_qualifier_id: qualifier.id)
+      end
+    end
+  end
+
   # PATCH/PUT /foods/1 or /foods/1.json
   def update
-    # Update basic attributes
-    @food.assign_attributes(food_params)
+    @food_qualifiers = FoodQualifier.ordered
 
-    # Handle qualifiers
-    process_qualifiers
-
-    respond_to do |format|
-      begin
-        if @food.save
-          format.html { redirect_to @food, notice: "Food was successfully updated." }
-          format.json { render :show, status: :ok, location: @food }
-        else
-          @food_qualifiers = FoodQualifier.ordered
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @food.errors, status: :unprocessable_entity }
+    if @food.update(food_params)
+      redirect_to @food, notice: "Food was successfully updated."
+    else
+      # Rebuild missing associations
+      @food_qualifiers.each do |qualifier|
+        unless @food.food_food_qualifiers.any? { |ffq| ffq.food_qualifier_id == qualifier.id }
+          @food.food_food_qualifiers.build(food_qualifier_id: qualifier.id)
         end
-      rescue ActiveRecord::RecordNotUnique => e
-        # Add a validation error for the unique constraint failure
-        @food.errors.add(:unique_signature, "A food with this name and the same qualifiers already exists")
-        @food_qualifiers = FoodQualifier.ordered
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @food.errors, status: :unprocessable_entity }
       end
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -108,78 +84,6 @@ class FoodsController < ApplicationController
     end
   end
 
-  # POST /foods/:id/add_qualifier
-  def add_qualifier
-    @qualifier = FoodQualifier.find(params[:qualifier_id])
-
-    if @food.includes_qualifier?(@qualifier)
-      message = "#{@qualifier.qualifier_name} is already associated with this food."
-      flash[:notice] = message
-    else
-      # Create a temporary food with the new qualifier to check uniqueness
-      temp_food = Food.new(food_name: @food.food_name)
-      temp_food.food_qualifiers = @food.food_qualifiers + [ @qualifier ]
-
-      if temp_food.valid?
-        @food.food_qualifiers << @qualifier
-        message = "Added #{@qualifier.qualifier_name} to #{@food.food_name}."
-        flash[:success] = message
-      else
-        message = temp_food.errors.full_messages.to_sentence
-        flash[:alert] = message
-      end
-    end
-
-    @available_qualifiers = FoodQualifier.where.not(id: @food.food_qualifier_ids)
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("qualifier-list", partial: "foods/qualifier_list", locals: { food: @food }),
-          turbo_stream.replace("add_existing_qualifier", partial: "foods/add_existing_qualifier_form", locals: { food: @food, available_qualifiers: @available_qualifiers }),
-          turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
-        ]
-      end
-      format.html { redirect_to @food }
-    end
-  end
-
-  # DELETE /foods/:id/remove_qualifier
-  def remove_qualifier
-    @qualifier = FoodQualifier.find(params[:qualifier_id])
-
-    if @food.includes_qualifier?(@qualifier)
-      # Create a temporary food without this qualifier to check uniqueness
-      temp_food = Food.new(food_name: @food.food_name)
-      temp_food.food_qualifiers = @food.food_qualifiers.reject { |q| q.id == @qualifier.id }
-
-      if temp_food.valid?
-        @food.food_qualifiers.delete(@qualifier)
-        message = "Removed #{@qualifier.qualifier_name} from #{@food.food_name}."
-        flash[:success] = message
-      else
-        message = temp_food.errors.full_messages.to_sentence
-        flash[:alert] = message
-      end
-    else
-      message = "#{@qualifier.qualifier_name} is not associated with this food."
-      flash[:notice] = message
-    end
-
-    @available_qualifiers = FoodQualifier.where.not(id: @food.food_qualifier_ids)
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: [
-          turbo_stream.replace("qualifier-list", partial: "foods/qualifier_list", locals: { food: @food }),
-          turbo_stream.replace("add_existing_qualifier", partial: "foods/add_existing_qualifier_form", locals: { food: @food, available_qualifiers: @available_qualifiers }),
-          turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
-        ]
-      end
-      format.html { redirect_to @food }
-    end
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -187,42 +91,14 @@ class FoodsController < ApplicationController
     @food = Food.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
-  def food_params
-    params.require(:food).permit(:food_name)
+  def set_food_qualifiers
+    @food_qualifiers = FoodQualifier.ordered
   end
 
-  # Process qualifiers from params
-  def process_qualifiers
-    # Save the original qualifiers to restore in case validation fails
-    original_qualifiers = @food.food_qualifiers.to_a
-
-    # Clear existing qualifiers first
-    @food.food_qualifiers.clear if @food.persisted?
-
-    # Add selected qualifiers
-    if params[:qualifier_ids].present?
-      qualifier_ids = params[:qualifier_ids].reject(&:blank?).map(&:to_i)
-      selected_qualifiers = FoodQualifier.where(id: qualifier_ids)
-      @food.food_qualifiers = selected_qualifiers
-    end
-
-    # Add any new qualifier if provided (from the form, not the model)
-    if params[:new_qualifier_name].present?
-      qualifier_name = params[:new_qualifier_name].strip
-      if qualifier_name.present?
-        # Find or create the qualifier
-        qualifier = FoodQualifier.find_or_create_by(qualifier_name: qualifier_name)
-        @food.food_qualifiers << qualifier unless @food.includes_qualifier?(qualifier)
-      end
-    end
-
-    # If the food's uniqueness validation fails, restore the original qualifiers
-    unless @food.valid?
-      @food.food_qualifiers.clear
-      original_qualifiers.each do |qualifier|
-        @food.food_qualifiers << qualifier
-      end
-    end
+  def food_params
+    params.require(:food).permit(
+      :food_name,
+      food_food_qualifiers_attributes: [ :id, :food_qualifier_id, :_destroy ]
+    )
   end
 end

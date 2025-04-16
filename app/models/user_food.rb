@@ -2,6 +2,8 @@ class UserFood < ApplicationRecord
   belongs_to :user, inverse_of: :user_foods
   belongs_to :food, inverse_of: :user_foods
 
+  accepts_nested_attributes_for :food, reject_if: :all_blank
+
   validate :food_not_already_selected
 
   scope :ordered, -> { joins(:food).order("foods.food_name") }
