@@ -1,0 +1,8 @@
+<%= link_to "Logout",
+  destroy_user_session_path,
+  class: css_class,
+  data: {
+    turbo_method: :delete,
+    confirm: "Are you sure?",
+    turbo_confirm: "Are you sure?"
+  } %>

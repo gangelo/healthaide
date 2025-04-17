@@ -1,9 +1,9 @@
 module ApplicationHelper
   def nav_link_class(path)
     if active_path?(path)
-      "rounded-md px-3 py-2 text-sm font-semibold bg-gray-900 text-white ring-1 ring-inset ring-white-700/10"
+      "rounded-md px-3 block lg:inline-block py-2 text-sm font-semibold bg-gray-900 text-white ring-1 ring-inset ring-white-700/10"
     else
-      "rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-400 hover:text-black"
+      "rounded-md px-3 block lg:inline-block py-2 text-sm font-medium text-gray-300 hover:bg-gray-400 hover:text-black"
     end
   end
 

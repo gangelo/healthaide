@@ -1,3 +1,9 @@
+<% if Rails.env.development? %>
+  <div class="p-2 hidden inline-block">sm:</div>
+  <div class="p-2 hidden md:inline-block">md:</div>
+  <div class="p-2 hidden lg:inline-block">lg:</div>
+<% end %>
+
 <nav class="bg-gray-800 w-full block">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 justify-between">
@@ -7,46 +13,84 @@
             <%= render partial: "shared/site_name" %>
           <% end %>
         </div>
-        <% if user_signed_in? %>
-          <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
-            <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
-            <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
-            <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
-            <% if current_user.admin? %>
-              <%= link_to "Foods", foods_path, class: nav_link_class(foods_path) %>
-              <%= link_to "Food Qualifiers", food_qualifiers_path, class: nav_link_class(food_qualifiers_path) %>
-              <%= link_to "Health Conditions", health_conditions_path, class: nav_link_class(health_conditions_path) %>
-              <%= link_to "Health Goals", health_goals_path, class: nav_link_class(health_goals_path) %>
-              <%= link_to "Exports", exports_path, class: nav_link_class(exports_path) %>
-            <% end %>
-          </div>
-        <% end %>
+
+        <!-- Desktop Navigation Menu (visible from lg breakpoint) -->
+        <div class="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
+          <%= render "shared/navigation/menu_items" %>
+        </div>
       </div>
-      <div class="flex items-center">
-        <div class="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
-          <!-- Profile dropdown -->
+
+      <!-- Desktop Profile/Login Menu (visible from lg breakpoint) -->
+      <div class="hidden lg:flex lg:items-center">
+        <div class="lg:ml-4 lg:flex lg:shrink-0 lg:items-center">
           <% if user_signed_in? %>
             <div class="relative ml-3">
-              <%= link_to "Logout",
-                    destroy_user_session_path,
-                    class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
-                    data: {
-                      turbo_method: :delete,
-                      confirm: "Are you sure?",
-                      turbo_confirm: "Are you sure?"
-                    } %>
-              <%= link_to "Profile",
-                    edit_user_registration_path,
-                    class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
-                    data: {
-                      action: "nav-bar#navigate"
-                    } %>
+              <%= render partial: "shared/navigation/logout_link",
+                  locals: {
+                    css_class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  } %>
+              <%= render partial: "shared/navigation/profile_link",
+                  locals: {
+                    css_class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  } %>
             </div>
           <% else %>
             <div class="shrink-0">
-              <%= link_to "Login", new_user_session_path, class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" %>
+              <%= render partial: "shared/navigation/login_link",
+                  locals: {
+                    css_class: "relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                  } %>
             </div>
           <% end %>
+        </div>
+      </div>
+
+      <!-- Mobile menu button with Stimulus controller -->
+      <div class="lg:hidden relative" data-controller="menu">
+        <button type="button"
+                data-action="menu#toggle"
+                aria-controls="mobile-menu-dropdown"
+                aria-expanded="false"
+                class="text-gray-400 hover:text-white p-2 z-[51]">
+          <span class="sr-only">Open main menu</span>
+          <!-- Menu icon (hamburger) -->
+          <svg class="h-12 w-12" data-menu-target="openIcon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <!-- Close icon (X) - hidden by default -->
+          <svg class="h-12 w-12 hidden" data-menu-target="closeIcon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Mobile menu dropdown - now positioned absolute so it scrolls with page -->
+        <div id="mobile-menu-dropdown" class="hidden absolute right-0 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+          <div class="py-1">
+            <div class="px-2 py-2 space-y-1">
+              <%= render "shared/navigation/menu_items" %>
+            </div>
+
+            <!-- Mobile profile/login links -->
+            <div class="border-t border-gray-700 mt-2">
+              <div class="px-2 py-2 space-y-1">
+                <% if user_signed_in? %>
+                  <%= render partial: "shared/navigation/logout_link",
+                    locals: {
+                      css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400 mb-2"
+                    } %>
+                  <%= render partial: "shared/navigation/profile_link",
+                    locals: {
+                      css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400"
+                    } %>
+                <% else %>
+                  <%= render partial: "shared/navigation/login_link",
+                    locals: {
+                      css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400"
+                    } %>
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
