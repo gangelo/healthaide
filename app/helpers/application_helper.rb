@@ -7,6 +7,24 @@ module ApplicationHelper
     end
   end
 
+  def active_path?(path)
+    if path.is_a?(Array)
+      path.any? { current_page?(it) }
+    else
+      current_page?(path)
+    end
+  end
+
+  def admin_active_paths
+    [
+      foods_path,
+      food_qualifiers_path,
+      health_conditions_path,
+      health_goals_path,
+      exports_path
+    ]
+  end
+
   def titleize(model_object)
     model_object.class.name.underscore.titleize
   end

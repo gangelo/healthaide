@@ -16,7 +16,14 @@
 
         <!-- Desktop Navigation Menu (visible from lg breakpoint) -->
         <div class="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
-          <%= render "shared/navigation/menu_items" %>
+          <% if user_signed_in? %>
+            <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
+            <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
+            <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
+            <% if current_user.admin? %>
+              <%= render partial: "shared/navigation/admin_menu" %>
+            <% end %>
+          <% end %>
         </div>
       </div>
 
@@ -67,7 +74,21 @@
         <div id="mobile-menu-dropdown" class="hidden absolute right-0 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
           <div class="py-1">
             <div class="px-2 py-2 space-y-1">
-              <%= render "shared/navigation/menu_items" %>
+              <% if user_signed_in? %>
+                <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
+                <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
+                <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
+                <% if current_user.admin? %>
+                  <div class="mt-2 border-t border-gray-700 pt-2">
+                    <p class="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</p>
+                    <%= link_to "Foods", foods_path, class: nav_link_class(foods_path) %>
+                    <%= link_to "Food Qualifiers", food_qualifiers_path, class: nav_link_class(food_qualifiers_path) %>
+                    <%= link_to "Health Conditions", health_conditions_path, class: nav_link_class(health_conditions_path) %>
+                    <%= link_to "Health Goals", health_goals_path, class: nav_link_class(health_goals_path) %>
+                    <%= link_to "Exports", exports_path, class: nav_link_class(exports_path) %>
+                  </div>
+                <% end %>
+              <% end %>
             </div>
 
             <!-- Mobile profile/login links -->
