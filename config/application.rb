@@ -38,5 +38,9 @@ module HealthAIde
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Configure ViewComponent
+    config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"
+    config.view_component.preview_controller = "ComponentPreviewController"
   end
 end

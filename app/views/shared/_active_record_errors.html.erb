@@ -1,0 +1,23 @@
+<!-- In your ERB template -->
+<% if resource.errors.any? %>
+  <div class="mb-5 bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg shadow-sm ring-1 ring-gray-900/5 relative"
+       data-controller="dismissible"
+       data-turbo-cache="false">
+    <div class="flex justify-between items-start">
+      <div class="active-record-errors-header">
+        The following <%= "error".pluralize(resource.errors.count) %> prohibited your action from being carried out
+      </div>
+      <button type="button"
+              class="ml-2 text-red-400 hover:text-red-600 focus:outline-none"
+              data-action="dismissible#close">
+        <%= render(Icons::CloseComponent.new) %>
+        <span class="sr-only">Dismiss</span>
+      </button>
+    </div>
+    <ul class="mt-2 list-disc pl-5 active-record-errors-list">
+      <% resource.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

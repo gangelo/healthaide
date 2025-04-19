@@ -16,6 +16,8 @@
 !/log/.keep
 !/tmp/.keep
 
+failures.json
+
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
 !/tmp/pids/
@@ -36,9 +38,13 @@
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
+vendor/templates/
+
 # Ignore scratch files
+exports/*
 scratch*.rb
 snippets.rb
 readme.txt
 todo.txt
-vendor/templates/
+
+CLAUDE.md

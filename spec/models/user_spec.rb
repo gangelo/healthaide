@@ -87,6 +87,24 @@ RSpec.describe User do
     end
   end
 
+  describe "#admin" do
+    context "when the user is not an admin" do
+      subject(:user) { build(:user) }
+
+      it "returns false" do
+        expect(user.admin?).to be false
+      end
+    end
+
+    context "when the user is an admin" do
+      subject(:user) { build(:user, :admin) }
+
+      it "returns true" do
+        expect(user.admin?).to be true
+      end
+    end
+  end
+
   describe 'callbacks' do
     describe 'before_save' do
       subject(:user) { build(:user, email: email) }

@@ -1,15 +1,15 @@
 class FoodQualifiersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
   before_action :set_food_qualifier, only: %i[ show edit update destroy ]
+  before_action :set_food_qualifiers, only: %i[ index ]
 
   # GET /food_qualifiers or /food_qualifiers.json
   def index
-    @food_qualifiers = FoodQualifier.kept.order(:qualifier_name)
   end
 
   # GET /food_qualifiers/1 or /food_qualifiers/1.json
   def show
-    @foods = @food_qualifier.foods.kept
+    @foods = @food_qualifier.foods
   end
 
   # GET /food_qualifiers/new
@@ -51,18 +51,34 @@ class FoodQualifiersController < ApplicationController
 
   # DELETE /food_qualifiers/1 or /food_qualifiers/1.json
   def destroy
-    @food_qualifier.soft_delete
+    if @food_qualifier.destroy
+      set_food_qualifiers
 
-    respond_to do |format|
-      format.html { redirect_to food_qualifiers_path, status: :see_other, notice: "Food qualifier was successfully deleted." }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.turbo_stream do
+          flash[:notice] = "Food qualifier was successfully deleted."
+          render turbo_stream: [
+            turbo_stream.update("flash_messages", partial: "shared/flash_messages"),
+            turbo_stream.replace("main_content",
+              partial: "food_qualifiers/list/list",
+              locals: { food_qualifiers: @food_qualifiers })
+          ]
+        end
+      end
+    else
+      respond_to do |format|
+        format.turbo_stream do
+          flash[:alert] = @food_qualifier.errors.full_messages.to_sentence
+          render turbo_stream: turbo_stream.update("flash_messages", partial: "shared/flash_messages")
+        end
+      end
     end
   end
 
   # POST /food_qualifiers/find_or_create
   def find_or_create
     name = params[:qualifier_name].to_s.strip
-    @food_qualifier = FoodQualifier.kept.find_by("LOWER(qualifier_name) = ?", name.downcase)
+    @food_qualifier = FoodQualifier.find_by_qualifier_name_normalized(name)
 
     if @food_qualifier.nil? && name.present?
       @food_qualifier = FoodQualifier.create(qualifier_name: name)
@@ -70,9 +86,9 @@ class FoodQualifiersController < ApplicationController
 
     if @food_qualifier&.persisted? && params[:food_id].present?
       # We're adding a qualifier to a food
-      @food = Food.kept.find(params[:food_id])
+      @food = Food.find(params[:food_id])
 
-      if @food.food_qualifiers.include?(@food_qualifier)
+      if @food.includes_qualifier?(@food_qualifier)
         # Qualifier is already associated with this food
         flash[:notice] = "#{@food_qualifier.qualifier_name} is already associated with this food."
       else
@@ -81,14 +97,14 @@ class FoodQualifiersController < ApplicationController
         flash[:success] = "Added #{@food_qualifier.qualifier_name} to #{@food.food_name}."
       end
 
-      @available_qualifiers = FoodQualifier.kept.where.not(id: @food.food_qualifier_ids)
+      @available_qualifiers = FoodQualifier.where.not(id: @food.food_qualifier_ids)
 
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: [
             turbo_stream.replace("qualifier-list", partial: "foods/qualifier_list", locals: { food: @food }),
             turbo_stream.replace("add_existing_qualifier", partial: "foods/add_existing_qualifier_form", locals: { food: @food, available_qualifiers: @available_qualifiers }),
-            turbo_stream.replace("flash", partial: "shared/flash")
+            turbo_stream.replace("flash_messages", partial: "shared/flash_messages")
           ]
         end
         format.html { redirect_to @food }
@@ -112,14 +128,31 @@ class FoodQualifiersController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_food_qualifier
-      @food_qualifier = FoodQualifier.find(params[:id])
+  # GET /food_qualifiers/export
+  def export
+    respond_to do |format|
+      format.html {
+        render html: FoodQualifierExportService.export
+      }
+      format.json {
+        send_data JSON.pretty_generate(FoodQualifierExportService.export), filename: "food_qualifiers.json"
+      }
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def food_qualifier_params
-      params.require(:food_qualifier).permit(:qualifier_name)
-    end
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_food_qualifier
+    @food_qualifier = FoodQualifier.find(params[:id])
+  end
+
+  def set_food_qualifiers
+    @food_qualifiers = FoodQualifier.ordered
+  end
+
+  # Only allow a list of trusted parameters through.
+  def food_qualifier_params
+    params.require(:food_qualifier).permit(:qualifier_name)
+  end
 end

@@ -1,0 +1,23 @@
+<%= form_with(model: user_health_goal, class: "contents") do |form| %>
+  <%= render partial: "shared/active_record_errors", locals: { resource: user_health_goal } %>
+  <div class="my-5">
+    <%= form.label :health_goal_name %>
+    <div class="block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full bg-gray-100">
+      <%= user_health_goal.health_goal.health_goal_name %>
+    </div>
+    <%= form.hidden_field :health_goal_id, value: user_health_goal.health_goal_id %>
+  </div>
+  <div class="my-5">
+    <%= form.label :order_of_importance %>
+    <%= form.select :order_of_importance,
+                  (1..25).to_a,
+                  { selected: user_health_goal.order_of_importance },
+                  { class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" } %>
+    <p class="text-sm text-gray-500 mt-1">1 is highest importance, 25 is lowest</p>
+  </div>
+  <%= render partial: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: user_health_goal,
+    back_path: user_health_goals_path
+  } %>
+<% end %>

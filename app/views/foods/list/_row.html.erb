@@ -1,0 +1,26 @@
+<ul role="list">
+  <% foods.each_with_index do |food, index| %>
+    <li class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= index.odd? ? 'bg-gray-50' : 'bg-white' %> hover:bg-gray-100">
+      <div class="text-sm font-semibold text-gray-900">
+        <%= food.food_name %>
+      </div>
+      <div>
+        <%= render partial: "foods/list/row_food_qualifiers", locals: { food: food } %>
+      </div>
+      <div class="text-right">
+        <div class="flex justify-end gap-2">
+          <%= link_to "Show", food_path(food),
+                      class: "show-button-sm",
+                      data: { turbo_frame: "_top" } %>
+          <%= link_to "Edit", edit_food_path(food),
+                      class: "edit-button-sm",
+                      data: { turbo_frame: "_top" } %>
+          <%= button_to "Delete", food_path(food),
+                        method: :delete,
+                        class: "delete-button-sm",
+                        form: { data: { turbo_confirm: "Are you sure? This will remove the food from all users who have added it." } } %>
+        </div>
+      </div>
+    </li>
+  <% end %>
+</ul>

@@ -1,0 +1,15 @@
+<%# 
+  DEPRECATED: This modal selection pattern is being replaced by a new dual-panel selection interface. 
+  This code is kept temporarily until other sections are migrated to the new pattern.
+%>
+<% content_for :search_field do %>
+  <%= render "user_foods/select/search_field" %>
+<% end %>
+<%# No item_list content needed - it's handled by the search_field partial %>
+<%= render "shared/select/modal_base",
+  item_type: "food",
+  item_type_label: "food",
+  title: "Select Foods",
+  back_path: user_foods_path,
+  submit_path: add_multiple_user_foods_path,
+  submit_text: "Add Selected Foods" %>

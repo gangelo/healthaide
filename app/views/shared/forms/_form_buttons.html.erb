@@ -1,0 +1,13 @@
+<%
+  # TODO: Pattern this after app/views/shared/buttons/_show_buttons.html.erb
+titleized_name = titleize(resource)
+%>
+<div class="button-group-container">
+  <% if resource.new_record? %>
+    <%= form.submit "Create #{titleized_name}", class: "submit-button" %>
+  <% else %>
+    <%= form.submit "Update #{titleized_name}", class: "submit-button" %>
+    <%= link_to "Show this #{titleized_name}", resource, class: "show-button" %>
+  <% end %>
+  <%= link_to "Back to #{titleized_name.pluralize}", back_path, class: "back-button" %>
+</div>
