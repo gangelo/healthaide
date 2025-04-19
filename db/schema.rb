@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_19_011755) do
   create_table "food_food_qualifiers", force: :cascade do |t|
     t.integer "food_id", null: false
     t.integer "food_qualifier_id", null: false
@@ -81,6 +81,27 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
     t.index ["user_id"], name: "index_user_health_goals_on_user_id"
   end
 
+  create_table "user_stats", force: :cascade do |t|
+    t.date "birthday"
+    t.string "sex", limit: 1
+    t.decimal "height", precision: 5, scale: 2
+    t.decimal "muscle_fat_analysis_weight", precision: 6, scale: 2
+    t.decimal "muscle_fat_analysis_skeletal_muscle_mass", precision: 6, scale: 2
+    t.decimal "muscle_fat_analysis_body_fat_mass", precision: 6, scale: 2
+    t.string "muscle_fat_analysis_cid"
+    t.decimal "obesity_analysis_bmi", precision: 5, scale: 2
+    t.decimal "obesity_analysis_percent_body_fat", precision: 5, scale: 2
+    t.decimal "abdominal_obesity_analysis_waist_hip_ratio", precision: 4, scale: 2
+    t.integer "abdominal_obesity_analysis_visceral_fat_level"
+    t.decimal "comprehensive_analysis_basal_metabolic_rate", precision: 8, scale: 2
+    t.string "body_balance_evaluation_upper_lower"
+    t.decimal "body_composition_analysis_soft_lean_mass", precision: 6, scale: 2
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_stats_on_user_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name", limit: 64, default: "", null: false
     t.string "last_name", limit: 64, default: "", null: false
@@ -120,4 +141,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_232505) do
   add_foreign_key "user_health_conditions", "users"
   add_foreign_key "user_health_goals", "health_goals"
   add_foreign_key "user_health_goals", "users"
+  add_foreign_key "user_stats", "users"
 end

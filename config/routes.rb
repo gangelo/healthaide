@@ -68,4 +68,7 @@ Rails.application.routes.draw do
       patch :update_importance
     end
   end
+
+   # User stats
+   resources :user_stats, only: [ :index, :new, :create, :edit, :update, :show ]
 end

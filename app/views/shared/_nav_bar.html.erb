@@ -17,6 +17,7 @@
         <!-- Desktop Navigation Menu (visible from lg breakpoint) -->
         <div class="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
           <% if user_signed_in? %>
+            <%= link_to "My Stats", user_stats_path, class: nav_link_class(user_stats_path) %>
             <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
             <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
             <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
@@ -77,6 +78,7 @@
           <div class="py-1">
             <div class="px-2 py-2 space-y-1">
               <% if user_signed_in? %>
+                <%= link_to "My Stats", user_stats_path, class: nav_link_class(user_stats_path) %>
                 <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
                 <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
                 <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
