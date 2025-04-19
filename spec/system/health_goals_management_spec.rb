@@ -13,7 +13,7 @@ RSpec.describe "Health Goals Management", type: :system do
       visit new_health_goal_path
 
       fill_in "Health goal name", with: "Weight Loss"
-      click_button "Create Health goal"
+      find('input[type="submit"][value*="Create"]').click
 
       expect(page).to have_content("Health goal was successfully created")
       expect(page).to have_content("Weight loss") # Normalized name
@@ -25,7 +25,7 @@ RSpec.describe "Health Goals Management", type: :system do
       visit new_health_goal_path
 
       fill_in "Health goal name", with: "muscle building" # Testing case-insensitivity
-      click_button "Create Health goal"
+      find('input[type="submit"][value*="Create"]').click
 
       expect(page).to have_content("Health goal name has already been taken")
     end
@@ -38,7 +38,7 @@ RSpec.describe "Health Goals Management", type: :system do
       visit edit_health_goal_path(health_goal)
 
       fill_in "Health goal name", with: "Improved Sleep Quality"
-      click_button "Update Health goal"
+      find('input[type="submit"][value*="Update"]').click
 
       expect(page).to have_content("Health goal was successfully updated")
       expect(page).to have_content("Improved sleep quality") # Normalized name

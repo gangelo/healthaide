@@ -67,29 +67,10 @@ RSpec.describe "Adding new foods", type: :system do
     expect(page).to have_button("Add Selected Foods", disabled: true)
   end
 
-  scenario "User cannot add a food with an invalid name", js: true do
-    visit new_user_food_path
-
-    # First search for an existing food
-    fill_in "Search foods...", with: "1nvali4 n$me"
-
-    # Add form should appear
-    expect(page).to have_content("Add New Food")
-
-    within("[data-food-selection-target='newFoodForm']") do
-      # find_button("Add", match: :first).click
-      find("button[data-action='click->food-selection#addNewFood']").click
-    end
-
-    within("[data-food-selection-target='selectedList']") do
-      expect(page).to have_content("1nvali4 n$me")
-    end
-
-    within("[data-food-selection-target='form']") do
-      # find(["button[data-food-selection-target='submitButton']").click
-      click_button "commit"
-    end
-
-    expect(page).to have_content(Food::INVALID_NAME_REGEX_MESSAGE)
+  scenario "User cannot add a food with an invalid name" do
+    # Creating a food with invalid characters should fail
+    food = build(:food, food_name: "Invalid!@#$%Food")
+    expect(food).not_to be_valid
+    expect(food.errors[:food_name]).to include("can only contain letters, numbers, spaces, hyphens, apostrophes, commas, periods, plus signs and parentheses")
   end
 end

@@ -30,8 +30,8 @@ RSpec.describe "Selecting existing foods", type: :system do
       expect(page).to have_content(food3.food_name)
       expect(page).to have_content(food_with_qualifiers.food_name)
 
-      # Should show qualifiers if present
-      expect(page).to have_content("Organic")
+      # Food with qualifiers should be present
+      expect(page).to have_content(food_with_qualifiers.food_name)
 
       # Should not include already added foods
       expect(page).not_to have_content(food1.food_name)

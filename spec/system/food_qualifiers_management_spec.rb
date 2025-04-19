@@ -13,7 +13,7 @@ RSpec.describe "Food Qualifiers Management", type: :system do
       visit new_food_qualifier_path
 
       fill_in "Qualifier name", with: "Organic"
-      click_button "Create Food qualifier"
+      find('input[type="submit"][value*="Create"]').click
 
       expect(page).to have_content("Food qualifier was successfully created")
       expect(page).to have_content("Organic")
@@ -25,7 +25,7 @@ RSpec.describe "Food Qualifiers Management", type: :system do
       visit new_food_qualifier_path
 
       fill_in "Qualifier name", with: "organic" # Testing case-insensitivity
-      click_button "Create Food qualifier"
+      find('input[type="submit"][value*="Create"]').click
 
       expect(page).to have_content("Qualifier name has already been taken")
     end
@@ -39,7 +39,7 @@ RSpec.describe "Food Qualifiers Management", type: :system do
       visit edit_food_qualifier_path(qualifier)
 
       fill_in "Qualifier name", with: "Extra Fresh"
-      click_button "Update Food qualifier"
+      find('input[type="submit"][value*="Update"]').click
 
       expect(page).to have_content("Food qualifier was successfully updated")
       expect(page).to have_content("Extra fresh") # Normalized name
@@ -49,7 +49,7 @@ RSpec.describe "Food Qualifiers Management", type: :system do
       visit edit_food_qualifier_path(qualifier)
 
       fill_in "Qualifier name", with: "Organic" # Already exists
-      click_button "Update Food qualifier"
+      find('input[type="submit"][value*="Update"]').click
 
       expect(page).to have_content("Qualifier name has already been taken")
       expect(qualifier.reload.qualifier_name).to eq("Fresh") # Name didn't change

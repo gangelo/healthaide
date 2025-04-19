@@ -37,7 +37,7 @@ RSpec.describe "Managing foods", type: :system do
     expect(page).to have_content("Fresh")
   end
 
-  scenario "User can delete a food", js: true do
+  scenario "User can delete a food from index page", js: true do
     visit user_foods_path
 
     # Find and click delete button for food2

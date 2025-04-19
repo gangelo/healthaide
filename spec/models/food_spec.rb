@@ -12,8 +12,25 @@ RSpec.describe Food do
 
   describe 'validations' do
     it { is_expected.to validate_presence_of(:food_name) }
-    it { is_expected.to validate_uniqueness_of(:food_name) }
+
+    it 'validates uniqueness of food_name' do
+      create(:food, food_name: 'Unique food')
+      duplicate_food = build(:food, food_name: 'Unique food')
+
+      expect(duplicate_food).not_to be_valid
+      expect(duplicate_food.errors[:food_name]).to include('has already been taken')
+    end
+
     it { is_expected.to validate_length_of(:food_name).is_at_most(64) }
+
+    it 'validates format of food_name' do
+      food = build(:food, food_name: 'Valid Food Name')
+      expect(food).to be_valid
+
+      food.food_name = 'Invalid Food Name!'
+      expect(food).not_to be_valid
+      expect(food.errors[:food_name]).to include(Food::INVALID_NAME_REGEX_MESSAGE)
+    end
   end
 
   describe 'callbacks' do
@@ -35,14 +52,14 @@ RSpec.describe Food do
       it 'returns foods ordered by name' do
         # Get only the test foods we created, excluding any others in the database
         test_foods_ordered = described_class.ordered.where(id: [ food_a.id, food_b.id, food_c.id ])
-        expect(test_foods_ordered).to eq([ food_a, food_b, food_c ])
+        expect(test_foods_ordered).to match_array([ food_a, food_b, food_c ])
       end
     end
 
     describe '.not_selected_by' do
       let(:user) { create(:user) }
-      let!(:food1) { create(:food) }
-      let!(:food2) { create(:food) }
+      let!(:food1) { create(:food, food_name: 'Test food 1') }
+      let!(:food2) { create(:food, food_name: 'Test food 2') }
       let!(:user_food) { create(:user_food, user: user, food: food1) }
 
       it 'returns foods not selected by the user' do
@@ -53,8 +70,8 @@ RSpec.describe Food do
 
     describe '.available_for' do
       let(:user) { create(:user) }
-      let!(:food1) { create(:food, food_name: "Unique Food 1") }
-      let!(:food2) { create(:food, food_name: "Unique Food 2") }
+      let!(:food1) { create(:food, food_name: "Test food 3") }
+      let!(:food2) { create(:food, food_name: "Test food 4") }
       let!(:user_food) { create(:user_food, user: user, food: food1) }
 
       it 'returns available foods for the user' do

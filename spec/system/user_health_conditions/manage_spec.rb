@@ -23,7 +23,7 @@ RSpec.describe "Managing health conditions", type: :system do
     expect(page).to have_content(health_condition2.health_condition_name)
   end
 
-  scenario "User can delete a health condition", js: true do
+  scenario "User can delete a health condition from index page", js: true do
     visit user_health_conditions_path
 
     # Find and click delete button for health_condition2

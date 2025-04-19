@@ -10,9 +10,15 @@ RSpec.describe UserFood do
 
   describe 'validations' do
     it "validates the uniquesness of food_id scoped to user_id" do
-      user_food.save!
+      # Create a user and a food with a valid name
+      user = create(:user)
+      food = create(:food, food_name: "Test Food")
 
-      already_selected_user_food = build(:user_food, user: user_food.user, food: user_food.food)
+      # Create the first user_food
+      user_food = create(:user_food, user: user, food: food)
+
+      # Try to create a duplicate
+      already_selected_user_food = build(:user_food, user: user, food: food)
       expect(already_selected_user_food).not_to be_valid
       expect(already_selected_user_food.errors[:food]).to include('has already been selected')
     end

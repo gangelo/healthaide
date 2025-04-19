@@ -23,7 +23,7 @@ RSpec.describe "Managing health goals", type: :system do
     expect(page).to have_content(health_goal2.health_goal_name)
   end
 
-  scenario "User can edit a health goal's importance" do
+  scenario "User can edit a health goal's importance", js: true do
     visit user_health_goals_path
 
     # Find and click edit button for health_goal2
@@ -37,14 +37,16 @@ RSpec.describe "Managing health goals", type: :system do
 
     # Update importance
     select "10", from: "user_health_goal[order_of_importance]"
-    click_button "Update health goal"
+
+    # Find the submit button (matching partial text)
+    find('input[type="submit"][value*="Update"]').click
 
     # Verify the update
     expect(page).to have_current_path(user_health_goals_path)
     expect(page).to have_content("Health goal was successfully updated")
   end
 
-  scenario "User can delete a health goal", js: true do
+  scenario "User can delete a health goal from index page", js: true do
     visit user_health_goals_path
 
     # Find and click delete button for health_goal2
@@ -61,12 +63,27 @@ RSpec.describe "Managing health goals", type: :system do
     expect(page).to have_content(health_goal1.health_goal_name) # Other goal still there
   end
 
-  scenario "User can navigate back to list from edit page" do
+  scenario "User can delete a health goal from show page", js: true do
+    user_health_goal = UserHealthGoal.find_by(user: user, health_goal: health_goal2)
+    visit user_health_goal_path(user_health_goal)
+
+    accept_confirm do
+      click_button "Delete this user health goal"
+    end
+
+    # Verify the deletion
+    expect(page).to have_current_path(user_health_goals_path)
+    expect(page).to have_content("Health goal was successfully removed")
+    expect(page).not_to have_content(health_goal2.health_goal_name)
+    expect(page).to have_content(health_goal1.health_goal_name) # Other goal still there
+  end
+
+  scenario "User can navigate back to list from edit page", js: true do
     # First navigate to edit page
     visit edit_user_health_goal_path(UserHealthGoal.find_by(user: user, health_goal: health_goal2))
 
-    # Click back/cancel button
-    click_link "Back to health goals"
+    # Find and click the back link
+    find('a.back-button').click
 
     # Verify we're back on the list
     expect(page).to have_current_path(user_health_goals_path)

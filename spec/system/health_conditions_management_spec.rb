@@ -13,7 +13,7 @@ RSpec.describe "Health Conditions Management", type: :system do
       visit new_health_condition_path
 
       fill_in "Health condition name", with: "Diabetes"
-      click_button "Create Health condition"
+      find('input[type="submit"][value*="Create"]').click
 
       expect(page).to have_content("Health condition was successfully created")
       expect(page).to have_content("Diabetes")
@@ -25,7 +25,7 @@ RSpec.describe "Health Conditions Management", type: :system do
       visit new_health_condition_path
 
       fill_in "Health condition name", with: "hypertension" # Testing case-insensitivity
-      click_button "Create Health condition"
+      find('input[type="submit"][value*="Create"]').click
 
       expect(page).to have_content("Health condition name has already been taken")
     end
@@ -38,7 +38,7 @@ RSpec.describe "Health Conditions Management", type: :system do
       visit edit_health_condition_path(health_condition)
 
       fill_in "Health condition name", with: "Severe Asthma"
-      click_button "Update Health condition"
+      find('input[type="submit"][value*="Update"]').click
 
       expect(page).to have_content("Health condition was successfully updated")
       expect(page).to have_content("Severe asthma") # Normalized name

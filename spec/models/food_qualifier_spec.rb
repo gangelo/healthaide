@@ -32,11 +32,11 @@ describe FoodQualifier do
 
       context "when the food qualifier is in use" do
         it "prevents deletion" do
-          create(:food).tap do |f|
-            f.food_qualifiers << food_qualifier
-          end
+          food = create(:food, food_name: "Test Food")
+          food.food_qualifiers << food_qualifier
+          food.save!
 
-          expect(food_qualifier.destroy).to be(false)
+          expect { food_qualifier.destroy }.not_to change(FoodQualifier, :count)
           expect(food_qualifier.errors[:base]).to include("Food qualifier is being used and cannot be deleted")
         end
       end
