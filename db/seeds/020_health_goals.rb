@@ -2,6 +2,7 @@ puts "Creating health goals..."
 
 health_goal_names = [
   "Balance blood sugar",
+  "Balance electrolytes",
   "Balance hormones",
   "Boost cognitive function",
   "Boost energy levels",
