@@ -12,6 +12,10 @@ module ApplicationHelper
     model_object.class.name.underscore.titleize
   end
 
+  def select_include_blank
+    "-- Select --"
+  end
+
   private
 
   # This method will return true if path matches the current_page exactly, or if

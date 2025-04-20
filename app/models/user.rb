@@ -23,6 +23,8 @@ class User < ApplicationRecord
   has_many :health_goals, through: :user_health_goals
   
   has_one :user_stat, dependent: :destroy
+  
+  has_many :user_supplements, dependent: :destroy
 
   enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER
 
@@ -77,6 +79,7 @@ class User < ApplicationRecord
       hash[:user_foods] = user_foods.map { it.to_export_hash }
       hash[:user_health_conditions] = user_health_conditions.map { it.to_export_hash }
       hash[:user_health_goals] = user_health_goals.map { it.to_export_hash }
+      hash[:user_supplements] = user_supplements.map { it.to_export_hash }
       hash[:user_stat] = user_stat&.to_export_hash
     end
     }

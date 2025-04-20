@@ -1,0 +1,93 @@
+<%= form_with(model: user_supplement, class: "space-y-6") do |form| %>
+  <%= render "shared/active_record_errors", resource: user_supplement %>
+  <div class="my-5">
+    <h2>Supplement Information</h2>
+    <%= form.label :name, class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.text_field :name, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Vitamin D3" %>
+    <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: user_supplement } %>
+  </div>
+
+  <%# supplement form (e.g. pill, capsule, etc. %>
+  <div class="my-5">
+    <%= form.label :form, class: "block font-medium text-gray-700 mb-1" %>
+    <%= form.select :form, options_for_select(UserSupplement.forms_by_value.map { |k, _v| [k.humanize, k] }, user_supplement.form),
+                    { include_blank: select_include_blank },
+                    { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
+  </div>
+
+  <%# supplement frequency (e.g. daily, weekly, etc. %>
+  <div class="my-5">
+    <%= form.label :frequency, class: "block font-medium text-gray-700 mb-1" %>
+    <%= form.select :frequency, options_for_select(UserSupplement.frequencies_by_value.map { |k, _v| [k.humanize, k] }, user_supplement.frequency),
+                    { include_blank: select_include_blank },
+                    { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
+  </div>
+
+  <%# supplement dosage (e.g. 100, 1000, etc. %>
+  <div class="my-5">
+    <%= form.label :dosage, class: "block font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :dosage, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "1000" %>
+  </div>
+
+  <%# supplement dosge unit (e.g. mg, etc. %>
+  <div class="my-5">
+    <%= form.label :dosage_unit, class: "block font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :dosage_unit, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "mg" %>
+  </div>
+
+  <%# supplement manufacturer unit (e.g. "Pure essentials", etc. %>
+  <div class="my-5">
+    <%= form.label :manufacturer, class: "block font-medium text-gray-700 mb-1" %>
+    <%= form.text_field :manufacturer, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Now Foods" %>
+  </div>
+
+  <%# health conditions %>
+  <div class="my-5">
+    <h2>Related Health Conditions</h2>
+    <div class="mt-2 border border-gray-300 rounded-md p-3 bg-gray-50">
+      <fieldset>
+        <legend class="sr-only">Health Conditions</legend>
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <% current_user.health_conditions.each do |condition| %>
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= form.check_box :health_condition_ids, { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" }, condition.id, nil %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= form.label :health_condition_ids, condition.health_condition_name, value: condition.id, class: "font-medium text-gray-700" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <%# health goals %>
+  <div class="my-5">
+    <h2>Related Health Goals</h2>
+    <div class="mt-2 border border-gray-300 rounded-md p-3 bg-gray-50">
+      <fieldset>
+        <legend class="sr-only">Health Goals</legend>
+        <div class="space-y-2 max-h-48 overflow-y-auto">
+          <% current_user.health_goals.each do |goal| %>
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= form.check_box :health_goal_ids, { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" }, goal.id, nil %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= form.label :health_goal_ids, goal.health_goal_name, value: goal.id, class: "font-medium text-gray-700" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <%= render partial: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: user_supplement,
+    back_path: user_supplements_path
+  } %>
+<% end %>

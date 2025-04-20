@@ -1,0 +1,50 @@
+<ul role="list">
+  <% user_supplements.each_with_index do |user_supplement, index| %>
+    <li>
+      <div class="block hover:bg-gray-50">
+        <div class="flex items-center px-4 py-4 sm:px-6">
+          <div class="min-w-0 flex-1 flex items-center">
+            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+              <div>
+                <p class="text-sm font-medium text-blue-600 truncate"><%= user_supplement.name %></p>
+              </div>
+              <div class="hidden md:block">
+                <div>
+                   <% if user_supplement.manufacturer.present? %>
+                    <p class="mt-2 flex items-center text-sm text-gray-500">
+                      <%= user_supplement.manufacturer %>
+                    </p>
+                  <% end %>
+                   <p class="mt-2 flex items-center text-sm text-gray-500">
+                      <%= user_supplement.form.to_s.humanize %>
+                      <% if user_supplement.dosage.present? %>
+                        (<%= user_supplement.dosage %> <%= user_supplement.dosage_unit %>)
+                      <% end %>
+                      <%= user_supplement.frequency.to_s.humanize.downcase %>
+                  </p>
+                  <p class="mt-2 flex items-center text-sm text-gray-500">
+                    <%= pluralize(user_supplement.supplement_components.count, "component") %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="flex justify-end gap-2">
+              <%= link_to "Show", user_supplement_path(user_supplement),
+                          class: "show-button-sm",
+                          data: { turbo_frame: "_top" } %>
+              <%= link_to "Edit", edit_user_supplement_path(user_supplement),
+                          class: "edit-button-sm",
+                          data: { turbo_frame: "_top" } %>
+              <%= button_to "Delete", user_supplement_path(user_supplement),
+                            method: :delete,
+                            class: "delete-button-sm",
+                            form: { data: { turbo_confirm: "Are you sure? This will remove this user supplement." } } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  <% end %>
+</ul>

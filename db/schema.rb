@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_19_011755) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
   create_table "food_food_qualifiers", force: :cascade do |t|
     t.integer "food_id", null: false
     t.integer "food_qualifier_id", null: false
@@ -47,6 +47,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_011755) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["health_goal_name"], name: "index_health_goals_on_health_goal_name", unique: true
+  end
+
+  create_table "supplement_components", force: :cascade do |t|
+    t.string "name"
+    t.string "amount"
+    t.string "unit"
+    t.integer "user_supplement_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_supplement_id"], name: "index_supplement_components_on_user_supplement_id"
+  end
+
+  create_table "supplement_health_conditions", force: :cascade do |t|
+    t.integer "user_supplement_id", null: false
+    t.integer "health_condition_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["health_condition_id"], name: "index_supplement_health_conditions_on_health_condition_id"
+    t.index ["user_supplement_id"], name: "index_supplement_health_conditions_on_user_supplement_id"
+  end
+
+  create_table "supplement_health_goals", force: :cascade do |t|
+    t.integer "user_supplement_id", null: false
+    t.integer "health_goal_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["health_goal_id"], name: "index_supplement_health_goals_on_health_goal_id"
+    t.index ["user_supplement_id"], name: "index_supplement_health_goals_on_user_supplement_id"
   end
 
   create_table "user_foods", force: :cascade do |t|
@@ -102,6 +130,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_011755) do
     t.index ["user_id"], name: "index_user_stats_on_user_id", unique: true
   end
 
+  create_table "user_supplements", force: :cascade do |t|
+    t.string "name"
+    t.integer "form"
+    t.integer "frequency"
+    t.string "dosage"
+    t.string "dosage_unit"
+    t.string "manufacturer"
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_supplements_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name", limit: 64, default: "", null: false
     t.string "last_name", limit: 64, default: "", null: false
@@ -135,6 +176,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_011755) do
 
   add_foreign_key "food_food_qualifiers", "food_qualifiers"
   add_foreign_key "food_food_qualifiers", "foods"
+  add_foreign_key "supplement_components", "user_supplements"
+  add_foreign_key "supplement_health_conditions", "health_conditions"
+  add_foreign_key "supplement_health_conditions", "user_supplements"
+  add_foreign_key "supplement_health_goals", "health_goals"
+  add_foreign_key "supplement_health_goals", "user_supplements"
   add_foreign_key "user_foods", "foods"
   add_foreign_key "user_foods", "users"
   add_foreign_key "user_health_conditions", "health_conditions"
@@ -142,4 +188,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_011755) do
   add_foreign_key "user_health_goals", "health_goals"
   add_foreign_key "user_health_goals", "users"
   add_foreign_key "user_stats", "users"
+  add_foreign_key "user_supplements", "users"
 end

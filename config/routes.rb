@@ -71,4 +71,16 @@ Rails.application.routes.draw do
 
    # User stats
    resources :user_stats, only: [ :index, :new, :create, :edit, :update, :show ]
+   
+   # User supplements
+   resources :user_supplements do
+     member do
+       post :add_component
+       delete :remove_component
+     end
+     collection do
+       get :select_multiple
+       post :add_multiple
+     end
+   end
 end

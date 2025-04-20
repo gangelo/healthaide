@@ -1,0 +1,116 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-900"><%= @user_supplement.name %></h1>
+    
+    <div class="flex space-x-2">
+      <%= render partial: "shared/buttons/show_buttons", locals: { 
+        edit_path: edit_user_supplement_path(@user_supplement),
+        delete_path: user_supplement_path(@user_supplement),
+        back_path: user_supplements_path,
+        confirm_message: "Are you sure you want to remove this supplement?"
+      } %>
+    </div>
+  </div>
+  
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Supplement Details</h3>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Name</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @user_supplement.name %></dd>
+        </div>
+        
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Form</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @user_supplement.form_form.to_s.humanize %></dd>
+        </div>
+        
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Frequency</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @user_supplement.frequency_frequency.to_s.humanize %></dd>
+        </div>
+        
+        <% if @user_supplement.dosage.present? %>
+        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Dosage</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @user_supplement.dosage %> <%= @user_supplement.dosage_unit %></dd>
+        </div>
+        <% end %>
+        
+        <% if @user_supplement.manufacturer.present? %>
+        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Manufacturer</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @user_supplement.manufacturer %></dd>
+        </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+  
+  <!-- Components Section -->
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Components</h3>
+      <button type="button" 
+              class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              data-controller="dismissible"
+              data-action="dismissible#show"
+              data-dismissible-target="showable"
+              aria-expanded="false"
+              aria-controls="add-component-form">
+        Add Component
+      </button>
+    </div>
+    
+    <!-- Add Component Form (hidden by default) -->
+    <div id="add-component-form" class="hidden px-4 py-5 sm:p-6 border-t border-gray-200" data-dismissible-target="dismissible">
+      <%= turbo_frame_tag "add_component_form" do %>
+        <%= render "user_supplements/components/form", user_supplement: @user_supplement, component: @user_supplement.supplement_components.build %>
+      <% end %>
+    </div>
+    
+    <!-- Components List -->
+    <%= turbo_frame_tag "components_list" do %>
+      <%= render "user_supplements/components/list", user_supplement: @user_supplement %>
+    <% end %>
+  </div>
+  
+  <!-- Health Conditions Section -->
+  <% if @user_supplement.health_conditions.any? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Related Health Conditions</h3>
+      </div>
+      <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+        <div class="flex flex-wrap gap-2">
+          <% @user_supplement.health_conditions.each do |condition| %>
+            <div class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+              <%= condition.health_condition_name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Health Goals Section -->
+  <% if @user_supplement.health_goals.any? %>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Related Health Goals</h3>
+      </div>
+      <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+        <div class="flex flex-wrap gap-2">
+          <% @user_supplement.health_goals.each do |goal| %>
+            <div class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              <%= goal.health_goal_name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
