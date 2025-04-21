@@ -91,6 +91,17 @@
         <div data-mobile-menu-target="menu" class="hidden fixed top-26 left-0 right-0 bg-gray-800 lg:hidden overflow-y-auto max-h-[80vh] overscroll-contain z-50 shadow-lg">
           <div class="space-y-2 px-2 pb-3 pt-2">
             <% if user_signed_in? %>
+              <!-- Generate menu section - similar to admin section -->
+              <div class="mt-2 border-t border-gray-700 pt-2">
+                <p class="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Generate</p>
+                <div class="py-1 flex flex-col space-y-2 px-3">
+                  <%= link_to "Meals prompt", "/", class: "#{nav_link_class("/")} block py-2" %>
+                  <%= link_to "Health goals prompt", "/", class: "#{nav_link_class("/")} block py-2" %>
+                  <%= link_to "Export", "/", class: "#{nav_link_class("/")} block py-2" %>
+                  <%= link_to "History", "/", class: "#{nav_link_class("/")} block py-2" %>
+                </div>
+              </div>
+
               <!-- Apply touch-friendly styles to user menu in mobile view -->
               <div class="py-1 flex flex-col space-y-2">
                 <%= link_to "My Stats", user_stats_path, class: "#{nav_link_class(user_stats_path)} block py-2" %>
@@ -98,17 +109,6 @@
                 <%= link_to "My Health Conditions", user_health_conditions_path, class: "#{nav_link_class(user_health_conditions_path)} block py-2" %>
                 <%= link_to "My Health Goals", user_health_goals_path, class: "#{nav_link_class(user_health_goals_path)} block py-2" %>
                 <%= link_to "My Supplements", user_supplements_path, class: "#{nav_link_class(user_supplements_path)} block py-2" %>
-              </div>
-
-              <!-- Generate menu section - similar to admin section -->
-              <div class="mt-2 border-t border-gray-700 pt-2">
-                <p class="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Generate</p>
-                <div class="py-1 flex flex-col space-y-2 px-3">
-                  <%= link_to "Meals prompt", "/", class: "#{nav_link_class("/")} block py-2" %>
-                  <%= link_to "Health goals prompt", "/", class: "#{nav_link_class("/")} block py-2" %>
-                  <%= link_to "History", "/", class: "#{nav_link_class("/")} block py-2" %>
-                  <%= link_to "Export", "/", class: "#{nav_link_class("/")} block py-2" %>
-                </div>
               </div>
 
               <% if current_user.admin? %>
