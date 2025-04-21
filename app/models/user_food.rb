@@ -6,7 +6,7 @@ class UserFood < ApplicationRecord
 
   validates :food, uniqueness: { scope: :user_id, message: "has already been selected" }
 
-  scope :ordered, -> { joins(:food).order("foods.food_name") }
+  scope :ordered, -> { includes(:food).order("foods.food_name") }
 
   def to_export_hash
     {

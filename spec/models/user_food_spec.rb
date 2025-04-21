@@ -51,7 +51,7 @@ RSpec.describe UserFood do
           begin
           create(:user_food, user: user, food: food)
           rescue ActiveRecord::RecordInvalid => e
-            puts "Error creating UserFood: #{food.food_name}:#{e.message}"
+            puts "Error creating UserFood: '#{food.food_name}':#{e.message}"
             throw e
           end
         end
