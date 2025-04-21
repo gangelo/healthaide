@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user_supplement do
-    name { FFaker::Product.product_name }
+    user_supplement_name { FFaker::Product.product_name }
     form { UserSupplement.forms.keys.sample }
     frequency { UserSupplement.frequencies.keys.sample }
     dosage { rand(1..1000).to_s }

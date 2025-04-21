@@ -6,7 +6,7 @@
           <div class="min-w-0 flex-1 flex items-center">
             <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
               <div>
-                <p class="text-sm font-medium text-blue-600 truncate"><%= user_supplement.name %></p>
+                <p class="text-sm font-medium text-blue-600 truncate"><%= user_supplement.user_supplement_name %></p>
               </div>
               <div class="hidden md:block">
                 <div>
@@ -16,11 +16,14 @@
                     </p>
                   <% end %>
                    <p class="mt-2 flex items-center text-sm text-gray-500">
-                      <%= user_supplement.form.to_s.humanize %>
-                      <% if user_supplement.dosage.present? %>
-                        (<%= user_supplement.dosage %> <%= user_supplement.dosage_unit %>)
-                      <% end %>
-                      <%= user_supplement.frequency.to_s.humanize.downcase %>
+                      <%
+                        supplement_info = user_supplement.form.to_s.humanize
+                        supplement_info += begin
+                          " (#{user_supplement.dosage} #{ user_supplement.dosage_unit })"
+                        end if user_supplement.dosage.present?
+                        supplement_info += ", taken #{user_supplement.frequency.to_s.humanize.downcase}"
+                      %>
+                      <%= supplement_info %>
                   </p>
                   <p class="mt-2 flex items-center text-sm text-gray-500">
                     <%= pluralize(user_supplement.supplement_components.count, "component") %>

@@ -18,6 +18,8 @@ health_goal_names = [
   "Improve sleep quality",
   "Increase muscle mass",
   "Increase muscle strength",
+  "Lower cholesterol levels",
+  "Lower triglyceride levels",
   "Maintain healthy blood pressure",
   "Maintain healthy weight",
   "Maintain muscle mass",

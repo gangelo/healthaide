@@ -50,9 +50,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
   end
 
   create_table "supplement_components", force: :cascade do |t|
-    t.string "name"
-    t.string "amount"
-    t.string "unit"
+    t.string "supplement_component_name", null: false
+    t.string "amount", null: false
+    t.string "unit", null: false
     t.integer "user_supplement_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -131,9 +131,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
   end
 
   create_table "user_supplements", force: :cascade do |t|
-    t.string "name"
-    t.integer "form"
-    t.integer "frequency"
+    t.string "user_supplement_name", null: false
+    t.integer "form", null: false
+    t.integer "frequency", null: false
     t.string "dosage"
     t.string "dosage_unit"
     t.string "manufacturer"

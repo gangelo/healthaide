@@ -31,7 +31,7 @@ RSpec.describe "User Stats", type: :system do
     
     # Should be redirected to edit page with success message
     expect(page).to have_content("Your stats were successfully saved")
-    expect(page).to have_content("Your Stats")
+    expect(page).to have_content("My Stats")
     
     # Check if data was saved correctly
     expect(user.reload.user_stat).to be_present
@@ -47,7 +47,7 @@ RSpec.describe "User Stats", type: :system do
       
       # Should be redirected to edit page
       expect(page).to have_current_path(edit_user_stat_path(user_stat))
-      expect(page).to have_content("Your Stats")
+      expect(page).to have_content("My Stats")
       
       # Update some values
       fill_in "Weight (lbs)", with: "180"
@@ -58,7 +58,7 @@ RSpec.describe "User Stats", type: :system do
       
       # Should stay on edit page with success message
       expect(page).to have_content("Your stats were successfully updated")
-      expect(page).to have_content("Your Stats")
+      expect(page).to have_content("My Stats")
       
       # Check if data was updated correctly
       expect(user.reload.user_stat.muscle_fat_analysis_weight).to eq(180)
@@ -73,7 +73,7 @@ RSpec.describe "User Stats", type: :system do
       
       # Should go to edit page
       expect(page).to have_current_path(edit_user_stat_path(user_stat))
-      expect(page).to have_content("Your Stats")
+      expect(page).to have_content("My Stats")
     end
   end
 end

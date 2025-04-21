@@ -2,8 +2,8 @@
   <%= render "shared/active_record_errors", resource: user_supplement %>
   <div class="my-5">
     <h2>Supplement Information</h2>
-    <%= form.label :name, class: "block font-medium text-gray-700 mb-1" %>
-      <%= form.text_field :name, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Vitamin D3" %>
+    <%= form.label :user_supplement_name, class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.text_field :user_supplement_name, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "Vitamin D3" %>
     <%= render partial: "shared/maximum_characters", locals: { max_characters: 64, model: user_supplement } %>
   </div>
 
@@ -35,6 +35,12 @@
     <%= form.text_field :dosage_unit, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "mg" %>
   </div>
 
+  <%# supplement components %>
+  <div class="my-5">
+    <h2>Components</h2>
+    <%= render partial: "user_supplements/components/list", locals: { user_supplement: user_supplement } %>
+  </div>
+
   <%# supplement manufacturer unit (e.g. "Pure essentials", etc. %>
   <div class="my-5">
     <%= form.label :manufacturer, class: "block font-medium text-gray-700 mb-1" %>
@@ -48,16 +54,29 @@
       <fieldset>
         <legend class="sr-only">Health Conditions</legend>
         <div class="space-y-2 max-h-48 overflow-y-auto">
-          <% current_user.health_conditions.each do |condition| %>
-            <div class="relative flex items-start">
-              <div class="flex items-center h-5">
-                <%= form.check_box :health_condition_ids, { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" }, condition.id, nil %>
+          <% if current_user.health_conditions.any? %>
+            <% current_user.health_conditions.each do |condition| %>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= form.check_box :health_condition_ids,
+                    { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" },
+                    condition.id, nil %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :health_condition_ids,
+                    condition.health_condition_name,
+                    value: condition.id,
+                    class: "font-medium text-gray-700" %>
+                </div>
               </div>
-              <div class="ml-3 text-sm">
-                <%= form.label :health_condition_ids, condition.health_condition_name, value: condition.id, class: "font-medium text-gray-700" %>
+            <% end %>
+            <% else %>
+              <div class="border-t border-gray-200 px-4 py-5 sm:p-6 text-center text-gray-500">
+                You haven't chosen any health conditions yet. Add some <%= link_to "here", new_user_health_condition_path,
+                                                                            class: "link",
+                                                                            data: { turbo: false } %>.
               </div>
-            </div>
-          <% end %>
+            <% end %>
         </div>
       </fieldset>
     </div>
@@ -70,16 +89,24 @@
       <fieldset>
         <legend class="sr-only">Health Goals</legend>
         <div class="space-y-2 max-h-48 overflow-y-auto">
-          <% current_user.health_goals.each do |goal| %>
-            <div class="relative flex items-start">
-              <div class="flex items-center h-5">
-                <%= form.check_box :health_goal_ids, { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" }, goal.id, nil %>
+          <% if current_user.health_goals.any? %>
+            <% current_user.health_goals.each do |goal| %>
+              <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                  <%= form.check_box :health_goal_ids, { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" }, goal.id, nil %>
+                </div>
+                <div class="ml-3 text-sm">
+                  <%= form.label :health_goal_ids, goal.health_goal_name, value: goal.id, class: "font-medium text-gray-700" %>
+                </div>
               </div>
-              <div class="ml-3 text-sm">
-                <%= form.label :health_goal_ids, goal.health_goal_name, value: goal.id, class: "font-medium text-gray-700" %>
+            <% end %>
+            <% else %>
+              <div class="border-t border-gray-200 px-4 py-5 sm:p-6 text-center text-gray-500">
+                You haven't chosen any health goals yet. Add some <%= link_to "here", new_user_health_goal_path,
+                                                                            class: "link",
+                                                                            data: { turbo: false } %>.
               </div>
-            </div>
-          <% end %>
+            <% end %>
         </div>
       </fieldset>
     </div>

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe SupplementComponent, type: :model do
   describe "validations" do
-    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:supplement_component_name) }
     it { should validate_presence_of(:amount) }
     it { should validate_presence_of(:unit) }
   end
@@ -20,7 +20,7 @@ RSpec.describe SupplementComponent, type: :model do
       expect(export_hash).to be_a(Hash)
       expect(export_hash[:supplement_component]).to include(
         id: component.id,
-        name: component.name,
+        supplement_component_name: component.supplement_component_name,
         amount: component.amount,
         unit: component.unit
       )

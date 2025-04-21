@@ -1,9 +1,10 @@
-<%= turbo_frame_tag "modal" do %>
-  <div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">Edit Supplement</h1>
-    </div>
-    
+<% content_for :title, "Editing user supplement" %>
+<div class="mx-auto md:w-3/4 w-full">
+  <%= turbo_frame_tag "flash_messages" do %>
+    <%= render "shared/flash_messages" %>
+  <% end %>
+  <h1>Editing user supplement</h1>
+  <%= turbo_frame_tag "main_content" do %>
     <%= render "form", user_supplement: @user_supplement %>
-  </div>
-<% end %>
+  <% end %>
+</div>

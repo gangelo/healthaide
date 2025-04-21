@@ -3,7 +3,7 @@ class UserSupplementsController < ApplicationController
   before_action :set_user_supplement, only: [ :show, :edit, :update, :destroy, :add_component, :remove_component ]
 
   def index
-    @user_supplements = current_user.user_supplements.ordered
+    @user_supplements = current_user.user_supplements.with_associations.ordered
   end
 
   def show
@@ -45,14 +45,14 @@ class UserSupplementsController < ApplicationController
         format.turbo_stream do
           flash.now[:notice] = "Supplement was successfully updated."
           render turbo_stream: [
-            turbo_stream.update("main_content", partial: "user_supplements/list/list", locals: { user_supplements: current_user.user_supplements.ordered }),
+            turbo_stream.update("main_content", partial: "user_supplements/form", locals: { user_supplement: @user_supplement }),
             turbo_stream.update("flash_messages", partial: "shared/flash_messages")
           ]
         end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.turbo_stream do
-          render turbo_stream: turbo_stream.update("modal", partial: "user_supplements/form", locals: { user_supplement: @user_supplement })
+          render turbo_stream: turbo_stream.update("main_content", partial: "user_supplements/form", locals: { user_supplement: @user_supplement })
         end
       end
     end
@@ -74,10 +74,10 @@ class UserSupplementsController < ApplicationController
   end
 
   def add_component
-    @component = @user_supplement.supplement_components.build(component_params)
+    @supplement_component = @user_supplement.supplement_components.build(component_params)
 
     respond_to do |format|
-      if @component.save
+      if @supplement_component.save
         format.html { redirect_to user_supplement_path(@user_supplement), notice: "Component was successfully added." }
         format.turbo_stream do
           flash.now[:notice] = "Component was successfully added."
@@ -89,15 +89,19 @@ class UserSupplementsController < ApplicationController
       else
         format.html { render :show, status: :unprocessable_entity }
         format.turbo_stream do
-          render turbo_stream: turbo_stream.update("add_component_form", partial: "user_supplements/components/form", locals: { user_supplement: @user_supplement, component: @component })
+          flash.now[:alert] = "Unable to add component: #{@supplement_component.errors.full_messages.join(", ")}"
+          render turbo_stream: [
+            turbo_stream.update("components_list", partial: "user_supplements/components/list", locals: { user_supplement: @user_supplement }),
+            turbo_stream.update("flash_messages", partial: "shared/flash_messages")
+          ]
         end
       end
     end
   end
 
   def remove_component
-    @component = @user_supplement.supplement_components.find(params[:component_id])
-    @component.destroy
+    @supplement_component = @user_supplement.supplement_components.find(params[:component_id])
+    @supplement_component.destroy
 
     respond_to do |format|
       format.html { redirect_to user_supplement_path(@user_supplement), notice: "Component was successfully removed." }
@@ -127,10 +131,10 @@ class UserSupplementsController < ApplicationController
   end
 
   def user_supplement_params
-    params.require(:user_supplement).permit(:name, :form, :frequency, :dosage, :dosage_unit, :manufacturer, health_condition_ids: [], health_goal_ids: [])
+    params.require(:user_supplement).permit(:user_supplement_name, :form, :frequency, :dosage, :dosage_unit, :manufacturer, health_condition_ids: [], health_goal_ids: [])
   end
 
   def component_params
-    params.require(:supplement_component).permit(:name, :amount, :unit)
+    params.require(:supplement_component).permit(:supplement_component_name, :amount, :unit)
   end
 end

@@ -15,7 +15,28 @@ export default class extends Controller {
 
   toggle(event) {
     event.stopPropagation();
-    this.menuTarget.classList.toggle("hidden");
+    
+    const isHidden = this.menuTarget.classList.contains("hidden");
+    
+    if (isHidden) {
+      // Show menu with animation
+      this.menuTarget.classList.remove("hidden");
+      
+      // Use setTimeout to ensure the transition works
+      setTimeout(() => {
+        this.menuTarget.classList.remove("opacity-0", "scale-95");
+        this.menuTarget.classList.add("opacity-100", "scale-100");
+      }, 10);
+    } else {
+      // Hide menu with animation
+      this.menuTarget.classList.add("opacity-0", "scale-95");
+      this.menuTarget.classList.remove("opacity-100", "scale-100");
+      
+      // Use setTimeout to wait for animation to complete before hiding
+      setTimeout(() => {
+        this.menuTarget.classList.add("hidden");
+      }, 100);
+    }
 
     // Rotate the dropdown icon
     this.iconTarget.classList.toggle("rotate-180");
@@ -34,7 +55,15 @@ export default class extends Controller {
 
     // Close if the click is outside the controller element
     if (!this.element.contains(event.target)) {
-      this.menuTarget.classList.add("hidden");
+      // Hide with animation
+      this.menuTarget.classList.add("opacity-0", "scale-95");
+      this.menuTarget.classList.remove("opacity-100", "scale-100");
+      
+      // Use setTimeout to wait for animation to complete before hiding
+      setTimeout(() => {
+        this.menuTarget.classList.add("hidden");
+      }, 100);
+      
       this.iconTarget.classList.remove("rotate-180");
       this.element
         .querySelector("button")

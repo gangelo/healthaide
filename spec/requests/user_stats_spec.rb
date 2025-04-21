@@ -70,6 +70,9 @@ RSpec.describe "/user_stats", type: :request do
 
   describe "GET /new" do
     it "renders a successful response" do
+      user = create(:user)
+      user.confirm
+      sign_in user
       get new_user_stat_url
       expect(response).to be_successful
     end

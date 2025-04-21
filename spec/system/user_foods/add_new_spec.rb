@@ -14,9 +14,9 @@ RSpec.describe "Adding new foods", type: :system do
   scenario "User can navigate to the new food form" do
     visit user_foods_path
 
-    # NOTE: We need to match: :first because there are no foods in the list yet
-    # and the "Add" button appears twice in the UI.
-    click_link "Add Foods", match: :first
+    # The button text has changed to "Add Food", but there might be multiple links
+    # Use the first one - in the main section of the page
+    click_link "Add Food", match: :first
 
     expect(page).to have_content("Add Foods")
     expect(page).to have_content("Available Foods")
@@ -71,6 +71,6 @@ RSpec.describe "Adding new foods", type: :system do
     # Creating a food with invalid characters should fail
     food = build(:food, food_name: "Invalid!@#$%Food")
     expect(food).not_to be_valid
-    expect(food.errors[:food_name]).to include("can only contain letters, numbers, spaces, hyphens, apostrophes, commas, periods, plus signs and parentheses")
+    expect(food.errors[:food_name]).to include("can only contain letters, numbers, spaces, hyphens, apostrophes, commas, periods, forward slashes, plus signs and parentheses")
   end
 end

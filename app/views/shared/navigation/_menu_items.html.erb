@@ -1,8 +1,0 @@
-<% if user_signed_in? %>
-  <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
-  <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
-  <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
-  <% if current_user.admin? %>
-    <%= render partial: "shared/navigation/admin_menu" %>
-  <% end %>
-<% end %>

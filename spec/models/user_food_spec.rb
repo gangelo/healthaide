@@ -48,7 +48,12 @@ RSpec.describe UserFood do
         let(:food) { create(:food) }
 
         before do
+          begin
           create(:user_food, user: user, food: food)
+          rescue ActiveRecord::RecordInvalid => e
+            puts "Error creating UserFood: #{food.food_name}:#{e.message}"
+            throw e
+          end
         end
 
         it 'prevents creating duplicate user_food' do

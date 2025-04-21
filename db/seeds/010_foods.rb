@@ -41,7 +41,11 @@ FOODS_WITH_QUALIFIERS = {
 # First ensure all qualifiers exist
 all_qualifiers = FOODS_WITH_QUALIFIERS.values.flat_map { |v| v[:food_qualifiers] }.uniq
 all_qualifiers.each do |qualifier_name|
-  FoodQualifier.find_or_create_by!(qualifier_name: qualifier_name)
+  begin
+    FoodQualifier.find_or_create_by!(qualifier_name: qualifier_name)
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Error creating FoodQualifier: #{qualifier_name} - #{e.message}"
+  end
 end
 
 # Then create foods with their qualifiers

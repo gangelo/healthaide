@@ -17,12 +17,7 @@
         <!-- Desktop Navigation Menu (visible from lg breakpoint) -->
         <div class="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4">
           <% if user_signed_in? %>
-            <%= link_to "My Stats", user_stats_path, class: nav_link_class(user_stats_path) %>
-            <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
-            <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
-            <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
-            <%= link_to "My Supplements", user_supplements_path, class: nav_link_class(user_supplements_path) %>
-            <%= render partial: "shared/navigation/generate_menu" %>
+            <%= render partial: "shared/navigation/user_menu" %>
           <% end %>
         </div>
       </div>
@@ -31,7 +26,26 @@
       <div class="hidden lg:flex lg:items-center">
         <!-- Admin Menu -->
         <% if user_signed_in? && current_user.admin? %>
-          <%= render partial: "shared/navigation/admin_menu" %>
+        <div class="relative" data-controller="dropdown-menu">
+          <button type="button"
+                  data-action="dropdown-menu#toggle"
+                  aria-expanded="false"
+                  <%# TODO: Move admin pages to /admin subfolder %>
+                  class="<%= nav_link_class('/admin') %> flex items-center gap-1">
+            Admin
+            <%= render "shared/icons/dropdown" do %>
+              data-dropdown-menu-target="icon"
+            <% end %>
+          </button>
+
+          <!-- Admin submenu - hidden by default -->
+          <div data-dropdown-menu-target="menu"
+              class="hidden absolute left-0 lg:right-0 lg:left-auto mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+            <div class="py-1 flex flex-col space-y-1">
+              <%= render partial: "shared/navigation/admin_menu" %>
+            </div>
+          </div>
+        </div>
         <% end %>
         <div class="lg:ml-4 lg:flex lg:shrink-0 lg:items-center">
           <% if user_signed_in? %>
@@ -56,66 +70,87 @@
         </div>
       </div>
 
-      <!-- Mobile menu button with Stimulus controller -->
-      <div class="lg:hidden relative" data-controller="menu">
+      <!-- Mobile menu toggle with Stimulus -->
+      <div class="lg:hidden" data-controller="mobile-menu">
         <button type="button"
-                data-action="menu#toggle"
-                aria-controls="mobile-menu-dropdown"
-                aria-expanded="false"
-                class="text-gray-400 hover:text-white p-2 z-[51]">
+                data-action="mobile-menu#toggle"
+                class="text-gray-400 hover:text-white p-2 relative inline-flex items-center justify-center">
           <span class="sr-only">Open main menu</span>
-          <!-- Menu icon (hamburger) -->
-          <svg class="h-12 w-12" data-menu-target="openIcon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <!-- Icon for menu - hamburger -->
+          <svg data-mobile-menu-target="openIcon" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
-          <!-- Close icon (X) - hidden by default -->
-          <svg class="h-12 w-12 hidden" data-menu-target="closeIcon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <!-- Icon for menu - "X" -->
+          <svg data-mobile-menu-target="closeIcon" class="h-12 w-12 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <!-- Mobile menu dropdown - now positioned absolute so it scrolls with page -->
-        <div id="mobile-menu-dropdown" class="hidden absolute right-0 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
-          <div class="py-1">
-            <div class="px-2 py-2 space-y-1">
-              <% if user_signed_in? %>
-                <%= link_to "My Stats", user_stats_path, class: nav_link_class(user_stats_path) %>
-                <%= link_to "My Foods", user_foods_path, class: nav_link_class(user_foods_path) %>
-                <%= link_to "My Health Conditions", user_health_conditions_path, class: nav_link_class(user_health_conditions_path) %>
-                <%= link_to "My Health Goals", user_health_goals_path, class: nav_link_class(user_health_goals_path) %>
-                <%= link_to "My Supplements", user_supplements_path, class: nav_link_class(user_supplements_path) %>
-                <% if current_user.admin? %>
-                  <div class="mt-2 border-t border-gray-700 pt-2">
-                    <p class="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</p>
-                    <%= link_to "Foods", foods_path, class: nav_link_class(foods_path) %>
-                    <%= link_to "Food Qualifiers", food_qualifiers_path, class: nav_link_class(food_qualifiers_path) %>
-                    <%= link_to "Health Conditions", health_conditions_path, class: nav_link_class(health_conditions_path) %>
-                    <%= link_to "Health Goals", health_goals_path, class: nav_link_class(health_goals_path) %>
-                    <%= link_to "Exports", exports_path, class: nav_link_class(exports_path) %>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
-
-            <!-- Mobile profile/login links -->
-            <div class="border-t border-gray-700 mt-2">
-              <div class="px-2 py-2 space-y-1">
-                <% if user_signed_in? %>
-                  <%= render partial: "shared/navigation/logout_link",
-                    locals: {
-                      css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400 mb-2"
-                    } %>
-                  <%= render partial: "shared/navigation/profile_link",
-                    locals: {
-                      css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400"
-                    } %>
-                <% else %>
-                  <%= render partial: "shared/navigation/login_link",
-                    locals: {
-                      css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400"
-                    } %>
-                <% end %>
+        <!-- Mobile menu - hidden by default -->
+        <%# NOTE: top-26 determines the positioning of the mobile menu from the header bar %>
+        <div data-mobile-menu-target="menu" class="hidden fixed top-26 left-0 right-0 bg-gray-800 lg:hidden overflow-y-auto max-h-[80vh] overscroll-contain z-50 shadow-lg">
+          <div class="space-y-2 px-2 pb-3 pt-2">
+            <% if user_signed_in? %>
+              <!-- Apply touch-friendly styles to user menu in mobile view -->
+              <div class="py-1 flex flex-col space-y-2">
+                <%= link_to "My Stats", user_stats_path, class: "#{nav_link_class(user_stats_path)} block py-2" %>
+                <%= link_to "My Foods", user_foods_path, class: "#{nav_link_class(user_foods_path)} block py-2" %>
+                <%= link_to "My Health Conditions", user_health_conditions_path, class: "#{nav_link_class(user_health_conditions_path)} block py-2" %>
+                <%= link_to "My Health Goals", user_health_goals_path, class: "#{nav_link_class(user_health_goals_path)} block py-2" %>
+                <%= link_to "My Supplements", user_supplements_path, class: "#{nav_link_class(user_supplements_path)} block py-2" %>
               </div>
+
+              <!-- Generate menu section - similar to admin section -->
+              <div class="mt-2 border-t border-gray-700 pt-2">
+                <p class="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Generate</p>
+                <div class="py-1 flex flex-col space-y-2 px-3">
+                  <%= link_to "Meals prompt", "/", class: "#{nav_link_class("/")} block py-2" %>
+                  <%= link_to "Health goals prompt", "/", class: "#{nav_link_class("/")} block py-2" %>
+                  <%= link_to "History", "/", class: "#{nav_link_class("/")} block py-2" %>
+                  <%= link_to "Export", "/", class: "#{nav_link_class("/")} block py-2" %>
+                </div>
+              </div>
+
+              <% if current_user.admin? %>
+                <div class="mt-2 border-t border-gray-700 pt-2">
+                  <p class="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</p>
+                  <div class="py-1 flex flex-col space-y-2 px-3">
+                    <!-- Apply touch-friendly styles to admin menu links -->
+                    <% foods_path_class = "#{nav_link_class(foods_path)} block py-2" %>
+                    <% food_qualifiers_path_class = "#{nav_link_class(food_qualifiers_path)} block py-2" %>
+                    <% health_conditions_path_class = "#{nav_link_class(health_conditions_path)} block py-2" %>
+                    <% health_goals_path_class = "#{nav_link_class(health_goals_path)} block py-2" %>
+                    <% exports_path_class = "#{nav_link_class(exports_path)} block py-2" %>
+
+                    <%= link_to "Foods", foods_path, class: foods_path_class %>
+                    <%= link_to "Food Qualifiers", food_qualifiers_path, class: food_qualifiers_path_class %>
+                    <%= link_to "Health Conditions", health_conditions_path, class: health_conditions_path_class %>
+                    <%= link_to "Health Goals", health_goals_path, class: health_goals_path_class %>
+                    <%= link_to "Exports", exports_path, class: exports_path_class %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+
+          <!-- Mobile profile/login links -->
+          <div class="border-t border-gray-700">
+            <div class="px-2 py-3 space-y-3">
+              <% if user_signed_in? %>
+                <%= render partial: "shared/navigation/logout_link",
+                  locals: {
+                    css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400 mb-2"
+                  } %>
+                <%= render partial: "shared/navigation/profile_link",
+                  locals: {
+                    css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400"
+                  } %>
+              <% else %>
+                <%= render partial: "shared/navigation/login_link",
+                  locals: {
+                    css_class: "block rounded-md px-3 py-2 text-base font-medium text-white bg-indigo-500 hover:bg-indigo-400"
+                  } %>
+              <% end %>
             </div>
           </div>
         </div>

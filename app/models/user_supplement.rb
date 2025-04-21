@@ -1,4 +1,6 @@
 class UserSupplement < ApplicationRecord
+  include NameNormalizable
+
   belongs_to :user
 
   has_many :supplement_components, dependent: :destroy
@@ -35,15 +37,26 @@ enum :frequency, {
   other: 999
 }, prefix: true
 
-  validates :name, presence: true, length: { minimum: 2, maximum: 64 }
+  validates :user_supplement_name,
+    presence: true,
+    uniqueness: true,
+    length: { minimum: 2, maximum: 64 },
+    format: {
+      with: VALID_NAME_REGEX,
+      message: INVALID_NAME_REGEX_MESSAGE
+    }
   validates :form, presence: true
   validates :frequency, presence: true
 
   scope :ordered, -> do
-    left_joins(:supplement_components)
-      .joins(:supplement_health_conditions)
-      .joins(:supplement_health_goals)
-      .order(:name)
+      order(:user_supplement_name)
+  end
+
+  scope :with_associations, -> do
+    includes(:supplement_components)
+      .includes(:supplement_health_conditions)
+      .includes(:supplement_health_goals)
+      .order(:user_supplement_name)
   end
 
   class << self
@@ -57,7 +70,7 @@ enum :frequency, {
   end
 
   def to_s
-    name
+    user_supplement_name
   end
 
   def to_export_hash
@@ -68,5 +81,9 @@ enum :frequency, {
         hash[:health_goals] = health_goals.map(&:to_export_hash)
       end
     }
+  end
+
+  def normalize_name
+    self.user_supplement_name = self.class.normalize_name(self.user_supplement_name)
   end
 end

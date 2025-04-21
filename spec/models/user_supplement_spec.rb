@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe UserSupplement, type: :model do
   describe "validations" do
-    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:user_supplement_name) }
     it { should validate_presence_of(:form) }
     it { should validate_presence_of(:frequency) }
-    it { should validate_length_of(:name).is_at_least(2).is_at_most(64) }
+    it { should validate_length_of(:user_supplement_name).is_at_least(2).is_at_most(64) }
   end
   
   describe "associations" do
@@ -24,8 +24,9 @@ RSpec.describe UserSupplement, type: :model do
   
   describe "#to_s" do
     it "returns the name of the supplement" do
-      user_supplement = create(:user_supplement, name: "Vitamin D3")
-      expect(user_supplement.to_s).to eq("Vitamin D3")
+      # The name_normalizable concern will normalize the name
+      user_supplement = create(:user_supplement, user_supplement_name: "Vitamin D3")
+      expect(user_supplement.to_s).to eq("Vitamin d3")
     end
   end
   
@@ -38,7 +39,7 @@ RSpec.describe UserSupplement, type: :model do
       expect(export_hash).to be_a(Hash)
       expect(export_hash[:user_supplement]).to include(
         id: user_supplement.id,
-        name: user_supplement.name,
+        user_supplement_name: user_supplement.user_supplement_name,
         form: user_supplement.form,
         frequency: user_supplement.frequency
       )
