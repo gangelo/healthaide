@@ -8,7 +8,9 @@ class UserHealthGoal < ApplicationRecord
                                               less_than_or_equal_to: 25 }
   validates :health_goal_id, uniqueness: { scope: :user_id, message: "has already been added to your goals" }
 
-  scope :ordered_by_importance, -> { order(order_of_importance: :asc) }
+  scope :ordered_by_importance, -> do
+    includes(:health_goal).order(order_of_importance: :asc, health_goals: { health_goal_name: :asc })
+  end
 
   def to_export_hash
     {
