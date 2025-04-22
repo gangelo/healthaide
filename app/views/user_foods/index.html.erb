@@ -7,9 +7,6 @@
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h2>My Foods</h2>
-      <p class="mt-1 text-sm text-gray-500 max-w-3xl">
-        Track your regular foods to export them with health goals and conditions.
-      </p>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
       <%= link_to new_user_food_path,
@@ -19,6 +16,9 @@
         Add Food
       <% end %>
     </div>
+  </div>
+  <div>
+    <%= render "info" %>
   </div>
   <!-- Single content frame -->
   <%= turbo_frame_tag "main_content" do %>
