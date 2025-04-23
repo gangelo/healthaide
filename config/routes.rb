@@ -42,11 +42,19 @@ Rails.application.routes.draw do
   # Health goals
   resources :health_goals
 
+  # Imports
+  get "imports" => "imports#index", as: :imports
+  post "imports" => "imports#import", as: :import
+  get "imports/preview" => "imports#preview", as: :import_preview
+
   # User foods
   resources :user_foods, only: [ :create, :destroy, :index, :new ] do
     collection do
       get :select_multiple
       post :add_multiple
+    end
+    member do
+      patch :toggle_available
     end
   end
 
@@ -71,7 +79,7 @@ Rails.application.routes.draw do
 
    # User stats
    resources :user_stats, only: [ :index, :new, :create, :edit, :update, :show ]
-   
+
    # User supplements
    resources :user_supplements do
      member do

@@ -1,20 +1,5 @@
 <ul role="list">
   <% user_foods.each_with_index do |user_food, index| %>
-    <li id="food-id-<%= user_food.food.id %>" class="relative px-4 py-3 sm:px-6 grid grid-cols-3 gap-4 <%= grid_alternate_row_color(index) %>">
-      <div class="text-sm font-semibold text-gray-900">
-        <%= user_food.food.food_name %>
-      </div>
-      <div>
-        <%= render partial: "user_foods/list/row_food_qualifiers", locals: { food: user_food.food } %>
-      </div>
-      <div class="text-right flex justify-end gap-2">
-        <%= button_to user_food_path(user_food),
-                  method: :delete,
-                  class: "delete-button-sm",
-                  form: { data: { turbo_confirm: "Are you sure you want to remove this food?" } } do %>
-          Delete
-        <% end %>
-      </div>
-    </li>
+    <%= render partial: "user_foods/list/row_item", locals: { user_food: user_food, index: index } %>
   <% end %>
 </ul>

@@ -1,6 +1,6 @@
 class UserFoodsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user_food, only: %i[ show edit update destroy ]
+  before_action :set_user_food, only: %i[ show edit update destroy toggle_available ]
   before_action :set_user_foods, only: [ :index ]
 
   # GET /user_foods or /user_foods.json
@@ -99,6 +99,25 @@ class UserFoodsController < ApplicationController
     end
   end
 
+  def toggle_available
+    # Toggle the available status
+    @user_food.update(available: !@user_food.available)
+    
+    respond_to do |format|
+      format.turbo_stream do
+        # Return a simple success status for AJAX requests
+        render turbo_stream: turbo_stream.replace(
+          "food-id-#{@user_food.food.id}",
+          partial: "user_foods/list/row_item",
+          locals: { user_food: @user_food, index: params[:index] || 0 }
+        )
+      end
+      format.json do
+        render json: { available: @user_food.available }
+      end
+    end
+  end
+
   def add_multiple
     food_ids = params[:food_ids]&.reject(&:blank?)
     new_food_names = params[:new_food_names]&.reject(&:blank?)
@@ -184,5 +203,9 @@ class UserFoodsController < ApplicationController
       :food_name,
       food_food_qualifiers_attributes: [ :id, :food_qualifier_id, :_destroy ]
     )
+  end
+  
+  def user_food_params
+    params.require(:user_food).permit(:food_id, :available, food_attributes: [:food_name])
   end
 end
