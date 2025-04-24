@@ -1,8 +1,8 @@
 class ImportsController < ApplicationController
   before_action :authenticate_admin!
-  before_action :set_users, only: [ :index ]
+  # before_action :set_users, only: [ :index ]
   before_action :set_import_options, only: [ :index ]
-  before_action :set_import_user, only: [ :import, :preview ]
+  # before_action :set_import_user, only: [ :import, :preview, :upload ]
 
   USER_FOODS_IMPORT_OPTION = 1
   USER_HEALTH_CONDITIONS_IMPORT_OPTION = 2
@@ -13,18 +13,50 @@ class ImportsController < ApplicationController
   def index
   end
 
-  def preview
+  def upload
     user_import_hash = {}
 
-    if @import_user
+    # Handle file upload without user selection
+    if params[:json_file].present?
       import_options = params[:import_options] || []
-      user_import_hash = @import_user.to_import_hash
-      user_import_hash = filter_user_import_hash(user_import_hash:, import_options:)
+
+      # Handle file upload
+      # if params[:json_file].present?
+      begin
+        uploaded_file = params[:json_file]
+        json_content = uploaded_file.read
+        user_import_hash = JSON.parse(json_content).with_indifferent_access
+        flash.now[:notice] = "JSON file successfully uploaded."
+      rescue JSON::ParserError => e
+        flash.now[:alert] = "Invalid JSON file: #{e.message}"
+      rescue => e
+        flash.now[:alert] = "Error processing file: #{e.message}"
+      end
+      # Handle direct JSON input (for backward compatibility)
+      # elsif params[:user_input_json].present?
+      #   begin
+      #     user_import_hash = JSON.parse(params[:user_input_json]).with_indifferent_access
+      #     user_import_hash = filter_user_import_hash(user_import_hash:, import_options:)
+      #   rescue JSON::ParserError => e
+      #     flash.now[:alert] = "Invalid JSON: #{e.message}"
+      #   end
+      # end
+    else
+      flash.now[:alert] = "Please choose a file to import."
     end
 
-    redacted_user_import_hash = redact_user_import_hash(user_import_hash)
-
-    render partial: "imports/preview", locals: { user_import_hash: redacted_user_import_hash }
+    respond_to do |format|
+      format.html { render partial: "imports/preview", locals: { user_import_hash: user_import_hash } }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update("import_content",
+                              partial: "imports/preview",
+                              locals: { user_import_hash: user_import_hash }),
+          turbo_stream.update("flash_messages",
+                              partial: "shared/flash_messages")
+        ]
+      end
+    end
   end
 
   def import
@@ -45,9 +77,9 @@ class ImportsController < ApplicationController
 
   private
 
-  def set_users
-    @users = User.all
-  end
+  # def set_users
+  #   @users = User.all
+  # end
 
   def set_import_options
     @import_options = {
@@ -59,9 +91,9 @@ class ImportsController < ApplicationController
     }
   end
 
-  def set_import_user
-    @import_user = User.find_by(id: params[:user_id])
-  end
+  # def set_import_user
+  #   @import_user = User.find_by(id: params[:user_id])
+  # end
 
   def filter_user_import_hash(user_import_hash:, import_options:)
     user_import_hash.tap do |hash|
@@ -78,10 +110,12 @@ class ImportsController < ApplicationController
 
     redacted = "[REDACTED]"
     user_import_hash.tap do |hash|
-      hash[:user][:confirmation_token] = redacted
-      hash[:user][:encrypted_password] = redacted
-      hash[:user][:reset_password_token] = redacted
-      hash[:user][:unlock_token] = redacted
+      hash.dig(:user)&.tap do |user|
+        user[:confirmation_token] = redacted if user[:confirmation_token].present?
+        user[:encrypted_password] = redacted if user[:encrypted_password].present?
+        user[:reset_password_token] = redacted if user[:reset_password_token].present?
+        user[:unlock_token] = redacted if user[:unlock_token].present?
+      end
     end
   end
 end

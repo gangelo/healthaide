@@ -3,6 +3,10 @@ import { Controller } from "@hotwired/stimulus";
 // Connects to data-controller="check-boxes"
 export default class extends Controller {
   static targets = ["selectAll", "selectNone", "submitButton", "userSelect"];
+  static values = {
+    previewUrl: { type: String, default: "/exports/preview" },
+    paramName: { type: String, default: "export_options" }
+  };
 
   connect() {
     this.updateButtonState();
@@ -20,8 +24,8 @@ export default class extends Controller {
 
     // Build the URL with query parameters
     const url =
-      `/exports/preview?user_id=${userId}&` +
-      selectedOptions.map((opt) => `export_options[]=${opt}`).join("&");
+      `${this.previewUrlValue}?user_id=${userId}&` +
+      selectedOptions.map((opt) => `${this.paramNameValue}[]=${opt}`).join("&");
 
     // Find the Turbo Frame and update its source
     const frame = document.getElementById("main_content");
