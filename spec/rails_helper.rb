@@ -94,6 +94,13 @@ RSpec.configure do |config|
   # For view_component testing
   config.include ViewComponent::TestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
+
+  config.include Module.new {
+    def load_fixture_file(file_name)
+      file_path = Rails.root.join('spec', 'fixtures', 'files', file_name)
+      File.read(file_path)
+    end
+  }
 end
 
 Shoulda::Matchers.configure do |config|

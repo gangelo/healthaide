@@ -44,9 +44,8 @@ Rails.application.routes.draw do
 
   # Imports
   get "imports" => "imports#index", as: :imports
-  post "imports" => "imports#import", as: :import
   post "upload" => "imports#upload", as: :import_upload
-  match "imports/preview" => "imports#preview", as: :import_preview, via: [ :get, :post ]
+  post "imports" => "imports#import", as: :import
 
   # User foods
   resources :user_foods, only: [ :create, :destroy, :index, :new ] do
@@ -79,7 +78,7 @@ Rails.application.routes.draw do
   end
 
    # User stats
-   resources :user_stats, only: [ :index, :new, :create, :edit, :update, :show ]
+   resources :user_stats
 
    # User supplements
    resources :user_supplements do

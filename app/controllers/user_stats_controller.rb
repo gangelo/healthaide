@@ -1,6 +1,6 @@
 class UserStatsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user_stat, only: %i[ show edit update ]
+  before_action :set_user_stat, only: %i[ show edit update destroy ]
 
   # GET /user_stats
   def index
@@ -55,6 +55,12 @@ class UserStatsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  # DELETE /user_stats/1
+  def destroy
+    @user_stat.destroy
+    redirect_to new_user_stat_path, notice: "Your stats were successfully deleted."
   end
 
   private

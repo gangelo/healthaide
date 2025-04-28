@@ -141,17 +141,15 @@
           class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
     </div>
   </div>
-
-  <%
-  titleized_name = titleize(user_stat)
-  %>
-  <div class="button-group-container">
-    <% if user_stat.new_record? %>
-      <%= form.submit "Create #{titleized_name}", class: "submit-button" %>
-    <% else %>
-      <%= form.submit "Update #{titleized_name}", class: "submit-button" %>
-    <% end %>
-    <%= link_to "Back", "javascript:history.back()", class: "back-button" %>
-  </div>
-
 <% end %>
+<div class="button-group-container">
+  <%= link_to "Back", "javascript:history.back()", class: "back-button" %>
+
+  <%= button_to "Delete these user stats", user_stat,
+        method: :delete,
+        disabled: false,
+        class: "delete-button",
+        form_class: "w-full md:w-auto",
+        form: { data: { turbo: false } },
+        onclick: "return confirm('Delete these user stats?')" %>
+</div>

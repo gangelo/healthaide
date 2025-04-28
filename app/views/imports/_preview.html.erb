@@ -1,17 +1,15 @@
-<%= turbo_frame_tag "preview_content" do %>
-  <div class="not-prose isolate">
-    <% if user_import_hash.present? %>
-      <figure class="flex flex-col gap-1 rounded-xl bg-gray-950/5 p-1 inset-ring inset-ring-gray-950/5 dark:bg-white/10 dark:inset-ring-white/10">
-        <div class="not-prose overflow-auto rounded-lg bg-white outline outline-white/5 dark:bg-gray-950/50">
-          <div class="h-100 space-y-4 overflow-auto overscroll-none text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-            <%= pretty_json(user_import_hash) %>
-          </div>
-        </div>
-      </figure>
-    <% else %>
-      <div class="text-center py-8 rounded-lg bg-gray-50">
-        <p class="text-gray-500">Upload a JSON file to preview its contents</p>
-      </div>
-    <% end %>
+<% if import_user_hash.present? %>
+  <div class="rounded-lg bg-gray-50 p-4 border border-gray-200">
+    <div class="overflow-auto max-h-[500px] rounded-lg bg-white shadow-sm p-4 font-mono text-sm">
+      <%= pretty_json(import_user_hash) %>
+    </div>
+  </div>
+<% else %>
+  <div class="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg border border-gray-200 text-center">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No data to preview</h3>
+    <p class="mt-1 text-sm text-gray-500">Upload a JSON file to see a preview here.</p>
   </div>
 <% end %>

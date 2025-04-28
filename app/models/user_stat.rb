@@ -1,8 +1,8 @@
 class UserStat < ApplicationRecord
   belongs_to :user
-  
+
   validates :user_id, uniqueness: true
-  validates :sex, inclusion: { in: ["M", "F"] }, allow_nil: true
+  validates :sex, inclusion: { in: [ "M", "F" ] }, allow_nil: true
   validates :height, numericality: { greater_than_or_equal_to: 48, less_than_or_equal_to: 96 }, allow_nil: true
   validates :muscle_fat_analysis_weight, numericality: { greater_than_or_equal_to: 50.0, less_than_or_equal_to: 500.0 }, allow_nil: true
   validates :muscle_fat_analysis_skeletal_muscle_mass, numericality: { greater_than: 0 }, allow_nil: true
@@ -13,7 +13,7 @@ class UserStat < ApplicationRecord
   validates :abdominal_obesity_analysis_visceral_fat_level, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
   validates :comprehensive_analysis_basal_metabolic_rate, numericality: { greater_than: 0 }, allow_nil: true
   validates :body_composition_analysis_soft_lean_mass, numericality: { greater_than: 0 }, allow_nil: true
-  
+
   def to_export_hash
     attributes.symbolize_keys
   end
