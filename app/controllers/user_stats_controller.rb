@@ -12,17 +12,8 @@ class UserStatsController < ApplicationController
     end
   end
 
-  # GET /user_stats/1
-  def show
-    if @user_stat
-      redirect_to edit_user_stat_path(@user_stat)
-    else
-      redirect_to new_user_stat_path
-    end
-  end
-
-  # GET /user_stats/new
-  def new
+   # GET /user_stats/new
+   def new
     # If user already has stats, redirect to edit
     if current_user.user_stat.present?
       redirect_to edit_user_stat_path(current_user.user_stat)
@@ -30,6 +21,15 @@ class UserStatsController < ApplicationController
     end
 
     @user_stat = UserStat.new(user: current_user)
+  end
+
+  # GET /user_stats/1
+  def show
+    if @user_stat
+      redirect_to edit_user_stat_path(@user_stat)
+    else
+      redirect_to new_user_stat_path
+    end
   end
 
   # GET /user_stats/1/edit

@@ -1,13 +1,66 @@
 <%
-  # TODO: Pattern this after app/views/shared/buttons/_show_buttons.html.erb
+# TODO: Pattern this after app/views/shared/buttons/_show_buttons.html.erb
 titleized_name = titleize(resource)
+
+options ||= {}
+
+button_options = {
+  back_button: {
+    show: true,
+    text: "Back to #{titleized_name.pluralize}",
+    path: polymorphic_path(resource.class)
+  },
+  show_button: {
+    show: true,
+    text: "Show this #{titleized_name}",
+    path: resource
+  }
+}
+create_or_update_button = if resource.new_record?
+  {
+    create_button: {
+      show: true,
+      text: "Create #{titleized_name}",
+      path: resource
+    },
+    update_button: {
+      show: false
+    }
+  }
+else
+  {
+    create_button: {
+      show: false
+    },
+    update_button: {
+      show: true,
+      text: "Update this #{titleized_name}",
+      path: resource
+    }
+  }
+end
+button_options.deep_merge!(create_or_update_button)
+button_options.deep_merge!(options) if options.present?
 %>
 <div class="button-group-container">
-  <% if resource.new_record? %>
-    <%= form.submit "Create #{titleized_name}", class: "submit-button" %>
+  <%# Create button %>
+  <% if button_options.dig(:create_button, :show) %>
+    <%= form.submit button_options.dig(:create_button, :text), class: "submit-button" %>
   <% else %>
-    <%= form.submit "Update #{titleized_name}", class: "submit-button" %>
-    <%= link_to "Show this #{titleized_name}", resource, class: "show-button" %>
+    <%# Update button %>
+    <%= form.submit button_options.dig(:update_button, :text), class: "submit-button" %>
   <% end %>
-  <%= link_to "Back to #{titleized_name.pluralize}", back_path, class: "back-button" %>
+  <%# Show button %>
+  <% if button_options.dig(:show_button, :show) %>
+      <%# link_to button_options.dig(:show_button, :text),
+        button_options.dig(:show_button, :path),
+        class: "show-button" %>
+  <% end %>
+  <%# Back button %>
+  <% if button_options.dig(:back_button, :show) %>
+    <%= link_to button_options.dig(:back_button, :text),
+      button_options.dig(:back_button, :path),
+      class: "back-button whitespace-nowrap" %>
+  <% end %>
+  <%= yield if block_given? %>
 </div>

@@ -141,15 +141,34 @@
           class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
     </div>
   </div>
+  <%= render layout: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: user_stat,
+    options: {
+      back_button: {
+        show: true,
+        text: "Go back",
+        path: "javascript:history.back()"
+      },
+      create_button: {
+        text: "Create User Stats"
+      },
+      show_button: {
+        show: false
+      },
+      update_button: {
+        text: "Update User Stats"
+      },
+    }
+  } do %>
+    <% if user_stat.persisted? %>
+      <%= link_to "Delete these user stats",
+        user_stat,
+        class: "delete-button button-size",
+        data: {
+          turbo_method: :delete,
+          turbo_confirm: "Delete these user stats?"
+        } %>
+    <% end %>
+  <% end %>
 <% end %>
-<div class="button-group-container">
-  <%= link_to "Back", "javascript:history.back()", class: "back-button" %>
-
-  <%= button_to "Delete these user stats", user_stat,
-        method: :delete,
-        disabled: false,
-        class: "delete-button",
-        form_class: "w-full md:w-auto",
-        form: { data: { turbo: false } },
-        onclick: "return confirm('Delete these user stats?')" %>
-</div>

@@ -34,11 +34,11 @@
   }
 
   .delete-button {
-    @apply w-full rounded-lg py-3 px-5 bg-red-600 text-center text-white font-medium cursor-pointer hover:bg-red-500 transition-colors disabled:opacity-50 disabled:cursor-default;
+    @apply rounded-lg py-3 px-5 bg-red-600 text-center text-white font-medium cursor-pointer hover:bg-red-500 transition-colors disabled:opacity-50 disabled:cursor-default;
   }
 
   .delete-button-sm {
-    @apply w-full rounded-lg py-2 px-4 bg-red-600 text-center text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-default;
+    @apply rounded-lg py-2 px-4 bg-red-600 text-center text-white font-medium cursor-pointer disabled:opacity-50 disabled:cursor-default;
   }
 
   .button-group-container {
@@ -46,6 +46,6 @@
   }
 
   .button-file-upload {
-    @apply block w-full file:mr-4 file:py-3 file:px-5 file:rounded-lg file:border-0 file:font-semibold file:bg-amber-600 file:text-white hover:file:bg-amber-500 cursor-pointer;
+    @apply block file:mr-4 file:py-3 file:px-5 file:rounded-lg file:border-0 file:font-semibold file:bg-amber-600 file:text-white hover:file:bg-amber-500 cursor-pointer;
   }
 }
