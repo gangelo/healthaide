@@ -1,5 +1,5 @@
 <% content_for :title, "Import" %>
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+<div data-controller="import" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
   <% end %>
@@ -12,39 +12,55 @@
       <p class="mt-1 text-sm text-gray-500">Upload a JSON file to import user data into the system.</p>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <%= turbo_frame_tag "import_user" do %>
-        <% if @import_user.present? %>
-          <div class="flex items-center bg-blue-50 px-4 py-2 rounded-lg">
-            <span class="text-sm text-gray-700 mr-2">Selected User:</span>
-            <span class="font-medium text-blue-700"><%= render partial: "imports/import_user", locals: { import_user: @import_user } %></span>
-          </div>
+      <span class="text-gray-700 mr-2">Selected User:</span>
+      <span class="font-bold text-gray-900">
+        <%= turbo_frame_tag "import_user", data: { import_target: "importUser" } do %>
+          <%= render partial: "imports/import_user", locals: { import_user: @import_user } %>
         <% end %>
-      <% end %>
+      </span>
     </div>
   </div>
 
   <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden mb-6">
     <div class="px-6 py-6">
       <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4">Upload JSON File</h3>
-      <%= form_tag import_upload_path, method: :post, multipart: true, data: { turbo: true }, class: "flex flex-col sm:flex-row gap-4 items-start" do %>
+      <%= form_tag import_upload_path,
+        method: :post,
+        multipart: true,
+        class: "flex flex-col sm:flex-row gap-4 items-start",
+        data: { turbo: true } do %>
         <div class="flex-grow">
-          <%= file_field_tag :json_file, class: "button-file-upload", accept: ".json" %>
-        </div>
-        <div>
-          <%= button_tag type: :submit, class: "submit-button whitespace-nowrap" do %>
-            <span class="inline-flex items-center">
-              <%= render Icons::UploadComponent.new(css_class: "h-5 w-5 mr-2") %>
-              Upload
-            </span>
-          <% end %>
+          <%= file_field_tag :json_file,
+              class: "button-file-upload",
+              accept: ".json",
+              data: {
+                action: "change->import#fileSelected",
+                import_target: "chooseImportFile"
+              } %>
         </div>
       <% end %>
+      <div>
+        <button type="button"
+          class="submit-button mt-2"
+          data-import-target="importFile"
+          data-action="click->import#submitImportFileForm"
+          onclick="event.preventDefault();">
+          <span class="inline-flex items-center">
+            <%= render Icons::ImportComponent.new(css_class: "h-5 w-5 mr-2") %>
+            Import User Data
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="mb-6">
     <%= turbo_frame_tag "import_form" do %>
-      <%= render partial: "imports/import_form" %>
+      <%= render partial: "imports/import_form",
+            locals: {
+              import_user: @import_user,
+              import_user_json: @import_user_json
+            } %>
     <% end %>
   </div>
 
