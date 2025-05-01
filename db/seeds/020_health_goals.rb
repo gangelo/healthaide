@@ -1,6 +1,7 @@
 puts "Creating health goals..."
 
 health_goal_names = [
+  "Cardiovascular health",
   "Balance blood sugar",
   "Balance electrolytes",
   "Balance hormones",

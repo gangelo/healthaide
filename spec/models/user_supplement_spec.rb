@@ -6,6 +6,7 @@ RSpec.describe UserSupplement, type: :model do
     it { should validate_presence_of(:form) }
     it { should validate_presence_of(:frequency) }
     it { should validate_length_of(:user_supplement_name).is_at_least(2).is_at_most(64) }
+    it { should validate_length_of(:notes).is_at_most(256) }
     
     describe "uniqueness validation" do
       let(:user) { create(:user) }

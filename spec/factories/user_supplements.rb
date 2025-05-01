@@ -6,6 +6,7 @@ FactoryBot.define do
     dosage { rand(1..1000).to_s }
     dosage_unit { [ "mg", "mcg", "g", "IU" ].sample }
     manufacturer { FFaker::Company.name }
+    notes { FFaker::Lorem.sentence }
     user
 
     trait :with_components do

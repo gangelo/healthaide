@@ -11,7 +11,10 @@ class UserHealthGoalsController < ApplicationController
 
   def new
     @user_health_goal = current_user.user_health_goals.build
-    @health_goals = HealthGoal.ordered.where.not(id: current_user.user_health_goals.pluck(:health_goal_id))
+    
+    # Get all health goals not already associated with the user
+    user_goal_ids = current_user.health_goals.pluck(:id)
+    @health_goals = HealthGoal.ordered.where.not(id: user_goal_ids)
 
     # Handle AJAX search requests
     if request.xhr? && params[:search].present?

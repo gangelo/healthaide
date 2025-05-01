@@ -81,11 +81,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
     t.integer "user_id", null: false
     t.integer "food_id", null: false
     t.boolean "available", default: true, null: false
-    t.boolean "favorite", default: false
+    t.boolean "favorite", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["food_id"], name: "index_user_foods_on_food_id"
     t.index ["user_id", "available"], name: "index_user_foods_on_user_id_and_available"
+    t.index ["user_id", "favorite"], name: "index_user_foods_on_user_id_and_favorite"
     t.index ["user_id", "food_id"], name: "index_user_foods_on_user_id_and_food_id", unique: true
     t.index ["user_id"], name: "index_user_foods_on_user_id"
   end
@@ -139,6 +140,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
     t.string "dosage"
     t.string "dosage_unit"
     t.string "manufacturer"
+    t.string "notes", limit: 256
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

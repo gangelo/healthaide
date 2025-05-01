@@ -4,9 +4,14 @@ class UserSupplement < ApplicationRecord
   belongs_to :user
 
   has_many :supplement_components, dependent: :destroy
+  accepts_nested_attributes_for :supplement_components, allow_destroy: true, reject_if: :all_blank
+
   has_many :supplement_health_conditions, dependent: :destroy
+  accepts_nested_attributes_for :supplement_health_conditions, allow_destroy: true
   has_many :health_conditions, through: :supplement_health_conditions
+
   has_many :supplement_health_goals, dependent: :destroy
+  accepts_nested_attributes_for :supplement_health_goals, allow_destroy: true
   has_many :health_goals, through: :supplement_health_goals
 
   enum :form, {
@@ -28,6 +33,7 @@ class UserSupplement < ApplicationRecord
 enum :frequency, {
   as_needed: 10,
   daily: 20,
+  every_other_day: 25,
   four_times_daily: 30,
   monthly: 40,
   three_times_daily: 50,
@@ -47,6 +53,7 @@ enum :frequency, {
     }
   validates :form, presence: true
   validates :frequency, presence: true
+  validates :notes, length: { maximum: 256 }, allow_blank: true
 
   scope :ordered, -> do
       order(:user_supplement_name)

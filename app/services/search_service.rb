@@ -8,7 +8,8 @@ class SearchService
   # @return [ActiveRecord::Relation] filtered health conditions
   def self.search_health_conditions(user, search_term = nil)
     # Get the base query for conditions not already selected by this user
-    conditions = HealthCondition.ordered.where.not(id: user.user_health_conditions.pluck(:health_condition_id))
+    user_condition_ids = user.health_conditions.pluck(:id)
+    conditions = HealthCondition.ordered.where.not(id: user_condition_ids)
 
     normalized_search_term = normalize_search_term(search_term)
     return conditions if normalized_search_term.blank?
@@ -22,7 +23,8 @@ class SearchService
   # @return [ActiveRecord::Relation] filtered health goals
   def self.search_health_goals(user, search_term = nil)
     # Get the base query for goals not already selected by this user
-    goals = HealthGoal.ordered.where.not(id: user.user_health_goals.pluck(:health_goal_id))
+    user_goal_ids = user.health_goals.pluck(:id)
+    goals = HealthGoal.ordered.where.not(id: user_goal_ids)
 
     normalized_search_term = normalize_search_term(search_term)
     return goals if normalized_search_term.blank?

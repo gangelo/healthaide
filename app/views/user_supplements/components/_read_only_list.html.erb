@@ -1,0 +1,27 @@
+<div class="overflow-x-auto">
+  <!-- Use the HeaderComponent for grid headers -->
+  <%= render Grids::HeaderComponent.new(columns: %w[name amount unit]) %>
+
+  <!-- Grid rows -->
+  <div class="bg-white divide-y divide-gray-200 rounded-b-lg">
+    <% if user_supplement.supplement_components.any? %>
+      <% user_supplement.supplement_components.each do |component| %>
+        <div class="grid grid-cols-3 hover:bg-gray-50">
+          <div class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <%= component.supplement_component_name %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= component.amount %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= component.unit %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="grid grid-cols-1 py-4 text-center text-gray-500">
+        This supplement has no components added yet.
+      </div>
+    <% end %>
+  </div>
+</div>
