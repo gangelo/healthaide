@@ -123,7 +123,11 @@ module Imports
 
         UserStat.find_or_initialize_by(user_id: @import_user.id).tap do |s|
           if s.new_record?
-            filter_user_stat(user_stats).each do |key, value|
+            filtered_user_stats = filter_user_stat(user_stats)
+            Rails.logger.debug "Filtered user stats: '#{filtered_user_stats}' for user: #{@import_user.username}..."
+
+            filtered_user_stats.each do |key, value|
+              Rails.logger.debug "Importing user stat: '#{key}' with value: '#{value}' for user: #{@import_user.username}..."
               s.public_send("#{key}=", value)
             end
             s.save!
@@ -139,7 +143,7 @@ module Imports
 
     def filter_user_stat(user_stats)
       user_stats.reject do |key, value|
-        %i[created_at id user_id updated_at].include?(key)
+        %i[created_at id user_id updated_at].include?(key.to_sym)
       end
     end
   end

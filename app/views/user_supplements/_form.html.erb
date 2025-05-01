@@ -35,9 +35,9 @@
     <%= form.text_field :dosage_unit, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "mg" %>
   </div>
 
-  <%# supplement components %>
+  <%# supplement detail %>
   <div class="my-5">
-    <h2>Components</h2>
+    <h2>Supplement Detail</h2>
     <%= render partial: "user_supplements/components/list", locals: { user_supplement: user_supplement } %>
   </div>
 

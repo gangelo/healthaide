@@ -6,6 +6,25 @@ RSpec.describe UserSupplement, type: :model do
     it { should validate_presence_of(:form) }
     it { should validate_presence_of(:frequency) }
     it { should validate_length_of(:user_supplement_name).is_at_least(2).is_at_most(64) }
+    
+    describe "uniqueness validation" do
+      let(:user) { create(:user) }
+      
+      it "allows the same name for different users" do
+        create(:user_supplement, user_supplement_name: "Vitamin D", user: create(:user))
+        duplicate_for_different_user = build(:user_supplement, user_supplement_name: "Vitamin D", user: create(:user))
+        
+        expect(duplicate_for_different_user).to be_valid
+      end
+      
+      it "does not allow duplicate names for the same user" do
+        create(:user_supplement, user_supplement_name: "Vitamin D", user: user)
+        duplicate_for_same_user = build(:user_supplement, user_supplement_name: "vitamin d", user: user)
+        
+        expect(duplicate_for_same_user).not_to be_valid
+        expect(duplicate_for_same_user.errors[:user_supplement_name]).to include("has already been taken")
+      end
+    end
   end
   
   describe "associations" do

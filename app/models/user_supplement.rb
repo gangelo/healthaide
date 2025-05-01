@@ -39,7 +39,7 @@ enum :frequency, {
 
   validates :user_supplement_name,
     presence: true,
-    uniqueness: true,
+    uniqueness: { scope: :user_id },
     length: { minimum: 2, maximum: 64 },
     format: {
       with: VALID_NAME_REGEX,
