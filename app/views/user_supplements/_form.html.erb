@@ -122,6 +122,10 @@
   <%= render partial: "shared/forms/form_buttons", locals: {
     form: form,
     resource: user_supplement,
-    back_path: user_supplements_path
+    options: {
+      create_button: {
+        turbo: false
+      }
+    }
   } %>
 <% end %>

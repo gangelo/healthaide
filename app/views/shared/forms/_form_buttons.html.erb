@@ -6,6 +6,7 @@ options ||= {}
 
 button_options = {
   back_button: {
+    turbo: true,
     show: true,
     text: "Back to #{titleized_name.pluralize}",
     path: polymorphic_path(resource.class)
@@ -19,6 +20,7 @@ button_options = {
 create_or_update_button = if resource.new_record?
   {
     create_button: {
+      turbo: true,
       show: true,
       text: "Create #{titleized_name}",
       path: resource
@@ -33,6 +35,7 @@ else
       show: false
     },
     update_button: {
+      turbo: true,
       show: true,
       text: "Update this #{titleized_name}",
       path: resource
@@ -45,10 +48,14 @@ button_options.deep_merge!(options) if options.present?
 <div class="button-group-container">
   <%# Create button %>
   <% if button_options.dig(:create_button, :show) %>
-    <%= form.submit button_options.dig(:create_button, :text), class: "submit-button" %>
+    <%= form.submit button_options.dig(:create_button, :text),
+                    class: "submit-button",
+                    data: { turbo: button_options.dig(:create_button, :turbo) } %>
   <% else %>
     <%# Update button %>
-    <%= form.submit button_options.dig(:update_button, :text), class: "submit-button" %>
+    <%= form.submit button_options.dig(:update_button, :text),
+                    data: { turbo: button_options.dig(:update_button, :turbo) },
+                    class: "submit-button" %>
   <% end %>
   <%# Show button %>
   <% if button_options.dig(:show_button, :show) %>
