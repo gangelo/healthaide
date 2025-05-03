@@ -1,4 +1,5 @@
 <%
+  # TODO: Refactor this to look like app/views/shared/forms/_form_buttons.html.erb
 titleized_name = titleize(resource).downcase
 include_delete_button = include_delete_button.present? ? include_delete_button : true
 edit_path = polymorphic_path([:edit, resource])

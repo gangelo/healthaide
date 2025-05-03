@@ -1,0 +1,25 @@
+<div class="whitespace-pre-line font-mono text-sm p-4 bg-gray-100 rounded-lg border border-gray-300">
+<strong>CREATE A MEAL PLAN USING MY AVAILABLE FOODS THAT SPECIFICALLY SUPPORTS MY HEALTH NEEDS:</strong>
+
+<strong>AVAILABLE FOODS:</strong>
+<% if meal_prompt.foods.any? %>
+<% meal_prompt.foods.each do |food| %>- <%= food.food_name %>
+<% end %>
+<% else %>[No foods selected]
+<% end %>
+
+<%= render "meal_prompts/meal_prompt/health_profile", meal_prompt: meal_prompt %>
+<%= render "meal_prompts/meal_prompt/user_supplements", user_supplements: meal_prompt.supplements %>
+
+<strong>HEALTH PRIORITIES (MUST ADDRESS THESE):</strong>
+<% if meal_prompt.health_goals.any? %>
+<% meal_prompt.health_goals.each_with_index do |goal, index| %><%= index + 1 %>. <%= goal.health_goal_name %>
+<% end %>
+<% else %>[No health goals selected]
+<% end %>
+
+<strong>PROVIDE [<%= meal_prompt.meals_count %>] <%= "MEAL".pluralize(meal_prompt.meals_count).upcase %> WITH:</strong>
+- Specific portions (oz/cups), DO NOT PROVIDE RECIPES!!!
+- Which foods to use (<%= meal_prompt.foods.take(3).map(&:food_name).join(", ") %><%= meal_prompt.foods.count > 3 ? ", etc." : "" %>).
+- EXPLAIN HOW each meal directly supports my health conditions and priorities
+</div>

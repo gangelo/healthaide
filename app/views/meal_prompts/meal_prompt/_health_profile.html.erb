@@ -1,0 +1,17 @@
+<% if meal_prompt.include_user_stats? %>
+  <strong>MY HEALTH PROFILE:</strong>
+  <% user_stat = meal_prompt.user.user_stat %>
+  <% if user_stat %>
+    <%
+      sex      = user_stat.sex == "M" ? "Male" : "Female"
+      age      = user_stat.birthday ? ((Date.today - user_stat.birthday) / 365.25).to_i : "N/A"
+      height   = user_stat.height? ? "#{user_stat.height / 12}'#{user_stat.height % 12}\"" : "N/A"
+      weight   = user_stat.muscle_fat_analysis_weight? ? "#{user_stat.muscle_fat_analysis_weight} lbs" : "N/A"
+      bmi      = user_stat.obesity_analysis_bmi? ? "#{user_stat.obesity_analysis_bmi}" : "N/A"
+      body_fat = user_stat.obesity_analysis_percent_body_fat? ? "#{user_stat.obesity_analysis_percent_body_fat}%" : "N/A"
+    %>- <%= sex %>, <%= age %>, <%= height %>, <%= weight %>, BMI <%= bmi %>, <%= body_fat %> body fat
+    <% if meal_prompt.health_conditions.any? %>
+      - Conditions: <%= meal_prompt.health_conditions.map(&:health_condition_name).join(", ") %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -91,4 +91,17 @@ Rails.application.routes.draw do
        post :add_multiple
      end
    end
+   
+   # Meal prompts
+   resources :meal_prompts, only: [:show, :update, :destroy] do
+     collection do
+       get :wizard
+       get :step_1
+       get :step_2
+       get :step_3
+       get :step_4
+       post :update_step
+       post :generate
+     end
+   end
 end

@@ -25,6 +25,8 @@ class User < ApplicationRecord
   has_one :user_stat, dependent: :destroy
   
   has_many :user_supplements, dependent: :destroy
+  
+  has_one :meal_prompt, dependent: :destroy
 
   enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER
 

@@ -80,6 +80,10 @@ enum :frequency, {
     user_supplement_name
   end
 
+  def dosage?
+    dosage.present? && dosage_unit.present?
+  end
+
   def to_export_hash
     {
       user_supplement: attributes.symbolize_keys.tap do |hash|

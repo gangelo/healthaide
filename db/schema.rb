@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_02_010831) do
   create_table "food_food_qualifiers", force: :cascade do |t|
     t.integer "food_id", null: false
     t.integer "food_qualifier_id", null: false
@@ -47,6 +47,21 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["health_goal_name"], name: "index_health_goals_on_health_goal_name", unique: true
+  end
+
+  create_table "meal_prompts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.boolean "include_user_stats", default: true
+    t.text "food_ids", default: "[]"
+    t.text "health_condition_ids", default: "[]"
+    t.text "health_goal_ids", default: "[]"
+    t.text "supplement_ids", default: "[]"
+    t.integer "meals_count", default: 3
+    t.text "generated_text"
+    t.datetime "generated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_meal_prompts_on_user_id", unique: true
   end
 
   create_table "supplement_components", force: :cascade do |t|
@@ -180,6 +195,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_135947) do
 
   add_foreign_key "food_food_qualifiers", "food_qualifiers"
   add_foreign_key "food_food_qualifiers", "foods"
+  add_foreign_key "meal_prompts", "users"
   add_foreign_key "supplement_components", "user_supplements"
   add_foreign_key "supplement_health_conditions", "health_conditions"
   add_foreign_key "supplement_health_conditions", "user_supplements"
