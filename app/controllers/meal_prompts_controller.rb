@@ -82,8 +82,16 @@ class MealPromptsController < ApplicationController
       prev_step = current_step - 1
 
       if prev_step >= 1
-        redirect_to public_send("step_#{prev_step}_meal_prompts_path")
-        return
+        return case prev_step
+               when 1
+                 redirect_to step_1_meal_prompts_path
+               when 2
+                 redirect_to step_2_meal_prompts_path
+               when 3
+                 redirect_to step_3_meal_prompts_path
+               else
+                 redirect_to step_1_meal_prompts_path
+               end
       end
     end
 
@@ -92,16 +100,19 @@ class MealPromptsController < ApplicationController
 
     # Otherwise redirect to the next step
     # Make sure next_step is a valid step number
-    redirect_path = if next_step.to_i.between?(1, 4)
-      send("step_#{next_step}_meal_prompts_path")
+    case next_step.to_i
+    when 1
+      redirect_to step_1_meal_prompts_path, notice: "Meal prompt updated successfully."
+    when 2
+      redirect_to step_2_meal_prompts_path, notice: "Meal prompt updated successfully."
+    when 3
+      redirect_to step_3_meal_prompts_path, notice: "Meal prompt updated successfully."
+    when 4
+      redirect_to step_4_meal_prompts_path, notice: "Meal prompt updated successfully."
     else
       # Default to step 1 if invalid step
-      step_1_meal_prompts_path
+      redirect_to step_1_meal_prompts_path, notice: "Meal prompt updated successfully."
     end
-
-    Rails.logger.debug "MealPromptsController redirect_path: #{redirect_path}"
-
-    redirect_to redirect_path, notice: "Meal prompt updated successfully."
   end
 
   # POST /meal_prompts/generate
