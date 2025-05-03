@@ -14,11 +14,16 @@
 
     <%= turbo_frame_tag "new_qualifier" do %>
       <%= form_with url: find_or_create_food_qualifiers_path, method: :post, class: "flex gap-4" do |form| %>
-        <%= text_input form, :qualifier_name,
-                      placeholder: "Enter a new qualifier name",
-                      required: true,
-                      error: flash[:error] %>
-        <%= success_button "Create & Add", type: :submit %>
+        <div class="form-field flex-grow">
+          <%= form.text_field :qualifier_name,
+                        class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 #{flash[:error].present? ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : ''}",
+                        placeholder: "Enter a new qualifier name",
+                        required: true %>
+          <% if flash[:error].present? %>
+            <p class="mt-2 text-sm text-red-600"><%= flash[:error] %></p>
+          <% end %>
+        </div>
+        <%= form.submit "Create & Add", class: "add-selected-button" %>
         <%= form.hidden_field :food_id, value: @food.id %>
       <% end %>
     <% end %>
