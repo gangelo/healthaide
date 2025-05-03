@@ -5,9 +5,9 @@ class Grids::HeaderComponent < ViewComponent::Base
     @columns = columns_hash_for(columns[:columns])
   end
 
-  private
-
   attr_reader :columns
+
+  private
 
   # Converts an array of column definitions into a hash.
   # @param columns [Array<Hash, Symbol>] An array where each element is either:
