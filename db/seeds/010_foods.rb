@@ -31,10 +31,13 @@ FOODS_WITH_QUALIFIERS = {
   "Sardine"           => { food_qualifiers: [ "Canned, olive oil", "Canned, spring water", "Wild caught" ] },
   "Seaweed"           => { food_qualifiers: [ "Fresh", "Dried", "Organic" ] },
   "Spinach"           => { food_qualifiers: [ "Fresh", "Frozen", "Organic" ] },
+  "Squash, green"     => { food_qualifiers: [ "Fresh", "Organic" ] },
+  "Squash, yellow"    => { food_qualifiers: [ "Fresh", "Organic" ] },
   "Sweet potato"      => { food_qualifiers: [ "Fresh", "Organic" ] },
   "Tuna"              => { food_qualifiers: [ "Fresh", "Frozen", "Canned, olive oil", "Canned, spring water", "Wild caught" ] },
   "Turkey"            => { food_qualifiers: [ "Breast", "Ground", "Organic", "Fresh", "Frozen", "Sliced" ] },
   "Turmeric"          => { food_qualifiers: [ "Fresh", "Organic" ] },
+  "Venison"           => { food_qualifiers: [ "Ground", "Organic" ] },
   "White potato"      => { food_qualifiers: [ "Fresh", "Organic" ] }
 }.freeze
 
