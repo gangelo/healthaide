@@ -11,7 +11,7 @@ class UserHealthGoalsController < ApplicationController
 
   def new
     @user_health_goal = current_user.user_health_goals.build
-    
+
     # Get all health goals not already associated with the user
     user_goal_ids = current_user.health_goals.pluck(:id)
     @health_goals = HealthGoal.ordered.where.not(id: user_goal_ids)

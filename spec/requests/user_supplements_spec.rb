@@ -32,7 +32,7 @@ RSpec.describe "UserSupplements", type: :request do
       expect {
         post user_supplements_path, params: { user_supplement: valid_attributes }
       }.to change(UserSupplement, :count).by(1)
-      
+
       expect(response).to redirect_to(user_supplement_path(UserSupplement.last))
     end
   end
@@ -46,10 +46,10 @@ RSpec.describe "UserSupplements", type: :request do
 
   describe "PATCH /update" do
     it "updates the user supplement" do
-      patch user_supplement_path(user_supplement), params: { 
+      patch user_supplement_path(user_supplement), params: {
         user_supplement: { user_supplement_name: "Updated Supplement" }
       }
-      
+
       expect(response).to redirect_to(user_supplement_path(user_supplement))
       # The name_normalizable concern will normalize the name
       expect(user_supplement.reload.user_supplement_name).to eq("Updated supplement")
@@ -59,11 +59,11 @@ RSpec.describe "UserSupplements", type: :request do
   describe "DELETE /destroy" do
     it "destroys the user supplement" do
       delete_supplement = create(:user_supplement, user: user)
-      
+
       expect {
         delete user_supplement_path(delete_supplement)
       }.to change(UserSupplement, :count).by(-1)
-      
+
       expect(response).to redirect_to(user_supplements_path)
     end
   end

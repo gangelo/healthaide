@@ -21,11 +21,11 @@ class User < ApplicationRecord
 
   has_many :user_health_goals, dependent: :destroy
   has_many :health_goals, through: :user_health_goals
-  
+
   has_one :user_stat, dependent: :destroy
-  
+
   has_many :user_supplements, dependent: :destroy
-  
+
   has_one :meal_prompt, dependent: :destroy
 
   enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER

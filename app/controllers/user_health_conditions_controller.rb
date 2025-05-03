@@ -12,7 +12,7 @@ class UserHealthConditionsController < ApplicationController
 
   def new
     @user_health_condition = current_user.user_health_conditions.build
-    
+
     # Get all health conditions not already associated with the user
     user_condition_ids = current_user.health_conditions.pluck(:id)
     @health_conditions = HealthCondition.ordered.where.not(id: user_condition_ids)

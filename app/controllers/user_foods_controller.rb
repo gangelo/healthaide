@@ -102,7 +102,7 @@ class UserFoodsController < ApplicationController
   def toggle_available
     # Toggle the available status
     @user_food.update(available: !@user_food.available)
-    
+
     respond_to do |format|
       format.turbo_stream do
         # Return a simple success status for AJAX requests
@@ -204,8 +204,8 @@ class UserFoodsController < ApplicationController
       food_food_qualifiers_attributes: [ :id, :food_qualifier_id, :_destroy ]
     )
   end
-  
+
   def user_food_params
-    params.require(:user_food).permit(:food_id, :available, food_attributes: [:food_name])
+    params.require(:user_food).permit(:food_id, :available, food_attributes: [ :food_name ])
   end
 end
