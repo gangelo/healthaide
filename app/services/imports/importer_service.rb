@@ -114,6 +114,8 @@ module Imports
     end
 
     def import_user_supplements
+      # Skip supplements import for now as it's not implemented yet
+      @message = nil
     end
 
     def import_user_stats
@@ -121,16 +123,18 @@ module Imports
         user_stats = @import_user_hash.dig(:user, :user_stat)
         Rails.logger.info "Importing user stats for user: #{@import_user.username}..."
 
-        UserStat.find_or_initialize_by(user_id: @import_user.id).tap do |s|
-          if s.new_record?
-            filtered_user_stats = filter_user_stat(user_stats)
-            Rails.logger.debug "Filtered user stats: '#{filtered_user_stats}' for user: #{@import_user.username}..."
+        if user_stats.present?
+          UserStat.find_or_initialize_by(user_id: @import_user.id).tap do |s|
+            if s.new_record?
+              filtered_user_stats = filter_user_stat(user_stats)
+              Rails.logger.debug "Filtered user stats: '#{filtered_user_stats}' for user: #{@import_user.username}..."
 
-            filtered_user_stats.each do |key, value|
-              Rails.logger.debug "Importing user stat: '#{key}' with value: '#{value}' for user: #{@import_user.username}..."
-              s.public_send("#{key}=", value)
+              filtered_user_stats.each do |key, value|
+                Rails.logger.debug "Importing user stat: '#{key}' with value: '#{value}' for user: #{@import_user.username}..."
+                s.public_send("#{key}=", value)
+              end
+              s.save!
             end
-            s.save!
           end
         end
         @message = nil
@@ -142,6 +146,8 @@ module Imports
     end
 
     def filter_user_stat(user_stats)
+      return {} unless user_stats.is_a?(Hash)
+      
       user_stats.reject do |key, value|
         %i[created_at id user_id updated_at].include?(key.to_sym)
       end

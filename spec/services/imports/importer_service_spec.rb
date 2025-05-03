@@ -92,7 +92,7 @@ describe Imports::ImporterService do
 
         # Compare everything except the :updated_at timestamp; this ensures that the new user_food was created
         # and the existing user_foods were not deleted.
-        expect(expected_user_foods.map { it[0..2] }).to match(actual_user_foods.map { it[0..2] })
+        expect(expected_user_foods.map { |it| it[0..2] }).to match(actual_user_foods.map { |it| it[0..2] })
 
         # Check to see that the existing user_foods were not updated (we're comparing :updated_at times).
         expect(expected_user_foods[0]).to eq(actual_user_foods[0])

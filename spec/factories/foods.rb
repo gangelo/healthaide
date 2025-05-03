@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :food do
-    sequence(:food_name) { |n| "#{FFaker::FoodPL.food} #{n}" }
+    sequence(:food_name) { |n| "Test Food #{n}" }
 
     trait :with_food_qualifiers do
       transient do

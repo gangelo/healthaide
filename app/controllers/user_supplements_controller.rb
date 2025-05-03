@@ -52,7 +52,7 @@ class UserSupplementsController < ApplicationController
 
         @user_supplement.reload
 
-        format.html { redirect_to edit_user_supplement_path(@user_supplement), notice: "Supplement was successfully updated." }
+        format.html { redirect_to user_supplement_path(@user_supplement), notice: "Supplement was successfully updated." }
         format.turbo_stream do
           flash.now[:notice] = "Supplement was successfully updated."
           render turbo_stream: [

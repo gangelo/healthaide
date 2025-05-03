@@ -82,7 +82,7 @@ class MealPromptsController < ApplicationController
       prev_step = current_step - 1
 
       if prev_step >= 1
-        redirect_to send("step_#{prev_step}_meal_prompts_path")
+        redirect_to public_send("step_#{prev_step}_meal_prompts_path")
         return
       end
     end
