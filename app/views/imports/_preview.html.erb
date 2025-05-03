@@ -1,0 +1,13 @@
+<% if import_user_hash.present? %>
+  <div class="rounded-lg bg-gray-50 p-4 border border-gray-200">
+    <div class="overflow-auto max-h-[500px] rounded-lg bg-white shadow-sm p-4 font-mono text-sm">
+      <%= pretty_json(import_user_hash) %>
+    </div>
+  </div>
+<% else %>
+  <div class="flex flex-col items-center justify-center py-12 bg-gray-50 rounded-lg border border-gray-200 text-center">
+    <%= render Icons::DocumentComponent.new(css_class: "mx-auto h-12 w-12 text-gray-400") %>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No data to preview</h3>
+    <p class="mt-1 text-sm text-gray-500">Choose a JSON file to see a preview here.</p>
+  </div>
+<% end %>

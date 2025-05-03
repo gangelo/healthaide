@@ -1,0 +1,11 @@
+<% content_for :title, "Showing health condition" %>
+<div class="mx-auto md:w-2/3 w-full">
+  <%= render "shared/flash_messages" %>
+  <%= render @health_condition %>
+   <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @health_condition
+    }
+  %>
+</div>

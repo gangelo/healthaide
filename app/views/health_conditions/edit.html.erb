@@ -1,0 +1,6 @@
+<% content_for :title, "Editing health condition" %>
+<div class="mx-auto md:w-2/3 w-full">
+  <%= render partial: "shared/active_record_errors", locals: { resource: @health_condition } %>
+  <h1>Editing health condition</h1>
+  <%= render "form", health_condition: @health_condition %>
+</div>

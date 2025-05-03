@@ -1,0 +1,9 @@
+@layer components {
+  .active-record-errors-header {
+    @apply text-lg font-bold;
+  }
+
+  .link {
+    @apply text-blue-600 hover:text-blue-500 underline;
+  }
+}

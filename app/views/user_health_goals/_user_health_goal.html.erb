@@ -1,0 +1,16 @@
+<div id="<%= dom_id user_health_goal %>">
+  <p class="my-5">
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="min-w-0 flex-1">
+        <h1>Health goal</h1>
+      </div>
+    </div>
+    <div class="min-w-0 flex-1 md:mt-2">
+      <%= @user_health_goal.health_goal.health_goal_name %>
+    </div>
+    <div>
+      <h2>Order of importance</h2>
+      <%= @user_health_goal.order_of_importance %>
+    </div>
+  </p>
+</div>

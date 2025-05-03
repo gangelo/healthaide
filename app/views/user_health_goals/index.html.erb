@@ -1,0 +1,27 @@
+<% content_for :title, "My Health Goals" %>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <!-- Flash messages outside of Turbo Frames -->
+  <div id="flash_messages">
+    <%= render "shared/flash_messages" %>
+  </div>
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="min-w-0 flex-1">
+      <h2>My Health Goals</h2>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= link_to new_user_health_goal_path,
+          class: "add-new-button",
+          data: { turbo_frame: "_top" } do %>
+        <%= render partial: "shared/icons/plus_sign" %>
+        Add Health Goals
+      <% end %>
+    </div>
+  </div>
+  <div>
+    <%= render "info" %>
+  </div>
+  <!-- Single content frame -->
+  <%= turbo_frame_tag "main_content" do %>
+    <%= render "user_health_goals/list/list", user_health_goals: @user_health_goals %>
+  <% end %>
+</div>

@@ -1,0 +1,21 @@
+<div  data-controller="info" class="grid mx-auto w-full">
+  <div class="pb-5">
+    <div class="h3 text-base font-semibold text-gray-900">
+      <button type="button"
+              data-action="info#toggle"
+              aria-expanded="false"
+              class="cursor-pointer flex items-center gap-1 ">
+        <%= local_assigns.has_key?(:toggler_text) ? toggler_text : "More Info" %>
+        <%= render "shared/icons/info_toggler", size: 5 do %>
+          data-info-target="icon"
+          aria-expanded="false"
+        <% end %>
+      </button>
+    </div>
+    <div data-info-target="info" class="hidden">
+      <p class="mt-2 max-w-4xl text-sm text-gray-500 border-b border-gray-200 pb-5">
+        <%= yield %>
+      </p>
+    </div>
+  </div>
+</div>

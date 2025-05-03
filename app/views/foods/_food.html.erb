@@ -1,7 +1,39 @@
-<div id="<%= dom_id food %>" class="my-5 space-y-5">
-  <div class="flex justify-between items-center">
-    <h3 class="text-xl font-bold text-gray-800">
-      <%= food.food_name %>
-    </h3>
-  </div>
+<%
+used_count = @food.user_foods.count
+%>
+<div id="<%= dom_id food %>">
+  <p class="my-5">
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="min-w-0 flex-1">
+        <h1>Food</h1>
+      </div>
+      <div class="ml-0 mb-4 md:mt-6">
+        <% if used_count.positive? %>
+          <span class="badge-red-full">
+            In use (<%= used_count %>)
+          </span>
+        <% else %>
+          <span class="badge-green-full">
+            Unused
+          </span>
+        <% end %>
+      </div>
+    </div>
+    <div class="min-w-0 flex-1 md:mt-2">
+      <%= @food.food_name %>
+    </div>
+    <!-- Food qualifiers section -->
+    <div>
+      <h2>Qualifiers</h2>
+      <% if @food.food_qualifiers.any? %>
+        <div class="flex flex-wrap">
+          <% @food.food_qualifiers.ordered.each_with_index do |qualifier, index| %>
+            <span class="badge-red-md mr-2"><%= qualifier.qualifier_name %></span>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No qualifiers for this food.</p>
+      <% end %>
+    </div>
+  </p>
 </div>

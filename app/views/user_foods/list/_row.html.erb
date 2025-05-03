@@ -1,0 +1,5 @@
+<ul role="list">
+  <% user_foods.each_with_index do |user_food, index| %>
+    <%= render partial: "user_foods/list/row_item", locals: { user_food: user_food, index: index } %>
+  <% end %>
+</ul>

@@ -1,44 +1,35 @@
 <h2>Sign up</h2>
-
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
-
   <div class="field mb-4">
-    <%= f.label :first_name %><br />
+    <%= f.label :first_name %><br>
     <%= f.text_field :first_name, autofocus: true, autocomplete: "given-name", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-
   <div class="field mb-4">
-    <%= f.label :last_name %><br />
+    <%= f.label :last_name %><br>
     <%= f.text_field :last_name, autocomplete: "family-name", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-
   <div class="field mb-4">
-    <%= f.label :email %><br />
+    <%= f.label :email %><br>
     <%= f.email_field :email, autocomplete: "email", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-
   <div class="field mb-4">
-    <%= f.label :username %><br />
+    <%= f.label :username %><br>
     <%= f.text_field :username, autocomplete: "username", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-
   <div class="field mb-4">
     <%= f.label :password %>
     <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
+      <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br>
     <%= f.password_field :password, autocomplete: "new-password", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-
   <div class="field mb-4">
-    <%= f.label :password_confirmation %><br />
+    <%= f.label :password_confirmation %><br>
     <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "block w-full rounded-md border-gray-300 shadow-sm mt-1 focus:border-blue-500 focus:ring-blue-500" %>
   </div>
-
   <div class="actions">
     <%= f.submit "Sign up", class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium cursor-pointer" %>
   </div>
 <% end %>
-
 <%= render "devise/shared/links" %>

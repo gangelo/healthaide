@@ -1,0 +1,11 @@
+<% content_for :search_field do %>
+  <%= render "user_health_conditions/select/search_field" %>
+<% end %>
+<%# No item_list content needed - it's handled by the search_field partial %>
+<%= render "shared/select/modal_base",
+  item_type: "health_condition",
+  item_type_label: "health condition",
+  title: "Select Health Conditions",
+  back_path: user_health_conditions_path,
+  submit_path: add_multiple_user_health_conditions_path,
+  submit_text: "Add Selected Health Conditions" %>

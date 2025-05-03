@@ -1,0 +1,11 @@
+<% if import_user.present? %>
+  <%= form_with url: import_path,
+          method: :post,
+          data: {
+            turbo: true,
+            import_target: "importFileForm"
+          } do |form| %>
+    <%= form.hidden_field :import_user_id, value: import_user.id %>
+    <%= form.hidden_field :import_user_json, value: import_user_json %>
+  <% end %>
+<% end %>

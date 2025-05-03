@@ -1,0 +1,174 @@
+<%= form_with(model: user_stat, class: "contents") do |form| %>
+  <%= render partial: "shared/active_record_errors", locals: { resource: user_stat } %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="my-0">
+      <%= form.label :birthday, "Birthday", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.date_field :birthday,
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500",
+          max: Date.today %>
+    </div>
+
+    <div class="my-0">
+      <%= form.label :sex, "Gender", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.select :sex,
+          [["", nil], ["Male", "M"], ["Female", "F"]],
+          {},
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :height, "Height (inches)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :height,
+          min: 48, max: 96, step: 0.5,
+          placeholder: "48-96 inches",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-semibold mt-8 mb-4 border-b pb-2">Muscle & Fat Analysis</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="my-5">
+      <%= form.label :muscle_fat_analysis_weight, "Weight (lbs)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :muscle_fat_analysis_weight,
+          min: 50.0, max: 500.0, step: 0.1,
+          placeholder: "50.0-500.0 lbs",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :muscle_fat_analysis_skeletal_muscle_mass, "Skeletal Muscle Mass (lbs)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :muscle_fat_analysis_skeletal_muscle_mass,
+          min: 0, step: 0.1,
+          placeholder: "Skeletal muscle mass in lbs",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :muscle_fat_analysis_body_fat_mass, "Body Fat Mass (lbs)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :muscle_fat_analysis_body_fat_mass,
+          min: 0, step: 0.1,
+          placeholder: "Body fat mass in lbs",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :muscle_fat_analysis_cid, "CID Classification", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.select :muscle_fat_analysis_cid,
+          [["", nil],
+          ["Above average D-type", "Above average D-type"],
+          ["Average D-type", "Average D-type"],
+          ["Below average D-type", "Below average D-type"],
+          ["Above average C-type", "Above average C-type"],
+          ["Average C-type", "Average C-type"],
+          ["Below average C-type", "Below average C-type"],
+          ["Above average B-type", "Above average B-type"],
+          ["Average B-type", "Average B-type"],
+          ["Below average B-type", "Below average B-type"],
+          ["Above average A-type", "Above average A-type"],
+          ["Average A-type", "Average A-type"],
+          ["Below average A-type", "Below average A-type"]],
+          {},
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-semibold mt-8 mb-4 border-b pb-2">Obesity Analysis</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="my-5">
+      <%= form.label :obesity_analysis_bmi, "BMI (kg/m²)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :obesity_analysis_bmi,
+          min: 0, step: 0.01,
+          placeholder: "Body Mass Index",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :obesity_analysis_percent_body_fat, "Percent Body Fat (%)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :obesity_analysis_percent_body_fat,
+          min: 0, max: 100, step: 0.1,
+          placeholder: "Percent body fat (0-100%)",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-semibold mt-8 mb-4 border-b pb-2">Abdominal Obesity Analysis</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="my-5">
+      <%= form.label :abdominal_obesity_analysis_waist_hip_ratio, "Waist-Hip Ratio", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :abdominal_obesity_analysis_waist_hip_ratio,
+          min: 0.5, max: 1.5, step: 0.01,
+          placeholder: "Example: 0.84",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :abdominal_obesity_analysis_visceral_fat_level, "Visceral Fat Level", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :abdominal_obesity_analysis_visceral_fat_level,
+          min: 0, max: 30, step: 1,
+          placeholder: "Visceral fat level (0-30)",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-semibold mt-8 mb-4 border-b pb-2">Additional Measurements</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="my-5">
+      <%= form.label :comprehensive_analysis_basal_metabolic_rate, "Basal Metabolic Rate (kJ)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :comprehensive_analysis_basal_metabolic_rate,
+          min: 0, step: 0.1,
+          placeholder: "Basal metabolic rate (kJ)",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :body_balance_evaluation_upper_lower, "Body Balance (Upper/Lower)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.select :body_balance_evaluation_upper_lower,
+          [["", nil],
+           ["Balanced", "Balanced"],
+           ["Slightly unbalanced", "Slightly unbalanced"],
+           ["Moderately unbalanced", "Moderately unbalanced"],
+           ["Significantly unbalanced", "Significantly unbalanced"]],
+          {},
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+
+    <div class="my-5">
+      <%= form.label :body_composition_analysis_soft_lean_mass, "Soft Lean Mass (lbs)", class: "block font-medium text-gray-700 mb-1" %>
+      <%= form.number_field :body_composition_analysis_soft_lean_mass,
+          min: 0, step: 0.1,
+          placeholder: "Soft lean mass (lbs)",
+          class: "block shadow-sm rounded-md border border-gray-300 px-3 py-2 w-full focus:border-blue-500 focus:ring-blue-500" %>
+    </div>
+  </div>
+  <%= render layout: "shared/forms/form_buttons", locals: {
+    form: form,
+    resource: user_stat,
+    options: {
+      back_button: {
+        show: true,
+        text: "Go back",
+        path: "javascript:history.back()"
+      },
+      create_button: {
+        text: "Create User Stats"
+      },
+      show_button: {
+        show: false
+      },
+      update_button: {
+        text: "Update User Stats"
+      },
+    }
+  } do %>
+    <% if user_stat.persisted? %>
+      <%= link_to "Delete these user stats",
+        user_stat,
+        class: "delete-button button-size",
+        data: {
+          turbo_method: :delete,
+          turbo_confirm: "Delete these user stats?"
+        } %>
+    <% end %>
+  <% end %>
+<% end %>

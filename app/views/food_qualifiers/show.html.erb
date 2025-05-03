@@ -1,18 +1,11 @@
 <% content_for :title, "Showing food qualifier" %>
-
-<div class="md:w-2/3 w-full">
-  <%= render "shared/flash" %>
-
-  <h1 class="font-bold text-4xl">Showing food qualifier</h1>
-
+<div class="mx-auto md:w-2/3 w-full">
+  <%= render "shared/flash_messages" %>
   <%= render @food_qualifier %>
-
-  <%= link_to "Edit this food qualifier", edit_food_qualifier_path(@food_qualifier), class: "mt-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to food qualifiers", food_qualifiers_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <div class="inline-block ml-2">
-    <%= button_to "Destroy this food qualifier", @food_qualifier, method: :delete,
-        class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-        form_class: "inline-flex",
-        data: { turbo_confirm: "Are you sure?" } %>
-  </div>
+  <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @food_qualifier
+    }
+  %>
 </div>

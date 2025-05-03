@@ -1,0 +1,7 @@
+<% content_for :title, "New supplement" %>
+<div class="mx-auto md:w-2/3 w-full">
+  <h1>New Supplement</h1>
+  <%= turbo_frame_tag "main_content" do %>
+    <%= render "form", user_supplement: @user_supplement %>
+  <% end %>
+</div>

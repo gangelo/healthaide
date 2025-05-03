@@ -20,34 +20,30 @@
     error: String - Error message to display (optional)
     class: String - Additional CSS classes (optional)
 %>
-
 <div class="form-field">
   <% if local_assigns[:label].present? %>
     <%= form.label field, label, class: "block text-sm font-medium leading-6 text-gray-900" %>
   <% end %>
-
   <div class="mt-2">
     <%= case local_assigns[:type]
-    when :textarea
-      form.text_area field,
-                    class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 #{error ? 'ring-red-300 focus:ring-red-500' : ''}",
-                    placeholder: local_assigns[:placeholder]
-    when :select
-      form.select field,
-                 local_assigns[:options] || [],
-                 { include_blank: true },
-                 class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 #{error ? 'ring-red-300 focus:ring-red-500' : ''}"
-    else
-      form.text_field field,
-                     class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 #{error ? 'ring-red-300 focus:ring-red-500' : ''}",
-                     placeholder: local_assigns[:placeholder]
-    end %>
+        when :textarea
+          form.text_area field,
+            class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 #{error ? "ring-red-300 focus:ring-red-500" : ""}",
+            placeholder: local_assigns[:placeholder]
+        when :select
+          form.select field,
+            local_assigns[:options] || [],
+            { include_blank: true },
+            class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 #{error ? "ring-red-300 focus:ring-red-500" : ""}"
+        else
+          form.text_field field,
+            class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 #{error ? "ring-red-300 focus:ring-red-500" : ""}",
+            placeholder: local_assigns[:placeholder]
+        end %>
   </div>
-
   <% if local_assigns[:hint].present? %>
     <p class="mt-2 text-sm text-gray-500"><%= hint %></p>
   <% end %>
-
   <% if error %>
     <p class="mt-2 text-sm text-red-600"><%= error %></p>
   <% end %>

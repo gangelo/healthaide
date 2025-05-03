@@ -1,0 +1,78 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold">Create Meal Plan - Step <%= current_step %> of 4</h1>
+    <p class="text-gray-600"><%= step_description %></p>
+  </div>
+
+  <%# Wizard progress indicator %>
+  <div class="flex justify-between mb-8 relative">
+    <% (1..4).each do |step| %>
+      <div class="flex-1 text-center relative z-10">
+        <div class="<%= step < current_step ? 'bg-green-500' : (step == current_step ? 'bg-blue-500' : 'bg-gray-300') %> w-8 h-8 rounded-full mx-auto flex items-center justify-center text-white text-sm font-medium">
+          <%= step %>
+        </div>
+        <div class="mt-2 text-xs font-medium <%= step == current_step ? 'text-blue-600' : (step < current_step ? 'text-green-600' : 'text-gray-500') %>">
+          <% case step %>
+          <% when 1 %>
+            Foods
+          <% when 2 %>
+            Health Conditions
+          <% when 3 %>
+            Health Goals
+          <% when 4 %>
+            Options
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Progress bar %>
+    <div class="absolute top-4 left-0 w-full h-0.5">
+      <div class="absolute inset-0 h-full bg-gray-300"></div>
+      <div class="absolute inset-0 w-1/4 h-full bg-green-500" style="width: <%= ((current_step - 1) * 33.33).to_i %>%;"></div>
+    </div>
+  </div>
+
+  <%= form_with model: @meal_prompt, url: update_step_meal_prompts_path, method: :post, data: { controller: "wizard-steps" } do |f| %>
+    <%# All steps in a single form, only showing current step %>
+    <div class="bg-white rounded shadow p-6 mb-6">
+      <div data-wizard-steps-target="step" data-step="1" class="<%= current_step == 1 ? '' : 'hidden' %>">
+        <%= render "step_1_content", f: f %>
+      </div>
+
+      <div data-wizard-steps-target="step" data-step="2" class="<%= current_step == 2 ? '' : 'hidden' %>">
+        <%= render "step_2_content", f: f %>
+      </div>
+
+      <div data-wizard-steps-target="step" data-step="3" class="<%= current_step == 3 ? '' : 'hidden' %>">
+        <%= render "step_3_content", f: f %>
+      </div>
+
+      <div data-wizard-steps-target="step" data-step="4" class="<%= current_step == 4 ? '' : 'hidden' %>">
+        <%= render "step_4_content", f: f %>
+      </div>
+    </div>
+
+    <%= hidden_field_tag :next_step, next_step %>
+    <%= hidden_field_tag :current_step, current_step %>
+
+    <div class="button-group-container justify-between mt-6">
+      <% if current_step > 1 %>
+        <%= button_tag "Back",
+                      type: "submit",
+                      name: "direction",
+                      value: "back",
+                      formnovalidate: true,
+                      class: "back-button" %>
+      <% else %>
+        <%= link_to "Cancel", root_path, class: "back-button" %>
+      <% end %>
+
+      <% if next_step == "finalize" %>
+        <%= f.submit "Complete & Generate", class: "submit-button" %>
+      <% else %>
+        <%= f.submit "Next", class: "submit-button" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

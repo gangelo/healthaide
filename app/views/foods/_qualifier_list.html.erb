@@ -1,7 +1,7 @@
 <div id="qualifier-list">
   <% if food.food_qualifiers.any? %>
     <ul class="qualifier-list mb-6">
-      <% food.food_qualifiers.by_name.each do |qualifier| %>
+      <% food.food_qualifiers.ordered.each do |qualifier| %>
         <li class="flex items-center justify-between p-2 mb-2 border rounded">
           <span class="font-medium"><%= qualifier.qualifier_name %></span>
           <%= button_to "Remove", remove_qualifier_food_path(food, qualifier_id: qualifier.id),

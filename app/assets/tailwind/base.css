@@ -1,4 +1,17 @@
 /* Base styles for common elements */
+html {
+  overflow-y: scroll; /* Force scrollbar to always show to prevent layout shifts */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  width: 100%; /* Ensure body takes full width */
+}
+
+p {
+  @apply mt-4;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;

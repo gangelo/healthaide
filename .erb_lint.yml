@@ -1,0 +1,39 @@
+---
+EnableDefaultLinters: true
+glob: "**/*.html{+*,}.erb"
+
+linters:
+  # Configure RuboCop to not enforce single quotes
+  Rubocop:
+    enabled: true
+    rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+      # Disable string literals enforcement or make it use double quotes
+      Style/StringLiterals:
+        Enabled: false
+
+      # Recommended disables for ERB files
+      Layout/InitialIndentation:
+        Enabled: false
+      Layout/TrailingEmptyLines:
+        Enabled: false
+      Layout/TrailingWhitespace:
+        Enabled: false
+      Naming/FileName:
+        Enabled: false
+      Style/FrozenStringLiteralComment:
+        Enabled: false
+      Lint/UselessAssignment:
+        Enabled: false
+
+  # Other common linters
+  FinalNewline:
+    enabled: true
+
+  SpaceAroundErbTag:
+    enabled: true
+    # Note: This linter doesn't accept custom_style parameter
+
+  NoJavascriptTagHelper:
+    enabled: true

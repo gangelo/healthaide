@@ -1,0 +1,85 @@
+@layer components {
+  .badge {
+    @apply inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 mr-2 mb-2;
+  }
+
+  /* green */
+  .badge-green,
+  .badge-green-sm {
+    @apply inline-flex items-center rounded-md bg-green-50 px-3 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20;
+  }
+
+  .badge-green-md {
+    @apply inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-sm font-medium text-green-700 ring-1 ring-inset ring-green-700/10;
+  }
+
+  .badge-green-full {
+    @apply inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-lg font-medium text-green-700 ring-1 ring-inset ring-green-700/10;
+  }
+
+  /* indigo */
+  .badge-indigo,
+  .badge-indigo-sm {
+    @apply inline-flex items-center rounded-md bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/20;
+  }
+
+  .badge-indigo-md {
+    @apply inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-sm font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10;
+  }
+
+  .badge-indigo-full {
+    @apply inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-lg font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10;
+  }
+
+  /* red */
+  .badge-red,
+  .badge-red-sm {
+    @apply inline-flex items-center rounded-md bg-red-50 px-3 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20;
+  }
+
+  .badge-red-md {
+    @apply inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-sm font-medium text-red-700 ring-1 ring-inset ring-red-700/10;
+  }
+
+  .badge-red-full {
+    @apply inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-lg font-medium text-red-700 ring-1 ring-inset ring-red-700/10;
+  }
+
+  /* amber */
+  .badge-amber,
+  .badge-amber-sm {
+    @apply inline-flex items-center rounded-md bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20;
+  }
+
+  .badge-amber-md {
+    @apply inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-sm font-medium text-amber-700 ring-1 ring-inset ring-amber-700/10;
+  }
+
+  .badge-amber-full {
+    @apply inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-lg font-medium text-amber-700 ring-1 ring-inset ring-amber-700/10;
+  }
+
+  /* purple */
+  .badge-purple,
+  .badge-purple-sm {
+    @apply inline-flex items-center rounded-md bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20;
+  }
+
+  .badge-purple-md {
+    @apply inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-sm font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10;
+  }
+
+  .badge-purple-full {
+    @apply inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-lg font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10;
+  }
+
+  /* qualifier */
+  .badge-qualifier,
+  .badge-qualifier-sm {
+    @apply inline-flex items-center rounded-md bg-gray-800 px-3 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-600/20;
+  }
+
+  .badge-qualifier-md {
+    @apply inline-flex items-center rounded-md bg-gray-800 px-4 py-2 text-xs font-medium text-white ring-1 ring-inset ring-gray-600/20;
+  }
+}

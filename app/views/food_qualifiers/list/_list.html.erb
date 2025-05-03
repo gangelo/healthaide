@@ -1,0 +1,25 @@
+<div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
+  <% if food_qualifiers.any? %>
+    <div class="divide-y divide-gray-100">
+      <!-- Table header -->
+      <%= render(Grids::HeaderComponent.new(columns: [ "qualifier name", actions: { css_class: "text-right" } ])) %>
+      <!-- Table rows -->
+      <%= render partial: "food_qualifiers/list/row", locals: { food_qualifiers: food_qualifiers } %>
+    </div>
+  <% else %>
+    <div class="px-6 py-10 text-center text-gray-500">
+      <div class="flex items-center justify-center">
+        <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
+      </div>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No Food qualifiers added yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding health qualifiers to your list.</p>
+      <div class="mt-6">
+        <%= render partial: "shared/links/add_new_link",
+          locals: {
+            link_path: new_food_qualifier_path,
+            link_text: "Add New Food Qualifier"
+          } %>
+      </div>
+    </div>
+  <% end %>
+</div>

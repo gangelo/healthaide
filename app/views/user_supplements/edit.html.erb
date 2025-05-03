@@ -1,0 +1,10 @@
+<% content_for :title, "Editing user supplement" %>
+<div class="mx-auto md:w-3/4 w-full">
+  <%= turbo_frame_tag "flash_messages" do %>
+    <%= render "shared/flash_messages" %>
+  <% end %>
+  <h1>Editing user supplement</h1>
+  <%= turbo_frame_tag "main_content" do %>
+    <%= render "form", user_supplement: @user_supplement %>
+  <% end %>
+</div>

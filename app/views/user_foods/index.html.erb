@@ -1,32 +1,27 @@
-<% content_for :title, "User foods" %>
-
-<div class="w-full">
-  <%= render "shared/flash" %>
-
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">User foods</h1>
-    <%= link_to "New user food", new_user_food_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
+<% content_for :title, "My Foods" %>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <!-- Flash messages outside of Turbo Frames -->
+  <div id="flash_messages">
+    <%= render "shared/flash_messages" %>
   </div>
-
-  <div id="user_foods" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @user_foods.any? %>
-      <% @user_foods.each do |user_food| %>
-        <div class="flex justify-between items-center">
-          <%= render user_food %>
-          <div class="space-x-2">
-            <%= link_to "Show", user_food, class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_user_food_path(user_food), class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <div class="inline-block">
-              <%= button_to "Destroy", user_food, method: :delete,
-                  class: "ml-2 rounded-lg py-3 px-5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
-                  form_class: "inline-flex",
-                  data: { turbo_confirm: "Are you sure?" } %>
-            </div>
-          </div>
-        </div>
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="min-w-0 flex-1">
+      <h2>My Foods</h2>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= link_to new_user_food_path,
+          class: "add-new-button",
+          data: { turbo_frame: "_top" } do %>
+        <%= render partial: "shared/icons/plus_sign" %>
+        Add Food
       <% end %>
-    <% else %>
-      <p class="text-center my-10">No user foods found.</p>
-    <% end %>
+    </div>
   </div>
+  <div>
+    <%= render "info" %>
+  </div>
+  <!-- Single content frame -->
+  <%= turbo_frame_tag "main_content" do %>
+    <%= render "user_foods/list/list", user_foods: @user_foods %>
+  <% end %>
 </div>

@@ -1,0 +1,72 @@
+<%
+titleized_name = titleize(resource)
+
+options ||= {}
+
+button_options = {
+  back_button: {
+    turbo: true,
+    show: true,
+    text: "Back to #{titleized_name.pluralize}",
+    path: polymorphic_path(resource.class)
+  },
+  show_button: {
+    show: true,
+    text: "Show this #{titleized_name}",
+    path: resource
+  }
+}
+create_or_update_button = if resource.new_record?
+  {
+    create_button: {
+      turbo: true,
+      show: true,
+      text: "Create #{titleized_name}",
+      path: resource
+    },
+    update_button: {
+      show: false
+    }
+  }
+else
+  {
+    create_button: {
+      show: false
+    },
+    update_button: {
+      turbo: true,
+      show: true,
+      text: "Update this #{titleized_name}",
+      path: resource
+    }
+  }
+end
+button_options.deep_merge!(create_or_update_button)
+button_options.deep_merge!(options) if options.present?
+%>
+<div class="button-group-container">
+  <%# Create button %>
+  <% if button_options.dig(:create_button, :show) %>
+    <%= form.submit button_options.dig(:create_button, :text),
+                    class: "submit-button",
+                    data: { turbo: button_options.dig(:create_button, :turbo) } %>
+  <% else %>
+    <%# Update button %>
+    <%= form.submit button_options.dig(:update_button, :text),
+                    data: { turbo: button_options.dig(:update_button, :turbo) },
+                    class: "submit-button" %>
+  <% end %>
+  <%# Show button %>
+  <% if button_options.dig(:show_button, :show) %>
+      <%# link_to button_options.dig(:show_button, :text),
+        button_options.dig(:show_button, :path),
+        class: "show-button" %>
+  <% end %>
+  <%# Back button %>
+  <% if button_options.dig(:back_button, :show) %>
+    <%= link_to button_options.dig(:back_button, :text),
+      button_options.dig(:back_button, :path),
+      class: "back-button whitespace-nowrap" %>
+  <% end %>
+  <%= yield if block_given? %>
+</div>

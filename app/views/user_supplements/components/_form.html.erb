@@ -1,0 +1,37 @@
+<%= form_with(model: supplement_component, url: add_component_user_supplement_path(user_supplement), method: :post, class: "space-y-4") do |form| %>
+  <%= render partial: "shared/active_record_errors", locals: { resource: supplement_component } %>
+
+  <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div class="sm:col-span-3">
+      <%= form.label :supplement_component_name, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1">
+        <%= form.text_field :supplement_component_name, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", placeholder: "Vitamin D3" %>
+      </div>
+    </div>
+
+    <div class="sm:col-span-2">
+      <%= form.label :amount, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1">
+        <%= form.text_field :amount, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", placeholder: "5000" %>
+      </div>
+    </div>
+
+    <div class="sm:col-span-1">
+      <%= form.label :unit, class: "block text-sm font-medium text-gray-700" %>
+      <div class="mt-1">
+        <%= form.text_field :unit, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", placeholder: "IU" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end pt-4">
+    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      Add Component
+    </button>
+    <button type="button"
+            class="ml-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            data-action="component-form#hide">
+      Cancel
+    </button>
+  </div>
+<% end %>

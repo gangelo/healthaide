@@ -1,0 +1,25 @@
+<div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
+  <% if user_supplements.any? %>
+    <div class="divide-y divide-gray-100">
+      <!-- Table header -->
+      <%= render(Grids::HeaderComponent.new(columns: [ "supplement", actions: { css_class: "text-right" } ])) %>
+      <!-- Table rows -->
+      <%= render partial: "user_supplements/list/row", locals: { user_supplements: user_supplements } %>
+    </div>
+  <% else %>
+    <div class="px-6 py-10 text-center text-gray-500">
+      <div class="flex items-center justify-center">
+        <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
+      </div>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No supplements added yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding supplements to your list.</p>
+      <div class="mt-6">
+        <%= render partial: "shared/links/add_new_link",
+          locals: {
+            link_path: new_user_supplement_path,
+            link_text: "Add Supplement"
+          } %>
+      </div>
+    </div>
+  <% end %>
+</div>

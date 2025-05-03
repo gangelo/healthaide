@@ -1,0 +1,12 @@
+<%# This partial is used to render search results for the health condition selection interface %>
+<% if conditions.any? %>
+  <%= render partial: "available_condition", collection: conditions, as: :condition %>
+<% else %>
+  <div class="text-center py-10 text-gray-500">
+    <% if params[:search].present? %>
+      <p>No health conditions found matching "<%= params[:search] %>". Try a different search term or add it as a new health condition.</p>
+    <% else %>
+      <p>No more health conditions available to add.</p>
+    <% end %>
+  </div>
+<% end %>

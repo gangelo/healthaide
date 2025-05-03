@@ -1,0 +1,67 @@
+<div class="overflow-x-auto">
+  <!-- Use the HeaderComponent for grid headers -->
+  <%= render Grids::HeaderComponent.new(columns: %w[name amount unit actions]) %>
+
+  <!-- Grid rows -->
+  <div class="bg-white divide-y divide-gray-200 rounded-b-lg">
+    <% if user_supplement.persisted? && user_supplement.supplement_components.any? %>
+      <% user_supplement.supplement_components.each do |component| %>
+        <div class="grid grid-cols-4 hover:bg-gray-50">
+          <div class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <%= component.supplement_component_name %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= component.amount %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= component.unit %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <%= button_to remove_component_user_supplement_path(user_supplement, component_id: component.id),
+              method: :delete,
+              form: { data: { turbo_confirm: "Are you sure you want to remove this component?" } },
+              class: "text-red-600 hover:text-red-900" do %>
+              <%= render "shared/icons/trash_can", css_class: "inline-block h-6 w-6" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if user_supplement.persisted? %>
+      <!-- Add New Component Row (only for persisted supplements) -->
+      <div class="grid grid-cols-4 hover:bg-gray-50 border-t border-gray-200">
+        <%= form_with(model: user_supplement.supplement_components.build,
+                      url: add_component_user_supplement_path(user_supplement),
+                      method: :post,
+                      class: "contents") do |form| %>
+          <div class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <%= form.text_field :supplement_component_name,
+                               class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md",
+                               placeholder: "Component name" %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= form.text_field :amount,
+                               class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md",
+                               placeholder: "Amount" %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= form.text_field :unit,
+                               class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md",
+                               placeholder: "Unit" %>
+          </div>
+          <div class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <button type="submit" class="text-green-600 hover:text-green-900">
+              <%= render "shared/icons/add_new", css_class: "inline-block h-6 w-6" %>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Message for new supplements -->
+      <div class="grid grid-cols-1 py-4 text-center text-gray-500">
+        Supplement detail can be added after saving this supplement.
+      </div>
+    <% end %>
+  </div>
+</div>

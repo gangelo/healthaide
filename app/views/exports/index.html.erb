@@ -1,0 +1,91 @@
+<% content_for :title, "Export" %>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <!-- Flash messages outside of Turbo Frames -->
+  <div id="flash_messages">
+    <%= render "shared/flash_messages" %>
+  </div>
+  <%= form_with url: export_path,
+                method: :post,
+                data: {
+                  controller: "check-boxes",
+                  turbo_confirm: "Export the selected user?",
+                  turbo: false
+                } do |form| %>
+    <!-- Row 1: Header and select input -->
+    <div class="md:flex md:items-center md:justify-between mb-6">
+      <div class="min-w-0 flex-1">
+        <h2>Exports</h2>
+      </div>
+      <div class="mt-4 flex md:ml-4 md:mt-0 space-x-3">
+        <%= select_tag "user_id",
+         options_for_select(@users.all.collect do |c|
+           user = "#{c.last_name}, #{c.first_name} (#{c.username})"
+           [ user, c.id ]
+         end,
+         current_user.id),
+         { include_blank: "Select a user to export...",
+           class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6",
+           data: {
+             check_boxes_target: "userSelect",
+             action: "change->check-boxes#updateButtonState change->check-boxes#userChanged"
+           }
+         } %>
+      </div>
+    </div>
+    <!-- Row 2: Checkboxes, submit button, select all/select none links - truly responsive -->
+    <div class="mb-6 mt-6">
+      <fieldset class="w-full">
+        <!-- Checkboxes section - horizontal on large screens, stacked on small screens -->
+        <div class="flex flex-row flex-wrap md:flex-nowrap justify-center md:space-x-6 gap-3 md:gap-0 mb-4">
+          <% @export_options.each do |key, value| %>
+            <div class="flex items-center w-full md:w-auto">
+              <%= check_box_tag "export_options[#{key}]",
+                value,
+                true,
+                class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600",
+                id: "export_options_#{key}",
+                data: { action: "change->check-boxes#checkboxChanged" } %>
+              <label for="export_options_<%= key %>" class="ml-3 text-base font-medium text-gray-900">
+                <%= key.to_s.humanize %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+        <!-- Submit button - full width on small screens, auto width on larger screens -->
+        <div class="flex justify-center mb-4">
+          <%= form.button type: "submit",
+              class: "submit-button-sm w-full md:w-auto",
+              data: { check_boxes_target: "submitButton" } do %>
+            <span class="inline-flex items-center">
+              <%= render Icons::DownloadComponent.new(css_class: "h-5 w-5 mr-2") %>
+              Export selected items
+            </span>
+          <% end %>
+        </div>
+        <!-- Select all/none buttons on their own line -->
+        <div class="flex justify-center space-x-6">
+          <div>
+            <%= link_to "Select all",
+                      "#",
+                      class: "text-blue-600 hover:text-blue-800",
+                      data: {
+                        check_boxes_target: "selectAll",
+                        action: "click->check-boxes#selectAll"
+                      } %>
+          </div>
+          <div>
+            <%= link_to "Select none",
+                      "#",
+                      class: "text-blue-600 hover:text-blue-800",
+                      data: {
+                        check_boxes_target: "selectNone",
+                        action: "click->check-boxes#selectNone"
+                      } %>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  <% end %>
+  <!-- Single content frame -->
+  <%= render partial: "exports/preview", locals: { user_export_hash: @user_export_hash } %>
+</div>

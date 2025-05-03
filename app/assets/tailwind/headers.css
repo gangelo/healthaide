@@ -1,0 +1,16 @@
+@layer components {
+  h1,
+  .h1 {
+    @apply !overflow-visible text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight mb-4 mt-8;
+  }
+
+  h2,
+  .h2 {
+    @apply !overflow-visible text-xl font-semibold leading-6 text-gray-800 sm:text-2xl sm:tracking-tight mb-3 mt-6;
+  }
+
+  h3,
+  .h3 {
+    @apply !overflow-visible text-lg font-medium leading-6 text-gray-700 sm:text-xl sm:tracking-tight mb-2 mt-4;
+  }
+}
