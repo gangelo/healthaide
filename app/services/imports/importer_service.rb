@@ -147,7 +147,7 @@ module Imports
 
     def filter_user_stat(user_stats)
       return {} unless user_stats.is_a?(Hash)
-      
+
       user_stats.reject do |key, value|
         %i[created_at id user_id updated_at].include?(key.to_sym)
       end
