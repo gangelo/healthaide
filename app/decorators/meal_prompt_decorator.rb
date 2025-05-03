@@ -79,16 +79,17 @@ class MealPromptDecorator < BaseDecorator
   def formatted_health_goals
     if health_goals.empty?
       <<~EMPTY_GOALS
-        HEALTH PRIORITIES (MUST ADDRESS THESE):
+        HEALTH PRIORITIES (MUST ADDRESS THESE, IN ORDER OF IMPORTANCE):
         [No health goals selected]
       EMPTY_GOALS
     else
       goals_content = health_goals.each_with_index.map do |goal, index|
-        "#{index + 1}. #{goal.health_goal_name}"
+        user_health_goal = user.user_health_goals.find_by(health_goal_id: goal.id)
+        "#{user_health_goal.order_of_importance}. #{goal.health_goal_name}"
       end.join("\n")
 
       <<~GOALS
-        HEALTH PRIORITIES (MUST ADDRESS THESE):
+        HEALTH PRIORITIES (MUST ADDRESS THESE, IN ORDER OF IMPORTANCE):
         #{goals_content}
       GOALS
     end
