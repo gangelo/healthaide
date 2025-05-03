@@ -9,6 +9,11 @@ class Grids::HeaderComponent < ViewComponent::Base
 
   attr_reader :columns
 
+  # Converts an array of column definitions into a hash.
+  # @param columns [Array<Hash, Symbol>] An array where each element is either:
+  #   - A Hash: The key is the column name, and the value is a hash of attributes (e.g., { css_class: "value" }).
+  #   - A Symbol: Represents a column name with no additional attributes.
+  # @return [Hash] A hash where keys are column names and values are attribute hashes.
   def columns_hash_for(columns)
     hash = {}
     columns.each do |column|
