@@ -8,14 +8,14 @@ if Rails::VERSION::MAJOR >= 8
   module WardenMappingFix
     def lookup_mapping_for(obj)
       return nil unless obj
-      
+
       # Force user mapping to be available in tests
       if obj.is_a?(User)
         return Warden::Proxy.new({})
-               .mapping_for_serialization(obj) || 
+               .mapping_for_serialization(obj) ||
                Devise.mappings[:user]
       end
-      
+
       # Original behavior
       super
     end
@@ -28,11 +28,11 @@ end
 # Configure RSpec to set up Warden test helpers
 RSpec.configure do |config|
   config.include Warden::Test::Helpers
-  
+
   config.before(:suite) do
     Warden.test_mode!
   end
-  
+
   config.after(:each) do
     Warden.test_reset!
   end
@@ -43,8 +43,8 @@ Devise.setup do |config|
   # Ensure Devise knows about the User model
   Devise.add_mapping(:user, {
     class_name: 'User',
-    module: [:database_authenticatable, :registerable, :recoverable, 
+    module: [ :database_authenticatable, :registerable, :recoverable,
              :rememberable, :validatable, :confirmable, :lockable,
-             :timeoutable, :trackable]
+             :timeoutable, :trackable ]
   })
 end
