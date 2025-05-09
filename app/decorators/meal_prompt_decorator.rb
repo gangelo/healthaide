@@ -6,8 +6,7 @@ class MealPromptDecorator < BaseDecorator
   end
 
   def formatted_health_profile
-    return "" unless include_user_stats?
-    return "" unless user.user_stat.present?
+    return "" unless include_user_stats? && user.user_stat.present?
 
     health_conditions_line = if health_conditions.any?
       "- Conditions: #{health_conditions.map(&:health_condition_name).join(", ")}"

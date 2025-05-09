@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Imports::ImporterService do
+RSpec.describe Imports::ImporterService do
   subject(:importer_service) { described_class.new(import_user_hash) }
 
   before do
@@ -26,8 +26,14 @@ describe Imports::ImporterService do
   end
   let(:import_user_hash) { import_user.to_export_hash }
 
-  it do
-    expect(import_user.user_foods.count).to eq(3)
+  # Move this into a proper test
+  describe "test setup" do
+    it "creates a user with the expected associations" do
+      expect(import_user.user_foods.count).to eq(3)
+      expect(import_user.user_health_conditions.count).to eq(3)
+      expect(import_user.user_health_goals.count).to eq(3)
+      expect(import_user.user_supplements.count).to eq(3)
+    end
   end
 
   describe "#execute" do
@@ -35,6 +41,11 @@ describe Imports::ImporterService do
       it "does not set #message" do
         expect(importer_service.execute).to be_successful
         expect(importer_service.message).to be_blank
+      end
+
+      it "returns a successful result" do
+        result = importer_service.execute
+        expect(result).to be_successful
       end
     end
 
@@ -44,6 +55,11 @@ describe Imports::ImporterService do
       it "sets the error in #message" do
         expect(importer_service.execute).not_to be_successful
         expect(importer_service.message).to match(/Import user 'nonexistent' not found/)
+      end
+
+      it "returns an unsuccessful result" do
+        result = importer_service.execute
+        expect(result).not_to be_successful
       end
     end
 
@@ -56,6 +72,11 @@ describe Imports::ImporterService do
         expect(importer_service.execute).not_to be_successful
         expect(importer_service.message).to match("Error finding import user 'admin': Boom!.")
       end
+
+      it "returns an unsuccessful result" do
+        result = importer_service.execute
+        expect(result).not_to be_successful
+      end
     end
 
     context "when the user_foods in the import_user_hash exists for the user" do
@@ -63,7 +84,8 @@ describe Imports::ImporterService do
         expect(import_user.user_foods.count).to eq(3)
         expected_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :favorite, :updated_at)
 
-        expect(importer_service.execute).to be_successful
+        result = importer_service.execute
+        expect(result).to be_successful
 
         import_user.reload
         actual_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :favorite, :updated_at)
@@ -73,7 +95,7 @@ describe Imports::ImporterService do
     end
 
     context "when some, but not all, of the user_foods in the import_user_hash exist for the user" do
-      it "create new user_foods but does not update existing user_foods" do
+      it "creates new user_foods but does not update existing user_foods" do
         expect(import_user.user_foods.count).to eq(3)
         expected_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :favorite, :updated_at)
 
@@ -82,7 +104,8 @@ describe Imports::ImporterService do
         import_user.reload
         expect(import_user.user_foods.count).to eq(2)
 
-        expect(importer_service.execute).to be_successful
+        result = importer_service.execute
+        expect(result).to be_successful
 
         # Check to see that the one user_food that was deleted was recreated (or at least that something was created).
         import_user.reload
@@ -105,9 +128,54 @@ describe Imports::ImporterService do
         expect(import_user.user_foods.count).to eq(3)
         import_user.user_foods.destroy_all
         expect(import_user.user_foods.count).to be_zero
-        expect(importer_service.execute).to be_successful
+
+        result = importer_service.execute
+        expect(result).to be_successful
+
         import_user.reload
         expect(import_user.user_foods.count).to eq(3)
+      end
+    end
+
+    # Additional tests that might help exercise functionality
+    context "when testing other associated objects" do
+      it "handles user_health_conditions properly" do
+        expect(import_user.user_health_conditions.count).to eq(3)
+        import_user.user_health_conditions.destroy_all
+        expect(import_user.user_health_conditions.count).to be_zero
+
+        result = importer_service.execute
+        expect(result).to be_successful
+
+        import_user.reload
+        expect(import_user.user_health_conditions.count).to eq(3)
+      end
+
+      it "handles user_health_goals properly" do
+        expect(import_user.user_health_goals.count).to eq(3)
+        import_user.user_health_goals.destroy_all
+        expect(import_user.user_health_goals.count).to be_zero
+
+        result = importer_service.execute
+        expect(result).to be_successful
+
+        import_user.reload
+        expect(import_user.user_health_goals.count).to eq(3)
+      end
+
+      it "handles user_supplements properly" do
+        expect(import_user.user_supplements.count).to eq(3)
+        import_user.user_supplements.destroy_all
+        expect(import_user.user_supplements.count).to be_zero
+
+        result = importer_service.execute
+        expect(result).to be_successful
+
+        import_user.reload
+        expect(import_user.user_supplements.count).to eq(3)
+        expect(SupplementComponent.joins(:user_supplement)
+                                  .where(user_supplements: { user_id: import_user.id })
+                                  .count).to eq(6)
       end
     end
   end

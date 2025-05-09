@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   add_flash_types :info, :warning, :error
+  include DecoratorHelper
 
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_session_timeout
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found

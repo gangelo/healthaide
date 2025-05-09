@@ -114,8 +114,48 @@ module Imports
     end
 
     def import_user_supplements
-      # Skip supplements import for now as it's not implemented yet
-      @message = nil
+      begin
+        user_supplements = @import_user_hash.dig(:user, :user_supplements)
+        user_supplements.each do |user_supplement|
+          user_supplement = user_supplement[:user_supplement]
+          user_supplement_name = user_supplement[:user_supplement_name]
+          Rails.logger.info "Importing user supplement: '#{user_supplement_name}' for user: #{@import_user.username}..."
+
+          @import_user.user_supplements.find_or_initialize_by(user_supplement_name: user_supplement_name).tap do |s|
+            s.form = user_supplement[:form]
+            s.frequency = user_supplement[:frequency]
+            s.dosage = user_supplement[:dosage]
+            s.dosage_unit = user_supplement[:dosage_unit]
+            s.manufacturer = user_supplement[:manufacturer]
+            s.notes = user_supplement[:notes]
+            s.save!
+
+            import_user_supplement_components(user_supplement: s, user_supplement_hash: user_supplement)
+          end
+        end
+        @message = nil
+      rescue ActiveRecord::RecordInvalid => e
+        @message = format_error("Error importing user supplements", error: e)
+      rescue => e
+        @message = format_error("Error importing user supplements", error: e)
+      end
+    end
+
+    def import_user_supplement_components(user_supplement:, user_supplement_hash:)
+      user_supplement.supplement_components = []
+
+      return if user_supplement_hash.blank?
+
+      user_supplement_hash[:supplement_components].each do |user_supplement_component|
+        user_supplement_component = user_supplement_component[:supplement_component]
+        Rails.logger.info "Importing user supplement component: '#{user_supplement_component}' for user: #{@import_user.username}..."
+
+        user_supplement.supplement_components.create!(user_supplement_component.slice(:supplement_component_name, :amount, :unit))
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      @message = format_error("Error importing user supplement components", error: e)
+    rescue => e
+      @message = format_error("Error importing user supplement components", error: e)
     end
 
     def import_user_stats
