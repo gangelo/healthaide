@@ -5,10 +5,8 @@ class UserFood < ApplicationRecord
   accepts_nested_attributes_for :food, reject_if: :all_blank
 
   validates :food, uniqueness: { scope: :user_id, message: "has already been selected" }
-  validates :available, inclusion: { in: [ true, false ] }
 
   scope :ordered, -> { includes(:food).order("foods.food_name") }
-  scope :available, -> { where(available: true) }
 
   # Safely gets an attribute value from the attributes hash
   # @param attribute_name [String, Symbol] name of the attribute to retrieve
