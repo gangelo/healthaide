@@ -7,21 +7,12 @@ RSpec.describe "Managing foods", type: :system do
   let!(:food1) { create(:food, food_name: "Apple") }
   let!(:food2) { create(:food, food_name: "Banana") }
 
-  # Food with qualifiers
-  let!(:food_with_qualifiers) do
-    food = create(:food, food_name: "Avocado")
-    food.food_qualifiers << create(:food_qualifier, qualifier_name: "Organic")
-    food.food_qualifiers << create(:food_qualifier, qualifier_name: "Fresh")
-    food
-  end
-
   before do
     user.confirm
     sign_in user
     # Create user foods
     create(:user_food, user: user, food: food1)
     create(:user_food, user: user, food: food2)
-    create(:user_food, user: user, food: food_with_qualifiers)
   end
 
   scenario "User can view their foods" do
@@ -30,11 +21,6 @@ RSpec.describe "Managing foods", type: :system do
     expect(page).to have_content("My Foods")
     expect(page).to have_content(food1.food_name)
     expect(page).to have_content(food2.food_name)
-    expect(page).to have_content(food_with_qualifiers.food_name)
-
-    # Should display qualifiers
-    expect(page).to have_content("Organic")
-    expect(page).to have_content("Fresh")
   end
 
   scenario "User can delete a food from index page", js: true do

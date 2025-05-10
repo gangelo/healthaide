@@ -22,18 +22,5 @@ used_count = @food.user_foods.count
     <div class="min-w-0 flex-1 md:mt-2">
       <%= @food.food_name %>
     </div>
-    <!-- Food qualifiers section -->
-    <div>
-      <h2>Qualifiers</h2>
-      <% if @food.food_qualifiers.any? %>
-        <div class="flex flex-wrap">
-          <% @food.food_qualifiers.ordered.each_with_index do |qualifier, index| %>
-            <span class="badge-red-md mr-2"><%= qualifier.qualifier_name %></span>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-gray-500 italic">No qualifiers for this food.</p>
-      <% end %>
-    </div>
   </p>
 </div>

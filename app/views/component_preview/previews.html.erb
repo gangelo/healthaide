@@ -10,12 +10,6 @@
   <%= render(HealthConditions::BadgeComponent.new(name: "Health condition (size :sm)", size: :sm, css_class: "ml-2")) %>
 </p>
 <p>
-  <h2>FoodQualifiers::BadgeComponent</h2>
-  <%= render(FoodQualifiers::BadgeComponent.new(name: "Food qualifier (size :full)", size: :full)) %>
-  <%= render(FoodQualifiers::BadgeComponent.new(name: "Food qualifier (size :md)", size: :md, css_class: "ml-2")) %>
-  <%= render(FoodQualifiers::BadgeComponent.new(name: "Food qualifier (size :sm)", size: :sm, css_class: "ml-2")) %>
-</p>
-<p>
   <h2>Icons::CloseComponent</h2>
   <% [
        [ "text-amber-400", "text-amber-600" ],
@@ -60,7 +54,7 @@
 </p>
 <p>
   <h2>Grids::HeaderComponent</h2>
-  <%= render(Grids::HeaderComponent.new(columns: [ :name, :qualifiers, actions: { css_class: "text-right" } ])) %>
+  <%= render(Grids::HeaderComponent.new(columns: [ :name, :something_else, actions: { css_class: "text-right" } ])) %>
 </p>
 <p>
   <h2>Icons::DownloadComponent</h2>

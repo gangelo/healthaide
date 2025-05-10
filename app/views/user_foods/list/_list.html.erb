@@ -2,7 +2,7 @@
   <% if user_foods.any? %>
     <div class="divide-y divide-gray-100">
       <!-- Table header -->
-      <%= render(Grids::HeaderComponent.new(columns: [ :name, :qualifiers, :available, actions: { css_class: "text-right" } ])) %>
+      <%= render(Grids::HeaderComponent.new(columns: [ :name, :available, actions: { css_class: "text-right" } ])) %>
       <!-- Table rows -->
       <%= render partial: "user_foods/list/row", locals: { user_foods: user_foods } %>
     </div>

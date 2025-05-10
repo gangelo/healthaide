@@ -6,8 +6,6 @@ RSpec.describe Food do
   describe 'associations' do
     it { is_expected.to have_many(:user_foods).inverse_of(:food).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:user_foods) }
-    it { is_expected.to have_many(:food_food_qualifiers).inverse_of(:food).dependent(:destroy) }
-    it { is_expected.to have_many(:food_qualifiers).through(:food_food_qualifiers) }
   end
 
   describe 'validations' do
@@ -79,33 +77,6 @@ RSpec.describe Food do
 
         expect(available_foods).to include(food2)
         expect(available_foods).not_to include(food1)
-      end
-    end
-  end
-
-  describe 'instance methods' do
-    describe '#display_food_qualifiers' do
-      let(:food) { create(:food, food_name: 'Apple') }
-
-      context 'when food has no qualifiers' do
-        it 'returns an empty string' do
-          expect(food.display_food_qualifiers).to eq('')
-        end
-      end
-
-      context 'when food has qualifiers' do
-        let(:qualifier1) { create(:food_qualifier, qualifier_name: 'Organic') }
-        let(:qualifier2) { create(:food_qualifier, qualifier_name: 'Fresh') }
-
-        before do
-          food.food_qualifiers << qualifier1
-          food.food_qualifiers << qualifier2
-        end
-
-        it 'returns sorted qualifiers' do
-          # Qualifiers are alphabetically sorted
-          expect(food.display_food_qualifiers).to eq('Fresh, Organic')
-        end
       end
     end
   end

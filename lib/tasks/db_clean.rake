@@ -85,8 +85,6 @@ namespace :db do
 
       # Get counts before deletion
       before_counts = {
-        food_food_qualifiers: FoodFoodQualifier.count,
-        food_qualifiers: FoodQualifier.count,
         foods: Food.count,
         health_conditions: HealthCondition.count,
         health_goals: HealthGoal.count
@@ -101,8 +99,6 @@ namespace :db do
 
       # Delete records in the correct order to respect foreign key constraints
       deleted_counts = {
-        food_food_qualifiers: FoodFoodQualifier.delete_all,
-        food_qualifiers: FoodQualifier.delete_all,
         foods: Food.delete_all,
         health_conditions: HealthCondition.delete_all,
         health_goals: HealthGoal.delete_all
@@ -130,8 +126,6 @@ namespace :db do
 
       # Get counts before deletion
       before_counts = {
-        food_food_qualifiers: FoodFoodQualifier.count,
-        food_qualifiers: FoodQualifier.count,
         foods: Food.count,
         health_conditions: HealthCondition.count,
         health_goals: HealthGoal.count
@@ -151,8 +145,6 @@ namespace :db do
       if response == "y"
         # Delete records in the correct order to respect foreign key constraints
         deleted_counts = {
-          food_food_qualifiers: FoodFoodQualifier.delete_all,
-          food_qualifiers: FoodQualifier.delete_all,
           foods: Food.delete_all,
           health_conditions: HealthCondition.delete_all,
           health_goals: HealthGoal.delete_all

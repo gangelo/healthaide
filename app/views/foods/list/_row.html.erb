@@ -4,9 +4,6 @@
       <div class="text-sm font-semibold text-gray-900">
         <%= food.food_name %>
       </div>
-      <div>
-        <%= render partial: "foods/list/row_food_qualifiers", locals: { food: food } %>
-      </div>
       <div class="text-right">
         <div class="flex justify-end gap-2">
           <%= link_to "Show", food_path(food),

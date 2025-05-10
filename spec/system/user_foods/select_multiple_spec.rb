@@ -9,13 +9,6 @@ RSpec.describe "Selecting multiple foods", type: :system do
   let!(:food3) { create(:food, food_name: "Cherry") }
   let!(:food4) { create(:food, food_name: "Dragon Fruit") }
 
-  # Food with qualifier
-  let!(:food_with_qualifier) do
-    food = create(:food, food_name: "Avocado")
-    food.food_qualifiers << create(:food_qualifier, qualifier_name: "Organic")
-    food
-  end
-
   before do
     user.confirm
     sign_in user
@@ -35,11 +28,7 @@ RSpec.describe "Selecting multiple foods", type: :system do
       expect(page).to have_content(food2.food_name)
       expect(page).to have_content(food3.food_name)
       expect(page).to have_content(food4.food_name)
-      expect(page).to have_content(food_with_qualifier.food_name)
       expect(page).not_to have_content(food1.food_name) # Already added
-
-      # Food with qualifier should be present
-      expect(page).to have_content(food_with_qualifier.food_name)
     end
   end
 

@@ -50,7 +50,7 @@ RSpec.describe SearchService do
     let!(:food3) { create(:food, food_name: 'Mixed Berries') }
 
     before do
-      allow(Food).to receive(:available_for).with(user, include_qualifiers: true).and_return(Food.all)
+      allow(Food).to receive(:available_for).with(user).and_return(Food.all)
     end
 
     context 'when no search term is provided' do
