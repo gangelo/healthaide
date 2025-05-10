@@ -84,13 +84,13 @@ RSpec.describe Imports::ImporterService do
     context "when the user_foods in the import_user_hash exists for the user" do
       it "does not create new user_foods or update existing user_foods" do
         expect(import_user.user_foods.count).to eq(3)
-        expected_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :updated_at)
+        expected_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :updated_at)
 
         result = importer_service.execute
         expect(result).to be_successful
 
         import_user.reload
-        actual_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :updated_at)
+        actual_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :updated_at)
 
         expect(expected_user_foods).to match(actual_user_foods)
       end
@@ -99,7 +99,7 @@ RSpec.describe Imports::ImporterService do
     context "when some, but not all, of the user_foods in the import_user_hash exist for the user" do
       it "creates new user_foods but does not update existing user_foods" do
         expect(import_user.user_foods.count).to eq(3)
-        expected_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :updated_at)
+        expected_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :updated_at)
 
         # Delete the second of the 3 user foods for the user.
         import_user.user_foods.order(:food_id).second.destroy
@@ -113,11 +113,11 @@ RSpec.describe Imports::ImporterService do
         import_user.reload
         expect(import_user.user_foods.count).to eq(3)
 
-        actual_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :available, :updated_at)
+        actual_user_foods = import_user.user_foods.order(:food_id).pluck(:food_id, :updated_at)
 
         # Compare everything except the :updated_at timestamp; this ensures that the new user_food was created
         # and the existing user_foods were not deleted.
-        expect(expected_user_foods.map { |it| it[0..1] }).to match(actual_user_foods.map { |it| it[0..1] })
+        expect(expected_user_foods.map { |it| it[0] }).to match(actual_user_foods.map { |it| it[0] })
 
         # Check to see that the existing user_foods were not updated (we're comparing :updated_at times).
         expect(expected_user_foods[0]).to eq(actual_user_foods[0])

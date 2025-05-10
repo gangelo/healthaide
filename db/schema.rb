@@ -77,11 +77,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
   create_table "user_foods", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "food_id", null: false
-    t.boolean "available", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["food_id"], name: "index_user_foods_on_food_id"
-    t.index ["user_id", "available"], name: "index_user_foods_on_user_id_and_available"
     t.index ["user_id", "food_id"], name: "index_user_foods_on_user_id_and_food_id", unique: true
     t.index ["user_id"], name: "index_user_foods_on_user_id"
   end

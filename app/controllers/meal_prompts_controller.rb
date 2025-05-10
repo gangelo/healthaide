@@ -131,7 +131,7 @@ class MealPromptsController < ApplicationController
   end
 
   def set_wizard_variables
-    @available_foods   = current_user.user_foods.available.ordered
+    @available_foods   = current_user.user_foods.ordered
     @health_conditions = current_user.user_health_conditions.ordered
     @health_goals      = current_user.user_health_goals.ordered_by_importance
     @user_stat         = current_user.user_stat
