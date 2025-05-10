@@ -21,7 +21,7 @@ export default class extends Controller {
   ];
 
   connect() {
-    this.selectedFoods = new Map(); // Map of food_id -> {food_id, name, display_name, qualifiers}
+    this.selectedFoods = new Map(); // Map of food_id -> {food_id, name, display_name}
     this.updateButtons();
     this.debounceTimeout = null;
   }
@@ -94,7 +94,6 @@ export default class extends Controller {
       food_id: tempId,
       food_name: foodName,
       display_name: foodName,
-      qualifiers: [],
     });
 
     // Update UI
@@ -190,8 +189,7 @@ export default class extends Controller {
       const foodHtml = this.renderSelectedFoodHtml(
         food.food_id,
         food.food_name,
-        food.display_name,
-        food.qualifiers
+        food.display_name
       );
       this.selectedListTarget.insertAdjacentHTML("beforeend", foodHtml);
 

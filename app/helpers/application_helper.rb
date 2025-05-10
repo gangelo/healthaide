@@ -20,7 +20,7 @@ module ApplicationHelper
 
   # This method will return true if path matches the current_page exactly, or if
   # path is a CRUD path (e.g. /foods/1/edit, /foods/1, /foods/new) and matches
-  # the base path of the current path (e.g. /foods, /food_qualifiers, etc.).
+  # the base path of the current path (e.g. /foods, etc.).
   def active_path?(path)
     return true if current_page?(path)
 

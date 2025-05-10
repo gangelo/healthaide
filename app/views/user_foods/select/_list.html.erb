@@ -11,20 +11,6 @@
           <%= label_tag "food_ids_#{food.id}", nil,
               class: "w-full ml-3 flex items-center cursor-pointer" do %>
             <span class="text-sm font-medium text-gray-700"><%= food.food_name %></span>
-            <% if food.food_qualifiers.any? %>
-              <div class="ml-2 flex flex-wrap gap-1">
-                <% food.food_qualifiers.first(3).each do |qualifier| %>
-                  <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
-                    <%= qualifier.qualifier_name %>
-                  </span>
-                <% end %>
-                <% if food.food_qualifiers.count > 3 %>
-                  <span class="inline-flex items-center rounded-md bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-600">
-                    +<%= food.food_qualifiers.count - 3 %> more
-                  </span>
-                <% end %>
-              </div>
-            <% end %>
           <% end %>
         </div>
       </div>

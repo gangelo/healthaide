@@ -20,21 +20,7 @@ Rails.application.routes.draw do
   get "exports/preview" => "exports#preview", as: :export_preview
 
   # Foods
-  resources :foods do
-    member do
-      delete :remove_qualifier
-      patch :restore
-      post :add_qualifier
-    end
-  end
-
-  # Food qualifiers
-  resources :food_qualifiers do
-    collection do
-      get "export", constraints: { format: /(html|json)/ }
-      post "find_or_create"
-    end
-  end
+  resources :foods
 
   # Health conditions
   resources :health_conditions

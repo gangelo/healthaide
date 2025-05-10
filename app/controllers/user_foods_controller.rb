@@ -15,7 +15,7 @@ class UserFoodsController < ApplicationController
   def new
     @user_food = current_user.user_foods.new
     @user_food.build_food # Build a new food for the nested form
-    @foods = Food.available_for(current_user, include_qualifiers: true)
+    @foods = Food.available_for(current_user)
 
     # Handle AJAX search requests
     if request.xhr? && params[:search].present?
@@ -199,10 +199,7 @@ class UserFoodsController < ApplicationController
   end
 
   def food_params
-    params.require(:food).permit(
-      :food_name,
-      food_food_qualifiers_attributes: [ :id, :food_qualifier_id, :_destroy ]
-    )
+    params.require(:food).permit(:food_name)
   end
 
   def user_food_params

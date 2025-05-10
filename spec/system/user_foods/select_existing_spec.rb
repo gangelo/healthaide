@@ -7,11 +7,6 @@ RSpec.describe "Selecting existing foods", type: :system do
   let!(:food1) { create(:food, food_name: "Apple") }
   let!(:food2) { create(:food, food_name: "Banana") }
   let!(:food3) { create(:food, food_name: "Cherry") }
-  let!(:food_with_qualifiers) {
-    food = create(:food, food_name: "Avocado")
-    food.food_qualifiers << create(:food_qualifier, qualifier_name: "Organic")
-    food
-  }
 
   before do
     user.confirm
@@ -28,10 +23,6 @@ RSpec.describe "Selecting existing foods", type: :system do
       # Should include foods not already added
       expect(page).to have_content(food2.food_name)
       expect(page).to have_content(food3.food_name)
-      expect(page).to have_content(food_with_qualifiers.food_name)
-
-      # Food with qualifiers should be present
-      expect(page).to have_content(food_with_qualifiers.food_name)
 
       # Should not include already added foods
       expect(page).not_to have_content(food1.food_name)

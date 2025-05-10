@@ -38,7 +38,7 @@ class SearchService
   # @return [ActiveRecord::Relation] filtered foods
   def self.search_foods(user, search_term = nil)
     # Get the base query for foods not already selected by this user
-    foods = Food.available_for(user, include_qualifiers: true)
+    foods = Food.available_for(user)
 
     normalized_search_term = normalize_search_term(search_term)
     return foods if normalized_search_term.blank?

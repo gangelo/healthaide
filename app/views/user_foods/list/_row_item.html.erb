@@ -2,9 +2,6 @@
   <div class="text-sm font-semibold text-gray-900">
     <%= user_food.food.food_name %>
   </div>
-  <div>
-    <%= render partial: "user_foods/list/row_food_qualifiers", locals: { food: user_food.food } %>
-  </div>
   <div class="flex items-center">
     <%= render(Controls::ToggleComponent.new(
       id: "toggle-food-#{user_food.id}",
