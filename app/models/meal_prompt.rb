@@ -25,9 +25,7 @@ class MealPrompt < ApplicationRecord
   }
 
   def to_export_hash
-    {
-      meal_prompt: attributes.symbolize_keys
-    }
+    attributes.symbolize_keys
   end
 
   # Convenience methods for associations with proper ordering
