@@ -12,13 +12,5 @@ FactoryBot.define do
     trait :not_available do
       available { false }
     end
-
-    trait :favorite do
-      favorite { true }
-    end
-
-    trait :not_favorite do
-      favorite { false }
-    end
   end
 end

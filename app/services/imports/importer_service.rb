@@ -53,7 +53,6 @@ module Imports
 
           @import_user.user_foods.find_or_initialize_by(food_id: food.id).tap do |x|
             x.available = user_food_hash[:user_food][:available]
-            x.favorite  = user_food_hash[:user_food][:favorite]
             x.save!
           end
         end
