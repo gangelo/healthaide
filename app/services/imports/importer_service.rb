@@ -18,6 +18,7 @@ module Imports
       import_user_health_goals if successful?
       import_user_supplements  if successful?
       import_user_stats        if successful?
+      import_user_meal_prompt  if successful?
 
       self
     end
@@ -42,20 +43,18 @@ module Imports
 
     def import_user_foods
       begin
-        user_foods = @import_user_hash.dig(:user, :user_foods)
-        user_foods.each do |user_food|
-          food_name = user_food.dig(:user_food, :food, :food_name)
+        user_foods_hash = @import_user_hash.dig(:user, :user_foods)
+        user_foods_hash.each do |user_food_hash|
+          food_name = user_food_hash.dig(:user_food, :food, :food_name)
           Rails.logger.info "Importing user food: '#{food_name}' for user: #{@import_user.username}..."
 
           food = Food.find_by(food_name: food_name)
           next if food.nil?
 
-          @import_user.user_foods.find_or_initialize_by(food_id: food.id).tap do |u|
-            if u.new_record?
-              u.available = user_food[:user_food][:available]
-              u.favorite  = user_food[:user_food][:favorite]
-              u.save!
-            end
+          @import_user.user_foods.find_or_initialize_by(food_id: food.id).tap do |x|
+            x.available = user_food_hash[:user_food][:available]
+            x.favorite  = user_food_hash[:user_food][:favorite]
+            x.save!
           end
         end
         @message = nil
@@ -68,16 +67,16 @@ module Imports
 
     def import_user_conditions
       begin
-        user_health_conditions = @import_user_hash.dig(:user, :user_health_conditions)
-        user_health_conditions.each do |user_health_condition|
-          health_condition_name = user_health_condition.dig(:user_health_condition, :health_condition, :health_condition_name)
+        user_health_conditions_hash = @import_user_hash.dig(:user, :user_health_conditions)
+        user_health_conditions_hash.each do |user_health_condition_hash|
+          health_condition_name = user_health_condition_hash.dig(:user_health_condition, :health_condition, :health_condition_name)
           Rails.logger.info "Importing user health condition: '#{health_condition_name}' for user: #{@import_user.username}..."
 
           health_condition = HealthCondition.find_by(health_condition_name: health_condition_name)
           next if health_condition.nil?
 
-          @import_user.user_health_conditions.find_or_initialize_by(health_condition_id: health_condition.id).tap do |h|
-            h.save! if h.new_record?
+          @import_user.user_health_conditions.find_or_initialize_by(health_condition_id: health_condition.id).tap do |x|
+            x.save! if x.new_record?
           end
         end
         @message = nil
@@ -90,19 +89,17 @@ module Imports
 
     def import_user_health_goals
       begin
-        user_health_goals = @import_user_hash.dig(:user, :user_health_goals)
-        user_health_goals.each do |user_health_goal|
-          health_goal_name = user_health_goal.dig(:user_health_goal, :health_goal, :health_goal_name)
+        user_health_goals_hash = @import_user_hash.dig(:user, :user_health_goals)
+        user_health_goals_hash.each do |user_health_goal_hash|
+          health_goal_name = user_health_goal_hash.dig(:user_health_goal, :health_goal, :health_goal_name)
           Rails.logger.info "Importing user health goal: '#{health_goal_name}' for user: #{@import_user.username}..."
 
           health_goal = HealthGoal.find_by(health_goal_name: health_goal_name)
           next if health_goal.nil?
 
-          @import_user.user_health_goals.find_or_initialize_by(health_goal_id: health_goal.id).tap do |g|
-            if g.new_record?
-              g.order_of_importance = user_health_goal[:user_health_goal][:order_of_importance]
-              g.save!
-            end
+          @import_user.user_health_goals.find_or_initialize_by(health_goal_id: health_goal.id).tap do |x|
+            x.order_of_importance = user_health_goal_hash[:user_health_goal][:order_of_importance]
+            x.save!
           end
         end
         @message = nil
@@ -115,22 +112,23 @@ module Imports
 
     def import_user_supplements
       begin
-        user_supplements = @import_user_hash.dig(:user, :user_supplements)
-        user_supplements.each do |user_supplement|
-          user_supplement = user_supplement[:user_supplement]
-          user_supplement_name = user_supplement[:user_supplement_name]
+        user_supplements_hash = @import_user_hash.dig(:user, :user_supplements)
+        user_supplements_hash.each do |user_supplement_hash|
+          user_supplement_hash = user_supplement_hash[:user_supplement]
+          user_supplement_name = user_supplement_hash[:user_supplement_name]
           Rails.logger.info "Importing user supplement: '#{user_supplement_name}' for user: #{@import_user.username}..."
 
-          @import_user.user_supplements.find_or_initialize_by(user_supplement_name: user_supplement_name).tap do |s|
-            s.form = user_supplement[:form]
-            s.frequency = user_supplement[:frequency]
-            s.dosage = user_supplement[:dosage]
-            s.dosage_unit = user_supplement[:dosage_unit]
-            s.manufacturer = user_supplement[:manufacturer]
-            s.notes = user_supplement[:notes]
-            s.save!
+          @import_user.user_supplements.find_or_initialize_by(user_supplement_name: user_supplement_name).tap do |user_supplement|
+            user_supplement.form         = user_supplement_hash[:form]
+            user_supplement.frequency    = user_supplement_hash[:frequency]
+            user_supplement.dosage       = user_supplement_hash[:dosage]
+            user_supplement.dosage_unit  = user_supplement_hash[:dosage_unit]
+            user_supplement.manufacturer = user_supplement_hash[:manufacturer]
+            user_supplement.notes        = user_supplement_hash[:notes]
 
-            import_user_supplement_components(user_supplement: s, user_supplement_hash: user_supplement)
+            user_supplement.save!
+
+            import_user_supplement_components!(user_supplement:, user_supplement_hash:)
           end
         end
         @message = nil
@@ -141,16 +139,14 @@ module Imports
       end
     end
 
-    def import_user_supplement_components(user_supplement:, user_supplement_hash:)
+    def import_user_supplement_components!(user_supplement:, user_supplement_hash:)
       user_supplement.supplement_components = []
 
       return if user_supplement_hash.blank?
 
-      user_supplement_hash[:supplement_components].each do |user_supplement_component|
-        user_supplement_component = user_supplement_component[:supplement_component]
-        Rails.logger.info "Importing user supplement component: '#{user_supplement_component}' for user: #{@import_user.username}..."
-
-        user_supplement.supplement_components.create!(user_supplement_component.slice(:supplement_component_name, :amount, :unit))
+      user_supplement_hash[:supplement_components].each do |user_supplement_component_hash|
+        user_supplement_component_hash = user_supplement_component_hash[:supplement_component]
+        user_supplement.supplement_components.create!(user_supplement_component_hash.slice(:supplement_component_name, :amount, :unit))
       end
     rescue ActiveRecord::RecordInvalid => e
       @message = format_error("Error importing user supplement components", error: e)
@@ -160,22 +156,12 @@ module Imports
 
     def import_user_stats
       begin
-        user_stats = @import_user_hash.dig(:user, :user_stat)
-        Rails.logger.info "Importing user stats for user: #{@import_user.username}..."
+        user_stats_hash = @import_user_hash.dig(:user, :user_stat)
+        @import_user.user_stat&.destroy
 
-        if user_stats.present?
-          UserStat.find_or_initialize_by(user_id: @import_user.id).tap do |s|
-            if s.new_record?
-              filtered_user_stats = filter_user_stat(user_stats)
-              Rails.logger.debug "Filtered user stats: '#{filtered_user_stats}' for user: #{@import_user.username}..."
-
-              filtered_user_stats.each do |key, value|
-                Rails.logger.debug "Importing user stat: '#{key}' with value: '#{value}' for user: #{@import_user.username}..."
-                s.public_send("#{key}=", value)
-              end
-              s.save!
-            end
-          end
+        if user_stats_hash.present?
+          user_stat = @import_user.build_user_stat
+          user_stat.update!(**filter_model_hash(user_stats_hash))
         end
         @message = nil
       rescue ActiveRecord::RecordInvalid => e
@@ -185,10 +171,31 @@ module Imports
       end
     end
 
-    def filter_user_stat(user_stats)
-      return {} unless user_stats.is_a?(Hash)
+    def import_user_meal_prompt
+      begin
+        meal_prompt_hash = @import_user_hash.dig(:user, :meal_prompt, :meal_prompt)
+        Rails.logger.info "Importing meal prompt for user: #{@import_user.username}..."
 
-      user_stats.reject do |key, value|
+        return if meal_prompt_hash.blank?
+
+        meal_prompt = MealPrompt.find_by_username(@import_user.username)&.first
+        meal_prompt ||= @import_user.build_meal_prompt
+
+        filtered_meal_prompt_hash = filter_model_hash(meal_prompt_hash)
+        meal_prompt.update!(**filtered_meal_prompt_hash)
+
+        @message = nil
+      rescue ActiveRecord::RecordInvalid => e
+        @message = format_error("Error importing meal prompt", error: e)
+      rescue => e
+        @message = format_error("Error importing meal prompt", error: e)
+      end
+    end
+
+    def filter_model_hash(model_hash)
+      return {} unless model_hash.is_a?(Hash)
+
+      model_hash.reject do |key, value|
         %i[created_at id user_id updated_at].include?(key.to_sym)
       end
     end

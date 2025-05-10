@@ -15,10 +15,20 @@ class MealPrompt < ApplicationRecord
     self.supplement_ids ||= []
   end
 
+  scope :find_by_username, ->(username) {
+    joins(:user).where(user: { username: username })
+  }
+
   validates :meals_count, numericality: {
     greater_than: 0,
     less_than_or_equal_to: 21
   }
+
+  def to_export_hash
+    {
+      meal_prompt: attributes.symbolize_keys
+    }
+  end
 
   # Convenience methods for associations with proper ordering
   def foods

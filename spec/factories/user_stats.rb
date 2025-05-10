@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :user_stat do
     birthday { 30.years.ago }
     sex { [ "M", "F" ].sample }
-    height { rand(60..75) }  # 5' to 6'3" in inches
+    height { rand(60..96) }
     muscle_fat_analysis_weight { rand(130..220) }  # lbs
     muscle_fat_analysis_skeletal_muscle_mass { rand(40..80) }  # lbs
     muscle_fat_analysis_body_fat_mass { rand(15..60) }  # lbs

@@ -8,7 +8,6 @@ class CreateMealPrompts < ActiveRecord::Migration[7.2]
       t.text :health_goal_ids, default: '[]'
       t.text :supplement_ids, default: '[]'
       t.integer :meals_count, default: 3
-      t.text :generated_text
       t.datetime :generated_at
 
       t.timestamps

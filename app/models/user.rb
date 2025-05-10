@@ -83,6 +83,7 @@ class User < ApplicationRecord
       hash[:user_health_goals] = user_health_goals.map { it.to_export_hash }
       hash[:user_supplements] = user_supplements.map { it.to_export_hash }
       hash[:user_stat] = user_stat&.to_export_hash
+      hash[:meal_prompt] = meal_prompt&.to_export_hash
     end
     }
   end
