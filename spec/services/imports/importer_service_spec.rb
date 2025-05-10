@@ -193,14 +193,12 @@ RSpec.describe Imports::ImporterService do
         # Add meal prompt data to import hash if not present
         if import_user_hash[:user][:meal_prompt].nil?
           import_user_hash[:user][:meal_prompt] = {
-            meal_prompt: {
-              meals_count: 3,
-              include_user_stats: true,
-              food_ids: [],
-              health_condition_ids: [],
-              health_goal_ids: [],
-              supplement_ids: []
-            }
+            meals_count: 3,
+            include_user_stats: true,
+            food_ids: [],
+            health_condition_ids: [],
+            health_goal_ids: [],
+            supplement_ids: []
           }
         end
 
@@ -228,12 +226,10 @@ RSpec.describe Imports::ImporterService do
         modified_hash = import_user_hash.deep_dup
         if modified_hash[:user][:meal_prompt].nil?
           modified_hash[:user][:meal_prompt] = {
-            meal_prompt: {
-              meals_count: new_meals_count
-            }
+            meals_count: new_meals_count
           }
         else
-          modified_hash[:user][:meal_prompt][:meal_prompt][:meals_count] = new_meals_count
+          modified_hash[:user][:meal_prompt][:meals_count] = new_meals_count
         end
 
         # Create a new importer with the modified hash
@@ -272,11 +268,7 @@ RSpec.describe Imports::ImporterService do
 
         # Make sure meal prompt data exists in the hash
         if import_user_hash[:user][:meal_prompt].nil?
-          import_user_hash[:user][:meal_prompt] = {
-            meal_prompt: {
-              meals_count: 3
-            }
-          }
+          import_user_hash[:user][:meal_prompt][:meals_count] = 3
         end
 
         result = importer_service.execute

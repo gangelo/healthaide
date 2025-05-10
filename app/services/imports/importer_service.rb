@@ -173,7 +173,7 @@ module Imports
 
     def import_user_meal_prompt
       begin
-        meal_prompt_hash = @import_user_hash.dig(:user, :meal_prompt, :meal_prompt)
+        meal_prompt_hash = @import_user_hash.dig(:user, :meal_prompt)
         Rails.logger.info "Importing meal prompt for user: #{@import_user.username}..."
 
         return if meal_prompt_hash.blank?
