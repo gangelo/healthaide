@@ -1,10 +1,20 @@
 class UserFoodsController < ApplicationController
+  include Pager
+
   before_action :authenticate_user!
   before_action :set_user_food, only: %i[ show edit update destroy ]
-  before_action :set_user_foods, only: [ :index ]
 
   # GET /user_foods or /user_foods.json
   def index
+    debug_show_pager_params do
+        "UserFoodsController#index:"
+    end
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: pagination_turbo_stream(records: @records, paginator: @pagy)
+      end
+    end
   end
 
   # GET /user_foods/1 or /user_foods/1.json
@@ -82,19 +92,16 @@ class UserFoodsController < ApplicationController
   # DELETE /user_foods/1 or /user_foods/1.json
   def destroy
     @user_food.destroy
-    set_user_foods
+
+    set_pager_params
 
     respond_to do |format|
       format.html { redirect_to user_foods_path, notice: "Food was successfully removed." }
       format.turbo_stream do
         flash.now[:notice] = "Food was successfully removed."
-        render turbo_stream: [
-          turbo_stream.update("main_content",
-            partial: "user_foods/list/list",
-            locals: { user_foods: @user_foods }),
-          turbo_stream.update("flash_messages",
-            partial: "shared/flash_messages")
-        ]
+        turbo_stream_content = pagination_turbo_stream(records: @records, paginator: @pagy)
+        turbo_stream_content << turbo_stream.update("flash_messages", partial: "shared/flash_messages")
+        render turbo_stream: turbo_stream_content
       end
     end
   end
@@ -168,15 +175,55 @@ class UserFoodsController < ApplicationController
     redirect_to user_foods_path
   end
 
+  # Pager override
+  def pager_rows_changed
+    respond_to do |format|
+      format.turbo_stream do
+        turbo_stream_content = pagination_turbo_stream(records: @records, paginator: @pagy)
+        render turbo_stream: turbo_stream_content
+      end
+      format.html { redirect_to user_foods_path }
+    end
+  end
+
   private
 
-  # Use callbacks to share common setup or constraints between actions.
+  # Pager override
+  def set_pager_pagination_path
+    @pager_pagination_path = user_foods_path
+  end
+
+  # Pager override
+  def set_pager_rows_changed_action_path
+    @pager_rows_changed_action_path = pager_rows_changed_user_foods_path
+  end
+
+  # Pager override
+  def pager_records_collection
+    current_user.user_foods.ordered
+  end
+
   def set_user_food
     @user_food = current_user.user_foods.find(params[:id])
   end
 
-  def set_user_foods
-    @user_foods = current_user.user_foods.includes(:food).ordered
+  def pagination_turbo_stream(records:, paginator:)
+    [
+      turbo_stream.update(
+        "pager_results",
+        partial: "user_foods/list/list",
+        locals: { user_foods: @records }
+      ),
+      turbo_stream.update(
+        "pagination_controls",
+        partial: "shared/pager",
+        locals: {
+          pager_pagination_path: @pager_pagination_path,
+          pagy: @pagy,
+          pager_rows: @pager_rows
+        }
+      )
+    ]
   end
 
   def food_params
