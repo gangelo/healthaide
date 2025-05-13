@@ -6,7 +6,7 @@ module Pager
 
   included do
     PAGER_ROWS_DEFAULT = 25
-    PAGER_ROWS_OPTIONS = [ 10, 25, 50, 100 ].freeze
+    PAGER_ROWS_OPTIONS = [ 10, 20, 30, 40, 50, 75, 100 ].freeze
 
     before_action :set_pager_params, only: [ :index, :pager_rows_changed ]
   end
@@ -22,7 +22,6 @@ module Pager
   private
 
   def set_pager_session
-    session[:pager_page] = pager_page_or_default
     session[:pager_rows] = pager_rows_or_default
   end
 
@@ -59,7 +58,7 @@ module Pager
   end
 
   def pager_page_or_default
-    (params[:pager_page] || session[:pager_page] || 1).to_i
+    (params[:pager_page] || 1).to_i
   end
 
   def pager_rows_or_default
