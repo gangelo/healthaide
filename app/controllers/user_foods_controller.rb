@@ -72,23 +72,6 @@ class UserFoodsController < ApplicationController
     render :new, status: :unprocessable_entity
   end
 
-  # GET /user_foods/1/edit
-  def edit
-  end
-
-  # PATCH/PUT /user_foods/1 or /user_foods/1.json
-  def update
-    respond_to do |format|
-      if @user_food.update(user_food_params)
-        format.html { redirect_to @user_food, notice: "Food item was successfully updated." }
-        format.json { render :show, status: :ok, location: @user_food }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user_food.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /user_foods/1 or /user_foods/1.json
   def destroy
     @user_food.destroy
@@ -188,6 +171,10 @@ class UserFoodsController < ApplicationController
 
   private
 
+  def set_user_food
+    @user_food = current_user.user_foods.find(params[:id])
+  end
+
   # Pager override
   def set_pager_pagination_path
     @pager_pagination_path = user_foods_path
@@ -201,10 +188,6 @@ class UserFoodsController < ApplicationController
   # Pager override
   def pager_records_collection
     current_user.user_foods.ordered
-  end
-
-  def set_user_food
-    @user_food = current_user.user_foods.find(params[:id])
   end
 
   def pagination_turbo_stream(records:, paginator:)
