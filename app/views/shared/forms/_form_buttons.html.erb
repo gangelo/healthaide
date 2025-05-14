@@ -58,7 +58,7 @@ button_options.deep_merge!(options) if options.present?
   <% end %>
   <%# Show button %>
   <% if button_options.dig(:show_button, :show) %>
-      <%# link_to button_options.dig(:show_button, :text),
+    <%# link_to button_options.dig(:show_button, :text),
         button_options.dig(:show_button, :path),
         class: "show-button" %>
   <% end %>
@@ -66,6 +66,7 @@ button_options.deep_merge!(options) if options.present?
   <% if button_options.dig(:back_button, :show) %>
     <%= link_to button_options.dig(:back_button, :text),
       button_options.dig(:back_button, :path),
+      data: { turbo: button_options.dig(:back_button, :turbo) },
       class: "back-button whitespace-nowrap" %>
   <% end %>
   <%= yield if block_given? %>

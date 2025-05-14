@@ -175,6 +175,14 @@ class UserFoodsController < ApplicationController
     @user_food = current_user.user_foods.find(params[:id])
   end
 
+  def food_params
+    params.require(:food).permit(:food_name)
+  end
+
+  def user_food_params
+    params.require(:user_food).permit(:food_id, food_attributes: [ :food_name ])
+  end
+
   # Pager override
   def set_pager_pagination_path
     @pager_pagination_path = user_foods_path
@@ -207,13 +215,5 @@ class UserFoodsController < ApplicationController
         }
       )
     ]
-  end
-
-  def food_params
-    params.require(:food).permit(:food_name)
-  end
-
-  def user_food_params
-    params.require(:user_food).permit(:food_id, food_attributes: [ :food_name ])
   end
 end
