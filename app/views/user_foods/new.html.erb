@@ -98,7 +98,10 @@
             </button>
             <%= form.submit "Add Selected Foods",
                 class: "add-selected-button-sm",
-                data: { food_selection_target: "submitButton" },
+                data: {
+                  turbo: false,
+                  food_selection_target: "submitButton"
+                },
                 disabled: true %>
           </div>
         <% end %>
