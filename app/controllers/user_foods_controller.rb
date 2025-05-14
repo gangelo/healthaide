@@ -7,7 +7,7 @@ class UserFoodsController < ApplicationController
   # GET /user_foods or /user_foods.json
   def index
     debug_show_pager_params do
-        "UserFoodsController#index:"
+        "#{self.class.name}#index:"
     end
     respond_to do |format|
       format.html
