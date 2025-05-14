@@ -2,7 +2,7 @@ class UserHealthConditionsController < ApplicationController
   include Pager
 
   before_action :authenticate_user!
-  before_action :set_user_health_condition, only: %i[show edit update destroy]
+  before_action :set_user_health_condition, only: %i[show destroy]
 
   def index
     debug_show_pager_params do

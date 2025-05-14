@@ -2,7 +2,7 @@ class UserFoodsController < ApplicationController
   include Pager
 
   before_action :authenticate_user!
-  before_action :set_user_food, only: %i[ show edit update destroy ]
+  before_action :set_user_food, only: %i[ show destroy ]
 
   # GET /user_foods or /user_foods.json
   def index
