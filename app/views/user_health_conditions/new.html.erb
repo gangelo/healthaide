@@ -98,7 +98,10 @@
             </button>
             <%= form.submit "Add Selected Conditions",
                 class: "add-selected-button-sm",
-                data: { health_condition_selection_target: "submitButton" },
+                data: {
+                  turbo: false,
+                  health_condition_selection_target: "submitButton"
+                },
                 disabled: true %>
           </div>
         <% end %>

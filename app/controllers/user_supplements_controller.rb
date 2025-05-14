@@ -1,9 +1,19 @@
 class UserSupplementsController < ApplicationController
+  include Pager
+
   before_action :authenticate_user!
   before_action :set_user_supplement, only: [ :show, :edit, :update, :destroy, :add_component, :remove_component ]
 
   def index
-    @user_supplements = current_user.user_supplements.with_associations.ordered
+    debug_show_pager_params do
+      "#{self.class.name}#index:"
+    end
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: pagination_turbo_stream(records: @records, paginator: @pagy)
+      end
+    end
   end
 
   def show
@@ -73,14 +83,15 @@ class UserSupplementsController < ApplicationController
   def destroy
     @user_supplement.destroy
 
+    set_pager_params
+
     respond_to do |format|
       format.html { redirect_to user_supplements_path, notice: "Supplement was successfully removed." }
       format.turbo_stream do
         flash.now[:notice] = "Supplement was successfully removed."
-        render turbo_stream: [
-          turbo_stream.update("main_content", partial: "user_supplements/list/list", locals: { user_supplements: current_user.user_supplements.ordered }),
-          turbo_stream.update("flash_messages", partial: "shared/flash_messages")
-        ]
+        turbo_stream_content = pagination_turbo_stream(records: @records, paginator: @pagy)
+        turbo_stream_content << turbo_stream.update("flash_messages", partial: "shared/flash_messages")
+        render turbo_stream: turbo_stream_content
       end
     end
   end
@@ -136,6 +147,17 @@ class UserSupplementsController < ApplicationController
     # Implementation for adding multiple supplements at once
   end
 
+  # Pager override
+  def pager_rows_changed
+    respond_to do |format|
+      format.turbo_stream do
+        turbo_stream_content = pagination_turbo_stream(records: @records, paginator: @pagy)
+        render turbo_stream: turbo_stream_content
+      end
+      format.html { redirect_to user_supplements_path }
+    end
+  end
+
   private
 
   def set_user_supplement
@@ -181,5 +203,39 @@ class UserSupplementsController < ApplicationController
     health_goal_ids.each do |hg_id|
       @user_supplement.supplement_health_goals.create(health_goal_id: hg_id)
     end
+  end
+
+  # Pager override
+  def set_pager_pagination_path
+    @pager_pagination_path = user_supplements_path
+  end
+
+  # Pager override
+  def set_pager_rows_changed_action_path
+    @pager_rows_changed_action_path = pager_rows_changed_user_supplements_path
+  end
+
+  # Pager override
+  def pager_records_collection
+    current_user.user_supplements.with_associations.ordered
+  end
+
+  def pagination_turbo_stream(records:, paginator:)
+    [
+      turbo_stream.update(
+        "pager_results",
+        partial: "user_supplements/list/list",
+        locals: { user_supplements: @records }
+      ),
+      turbo_stream.update(
+        "pagination_controls",
+        partial: "shared/pager",
+        locals: {
+          pager_pagination_path: @pager_pagination_path,
+          pagy: @pagy,
+          pager_rows: @pager_rows
+        }
+      )
+    ]
   end
 end

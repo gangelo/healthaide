@@ -1,0 +1,20 @@
+<%# Rows per page selector %>
+<div class="mt-2 mb-2 flex items-center" data-controller="pager-rows">
+  <label for="pager_rows_select" class="mr-2 block text-sm font-medium text-gray-700">Rows per page:</label>
+  <div class="relative">
+    <select id="pager_rows_select"
+            name="pager_rows_select"
+            class="block w-full rounded-md border-gray-300 py-2 pl-3 text-base sm:text-sm"
+            data-pager-rows-target="select"
+            data-action="change->pager-rows#changePageSize">
+      <% @pager_rows_options.each do |option| %>
+        <option value="<%= option %>"
+          <%= 'selected' if option == @pager_rows.to_i %>><%= option %>
+        </option>
+        <% end %>
+      </select>
+    </div>
+    <%= form_tag @pager_rows_changed_action_path, method: :patch, id: 'pager_rows_form', class: 'hidden' do %>
+      <%= hidden_field_tag :pager_rows, @pager_rows %>
+    <% end %>
+  </div>

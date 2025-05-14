@@ -18,6 +18,9 @@
   <%= render partial: "shared/forms/form_buttons", locals: {
     form: form,
     resource: user_health_goal,
-    back_path: user_health_goals_path
+    back_path: user_health_goals_path,
+    options: {
+      update_button: { turbo: false }
+    }
   } %>
 <% end %>

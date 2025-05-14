@@ -38,9 +38,7 @@ Rails.application.routes.draw do
     collection do
       get :select_multiple
       post :add_multiple
-    end
-    member do
-      patch :toggle_available
+      patch :pager_rows_changed
     end
   end
 
@@ -49,6 +47,7 @@ Rails.application.routes.draw do
     collection do
       get :select_multiple
       post :add_multiple
+      patch :pager_rows_changed
     end
   end
 
@@ -57,6 +56,7 @@ Rails.application.routes.draw do
     collection do
       get :select_multiple
       post :add_multiple
+      patch :pager_rows_changed
     end
     member do
       patch :update_importance
@@ -64,7 +64,11 @@ Rails.application.routes.draw do
   end
 
    # User stats
-   resources :user_stats
+   resources :user_stats do
+     collection do
+       patch :pager_rows_changed
+     end
+   end
 
    # User supplements
    resources :user_supplements do
@@ -75,6 +79,7 @@ Rails.application.routes.draw do
      collection do
        get :select_multiple
        post :add_multiple
+       patch :pager_rows_changed
      end
    end
 
