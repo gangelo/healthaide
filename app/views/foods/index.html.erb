@@ -14,8 +14,19 @@
       <% end %>
     </div>
   </div>
-  <!-- Single content frame -->
-  <%= turbo_frame_tag "main_content" do %>
-    <%= render "foods/list/list", foods: @foods %>
+  <!-- Page size selector -->
+  <div class="mt-4">
+    <%= render "shared/pager_rows" %>
+  </div>
+  <!-- Paginated content -->
+  <%= turbo_frame_tag "pager_results" do %>
+    <%= render "foods/list/list", foods: @records %>
+  <% end %>
+  <!-- Pagination controls -->
+  <%= turbo_frame_tag "pagination_controls" do %>
+    <%= render "shared/pager",
+      pager_pagination_path: @pager_pagination_path,
+      pagy: @pagy,
+      pager_rows: @pager_rows %>
   <% end %>
 </div>

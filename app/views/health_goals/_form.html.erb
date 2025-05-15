@@ -7,6 +7,13 @@
   <%= render partial: "shared/forms/form_buttons", locals: {
     form: form,
     resource: health_goal,
-    back_path: health_goals_path
+    options: {
+      create_button: {
+        turbo: false
+      },
+      back_button: {
+        path: health_goals_path
+      }
+    }
   } %>
 <% end %>

@@ -20,13 +20,25 @@ Rails.application.routes.draw do
   get "exports/preview" => "exports#preview", as: :export_preview
 
   # Foods
-  resources :foods
+  resources :foods do
+    collection do
+      patch :pager_rows_changed
+    end
+  end
 
   # Health conditions
-  resources :health_conditions
+  resources :health_conditions do
+     collection do
+      patch :pager_rows_changed
+    end
+  end
 
   # Health goals
-  resources :health_goals
+  resources :health_goals do
+     collection do
+      patch :pager_rows_changed
+    end
+  end
 
   # Imports
   get "imports" => "imports#index", as: :imports
