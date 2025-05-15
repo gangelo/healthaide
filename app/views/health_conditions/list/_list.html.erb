@@ -1,0 +1,25 @@
+<div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
+  <% if health_conditions.any? %>
+    <div class="divide-y divide-gray-100">
+      <!-- Table header -->
+      <%= render(Grids::HeaderComponent.new(columns: [ "health condition", actions: { css_class: "text-right" } ])) %>
+      <!-- Table rows -->
+      <%= render partial: "health_conditions/list/row", locals: { health_conditions: health_conditions } %>
+    </div>
+  <% else %>
+    <div class="px-6 py-10 text-center text-gray-500">
+      <div class="flex items-center justify-center">
+        <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
+      </div>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No health conditions added yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding health conditions to your list.</p>
+      <div class="mt-6">
+        <%= render partial: "shared/links/add_new_link",
+          locals: {
+            link_path: new_health_condition_path,
+            link_text: "Add New Health Condition"
+          } %>
+      </div>
+    </div>
+  <% end %>
+</div>

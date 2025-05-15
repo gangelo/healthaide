@@ -1,23 +1,23 @@
 <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
-  <% if foods.any? %>
+  <% if health_goals.any? %>
     <div class="divide-y divide-gray-100">
       <!-- Table header -->
-      <%= render(Grids::HeaderComponent.new(columns: [ :food, actions: { css_class: "text-right" } ])) %>
+      <%= render(Grids::HeaderComponent.new(columns: [ "health goal", actions: { css_class: "text-right" } ])) %>
       <!-- Table rows -->
-      <%= render partial: "foods/list/row", locals: { foods: foods } %>
+      <%= render partial: "health_goals/list/row", locals: { health_goals: health_goals } %>
     </div>
   <% else %>
     <div class="px-6 py-10 text-center text-gray-500">
       <div class="flex items-center justify-center">
         <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
       </div>
-      <h3 class="mt-2 text-sm font-semibold text-gray-900">No foods found</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by creating a new food.</p>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No health goals added yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding health goals to your list.</p>
       <div class="mt-6">
-        <%= link_to new_food_path,
-                class: "add-new-button" do %>
+        <%= link_to new_health_goal_path,
+              class: "add-new-button" do %>
           <%= render partial: "shared/icons/plus_sign" %>
-          Add New Food
+          Add New Health Goal
         <% end %>
       </div>
     </div>
