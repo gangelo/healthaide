@@ -82,7 +82,7 @@ RSpec.describe "Health Goals Management", type: :system do
       accept_confirm
 
       # Check for success message
-      expect(page).to have_content("Health goal was successfully deleted")
+      expect(page).to have_content("Health goal was successfully removed")
 
       # Verify health goal is no longer visible in the list
       expect(page).not_to have_content("Flexibility")
