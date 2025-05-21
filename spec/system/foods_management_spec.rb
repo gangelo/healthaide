@@ -122,7 +122,7 @@ RSpec.describe "Foods Management", type: :system do
       accept_confirm
 
       # Check for success message
-      expect(page).to have_content("Food was successfully deleted")
+      expect(page).to have_content("Food was successfully removed")
 
       # Food should be completely removed
       expect(page).not_to have_content("Lettuce")

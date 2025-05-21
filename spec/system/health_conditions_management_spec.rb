@@ -82,7 +82,7 @@ RSpec.describe "Health Conditions Management", type: :system do
       accept_confirm
 
       # Check for success message
-      expect(page).to have_content("Health condition was successfully deleted")
+      expect(page).to have_content("Health condition was successfully removed")
 
       # Health condition should be completely removed
       expect(page).not_to have_content("Arthritis")
