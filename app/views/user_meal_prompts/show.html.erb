@@ -1,70 +1,60 @@
 <div class="container mx-auto px-4 py-8">
   <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold">Your Meal Plan</h1>
+      <h1 class="text-2xl font-bold">Your Meal Prompt</h1>
       <p class="text-gray-600">
-        <% if @meal_prompt.generated_at %>
-          Last generated <%= time_ago_in_words(@meal_prompt.generated_at) %> ago
+        <% if @user_meal_prompt.generated_at %>
+          Last generated <%= time_ago_in_words(@user_meal_prompt.generated_at) %> ago
         <% else %>
           Not yet generated
         <% end %>
       </p>
     </div>
-    
     <div class="mt-4 md:mt-0 flex gap-3">
-      <%= link_to "Edit Plan", wizard_meal_prompts_path, class: "edit-button-sm" %>
-      <%= button_to "Generate New Plan", generate_meal_prompts_path, method: :post, class: "submit-button-sm" %>
+      <%= link_to "Edit Plan", wizard_user_meal_prompts_path, class: "edit-button-sm" %>
+      <%= button_to "Generate New Plan", generate_user_meal_prompts_path, method: :post, class: "submit-button-sm" %>
     </div>
   </div>
-
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
     <%# Sidebar with meal plan options %>
     <div class="lg:col-span-1 space-y-6">
       <div class="bg-white rounded shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Plan Settings</h2>
-        
         <div class="space-y-3 text-sm">
           <div>
             <div class="font-medium">Meals</div>
-            <div class="text-gray-600"><%= pluralize(@meal_prompt.meals_count, "meal") %></div>
+            <div class="text-gray-600"><%= pluralize(@user_meal_prompt.meals_count, "meal") %></div>
           </div>
-          
           <div>
             <div class="font-medium">Health Profile</div>
-            <div class="text-gray-600"><%= @meal_prompt.include_user_stats? ? "Included" : "Not included" %></div>
+            <div class="text-gray-600"><%= @user_meal_prompt.include_user_stats? ? "Included" : "Not included" %></div>
           </div>
-          
           <div>
             <div class="font-medium">Selected Foods</div>
-            <div class="text-gray-600"><%= @meal_prompt.foods.count %> foods</div>
+            <div class="text-gray-600"><%= @user_meal_prompt.foods.count %> foods</div>
           </div>
-          
           <div>
             <div class="font-medium">Health Conditions</div>
-            <div class="text-gray-600"><%= @meal_prompt.health_conditions.count %> conditions</div>
+            <div class="text-gray-600"><%= @user_meal_prompt.health_conditions.count %> conditions</div>
           </div>
-          
           <div>
             <div class="font-medium">Health Goals</div>
-            <div class="text-gray-600"><%= @meal_prompt.health_goals.count %> goals</div>
+            <div class="text-gray-600"><%= @user_meal_prompt.health_goals.count %> goals</div>
           </div>
-          
           <div>
             <div class="font-medium">Supplements</div>
-            <div class="text-gray-600"><%= @meal_prompt.supplements.count %> supplements</div>
+            <div class="text-gray-600"><%= @user_meal_prompt.supplements.count %> supplements</div>
           </div>
         </div>
       </div>
     </div>
-    
     <%# Main content area with generated meal prompt %>
     <div class="lg:col-span-3">
       <div class="bg-white rounded shadow p-6" data-controller="clipboard">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold">Generated Meal Plan</h2>
-          
-          <% if @meal_prompt.generated_at %>
-            <button type="button" 
+          <h2 class="text-lg font-semibold">Generated Meal Prompt</h2>
+          <% if @user_meal_prompt.generated_at %>
+            <button type="button"
                    class="edit-button-sm inline-flex items-center"
                    data-action="clipboard#copy">
               <%= render Icons::ClipboardComponent.new(css_class: "h-4 w-4 mr-2") %>
@@ -72,10 +62,9 @@
             </button>
           <% end %>
         </div>
-        
-        <% if @meal_prompt.generated_at %>
+        <% if @user_meal_prompt.generated_at %>
           <div data-clipboard-target="source" class="bg-gray-50 p-4 rounded-md font-mono text-sm whitespace-pre-wrap overflow-auto max-h-[600px]">
-            <%= render "meal_prompts/meal_prompt", meal_prompt: @meal_prompt %>
+            <%= render "user_meal_prompts/user_meal_prompt", user_meal_prompt: @user_meal_prompt %>
           </div>
         <% else %>
           <div class="text-center py-12">
@@ -84,7 +73,7 @@
               <h3 class="mt-2 text-sm font-medium text-gray-900">No meal plan generated yet</h3>
               <p class="mt-1 text-sm text-gray-500">Click the "Generate New Plan" button to create your personalized meal plan.</p>
               <div class="mt-6">
-                <%= button_to "Generate Now", generate_meal_prompts_path, method: :post, class: "submit-button mx-auto" %>
+                <%= button_to "Generate Now", generate_user_meal_prompts_path, method: :post, class: "submit-button mx-auto" %>
               </div>
             </div>
           </div>

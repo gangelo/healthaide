@@ -1,6 +1,6 @@
-class CreateMealPrompts < ActiveRecord::Migration[7.2]
+class CreateUserMealPrompts < ActiveRecord::Migration[7.2]
   def change
-    create_table :meal_prompts do |t|
+    create_table :user_meal_prompts do |t|
       t.references :user, null: false, foreign_key: true, index: { unique: true }
       t.boolean :include_user_stats, default: true
       t.text :food_ids, default: '[]'

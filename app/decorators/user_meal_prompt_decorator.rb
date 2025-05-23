@@ -1,4 +1,4 @@
-class MealPromptDecorator < BaseDecorator
+class UserMealPromptDecorator < BaseDecorator
   def formatted_foods_section
     return "[No foods selected]" if foods.empty?
 
