@@ -9,6 +9,7 @@ class ExportsController < ApplicationController
   USER_HEALTH_GOALS_EXPORT_OPTION = 3
   USER_SUPPLEMENTS_EXPORT_OPTION = 4
   USER_STATS_EXPORT_OPTION = 5
+  MEAL_PROMPT_EXPORT_OPTION = 6
 
   def index
     @user_export_hash = redact_user_export_hash(current_user.to_export_hash)
@@ -56,7 +57,8 @@ class ExportsController < ApplicationController
       user_health_conditions: USER_HEALTH_CONDITIONS_EXPORT_OPTION,
       user_health_goals: USER_HEALTH_GOALS_EXPORT_OPTION,
       user_supplements: USER_SUPPLEMENTS_EXPORT_OPTION,
-      user_stats: USER_STATS_EXPORT_OPTION
+      user_stats: USER_STATS_EXPORT_OPTION,
+      meal_prompt: MEAL_PROMPT_EXPORT_OPTION
     }
   end
 
@@ -71,6 +73,7 @@ class ExportsController < ApplicationController
       hash[:user].delete(:user_health_goals) unless export_options.include?(USER_HEALTH_GOALS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_supplements) unless export_options.include?(USER_SUPPLEMENTS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_stat) unless export_options.include?(USER_STATS_EXPORT_OPTION.to_s)
+      hash[:user].delete(:meal_prompt) unless export_options.include?(MEAL_PROMPT_EXPORT_OPTION.to_s)
     end
   end
 
