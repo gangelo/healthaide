@@ -56,7 +56,7 @@
     
     <div class="button-group-container">
       <%= f.submit "Update Profile", class: "submit-button" %>
-      <%= link_to "Back", :back, class: "back-button whitespace-nowrap" %>
+      <%= link_to "Back", request.referer || root_path, class: "back-button whitespace-nowrap" %>
     </div>
   <% end %>
   
