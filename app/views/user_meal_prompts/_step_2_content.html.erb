@@ -1,8 +1,8 @@
-<h2 class="text-xl font-semibold mb-4">Select Health Goals to Include</h2>
+<h2 class="text-xl font-semibold mb-4">Select Health Conditions to Include</h2>
 
-<% if @health_goals.any? %>
+<% if @health_conditions.any? %>
   <div data-controller="wizard-select"
-       data-wizard-select-item-label-value="goal"
+       data-wizard-select-item-label-value="condition"
        class="mb-4">
 
     <div class="my-4 flex items-center justify-between">
@@ -23,7 +23,7 @@
         </button>
       </div>
       <span data-wizard-select-target="counter" class="text-sm text-gray-500">
-        0 goals selected
+        0 conditions selected
       </span>
     </div>
 
@@ -31,28 +31,23 @@
     <div class="bg-white rounded border border-gray-200 p-4">
       <div class="min-h-60 max-h-[500px] overflow-y-auto pr-2">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          <% @health_goals.each_with_index do |user_goal, index| %>
+          <% @health_conditions.each do |user_condition| %>
             <div class="border rounded-md p-3 hover:bg-gray-50">
               <label class="flex items-start cursor-pointer">
-                <%= f.check_box :health_goal_ids,
+                <%= f.check_box :health_condition_ids,
                              { multiple: true,
-                               id: "goal_ids_#{user_goal.health_goal.id}",
+                               id: "condition_ids_#{user_condition.health_condition.id}",
                                class: "h-4 w-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500",
-                               checked: @meal_prompt.health_goal_ids.include?(user_goal.health_goal.id),
+                               checked: @user_meal_prompt.health_condition_ids.include?(user_condition.health_condition.id),
                                data: {
                                 wizard_select_target: "checkbox",
                                 action: "change->wizard-select#checkboxChanged"
                               } },
-                             user_goal.health_goal.id,
+                             user_condition.health_condition.id,
                              nil %>
-                <div class="ml-2">
-                  <div class="text-sm font-medium text-gray-700">
-                    <%= index + 1 %>. <%= user_goal.health_goal.health_goal_name %>
-                  </div>
-                  <div class="text-xs text-gray-500">
-                    Importance: <%= user_goal.order_of_importance %>
-                  </div>
-                </div>
+                <span class="ml-2 text-sm font-medium text-gray-700">
+                  <%= user_condition.health_condition.health_condition_name %>
+                </span>
               </label>
             </div>
           <% end %>
@@ -62,11 +57,11 @@
   </div>
 <% else %>
   <div class="text-center py-8">
-    <%= render "shared/icons/notebook", screen_reader_text: "No health goals" %>
-    <h3 class="mt-2 text-sm font-medium text-gray-900">No health goals found</h3>
-    <p class="mt-1 text-sm text-gray-500">You need to add health goals to your profile first.</p>
+    <%= render "shared/icons/notebook", screen_reader_text: "No health conditions" %>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No health conditions found</h3>
+    <p class="mt-1 text-sm text-gray-500">You need to add health conditions to your profile first.</p>
     <div class="mt-6">
-      <%= link_to "Add Health Goals", new_user_health_goal_path, class: "btn-primary" %>
+      <%= link_to "Add Health Conditions", new_user_health_condition_path, class: "btn-primary" %>
     </div>
   </div>
 <% end %>

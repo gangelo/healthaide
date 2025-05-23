@@ -1,4 +1,4 @@
-class MealPrompt < ApplicationRecord
+class UserMealPrompt < ApplicationRecord
   belongs_to :user
 
   # Serialize array attributes

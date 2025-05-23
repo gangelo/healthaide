@@ -32,20 +32,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
     t.index ["health_goal_name"], name: "index_health_goals_on_health_goal_name", unique: true
   end
 
-  create_table "meal_prompts", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.boolean "include_user_stats", default: true
-    t.text "food_ids", default: "[]"
-    t.text "health_condition_ids", default: "[]"
-    t.text "health_goal_ids", default: "[]"
-    t.text "supplement_ids", default: "[]"
-    t.integer "meals_count", default: 3
-    t.datetime "generated_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_meal_prompts_on_user_id", unique: true
-  end
-
   create_table "supplement_components", force: :cascade do |t|
     t.string "supplement_component_name", null: false
     t.string "amount", null: false
@@ -103,6 +89,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
     t.index ["health_goal_id"], name: "index_user_health_goals_on_health_goal_id"
     t.index ["user_id", "health_goal_id"], name: "index_user_health_goals_on_user_id_and_health_goal_id", unique: true
     t.index ["user_id"], name: "index_user_health_goals_on_user_id"
+  end
+
+  create_table "user_meal_prompts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.boolean "include_user_stats", default: true
+    t.text "food_ids", default: "[]"
+    t.text "health_condition_ids", default: "[]"
+    t.text "health_goal_ids", default: "[]"
+    t.text "supplement_ids", default: "[]"
+    t.integer "meals_count", default: 3
+    t.datetime "generated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_meal_prompts_on_user_id", unique: true
   end
 
   create_table "user_stats", force: :cascade do |t|
@@ -171,7 +171,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "meal_prompts", "users"
   add_foreign_key "supplement_components", "user_supplements"
   add_foreign_key "supplement_health_conditions", "health_conditions"
   add_foreign_key "supplement_health_conditions", "user_supplements"
@@ -183,6 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
   add_foreign_key "user_health_conditions", "users"
   add_foreign_key "user_health_goals", "health_goals"
   add_foreign_key "user_health_goals", "users"
+  add_foreign_key "user_meal_prompts", "users"
   add_foreign_key "user_stats", "users"
   add_foreign_key "user_supplements", "users"
 end

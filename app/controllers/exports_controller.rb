@@ -4,12 +4,12 @@ class ExportsController < ApplicationController
   before_action :set_export_options, only: [ :index ]
   before_action :set_export_user, only: [ :export, :preview ]
 
-  USER_FOODS_EXPORT_OPTION = 1
+  USER_FOODS_EXPORT_OPTION             = 1
   USER_HEALTH_CONDITIONS_EXPORT_OPTION = 2
-  USER_HEALTH_GOALS_EXPORT_OPTION = 3
-  USER_SUPPLEMENTS_EXPORT_OPTION = 4
-  USER_STATS_EXPORT_OPTION = 5
-  MEAL_PROMPT_EXPORT_OPTION = 6
+  USER_HEALTH_GOALS_EXPORT_OPTION      = 3
+  USER_SUPPLEMENTS_EXPORT_OPTION       = 4
+  USER_STATS_EXPORT_OPTION             = 5
+  USER_MEAL_PROMPT_EXPORT_OPTION       = 6
 
   def index
     @user_export_hash = redact_user_export_hash(current_user.to_export_hash)
@@ -53,12 +53,12 @@ class ExportsController < ApplicationController
 
   def set_export_options
     @export_options = {
-      user_foods: USER_FOODS_EXPORT_OPTION,
+      user_foods:             USER_FOODS_EXPORT_OPTION,
       user_health_conditions: USER_HEALTH_CONDITIONS_EXPORT_OPTION,
-      user_health_goals: USER_HEALTH_GOALS_EXPORT_OPTION,
-      user_supplements: USER_SUPPLEMENTS_EXPORT_OPTION,
-      user_stats: USER_STATS_EXPORT_OPTION,
-      meal_prompt: MEAL_PROMPT_EXPORT_OPTION
+      user_health_goals:      USER_HEALTH_GOALS_EXPORT_OPTION,
+      user_supplements:       USER_SUPPLEMENTS_EXPORT_OPTION,
+      user_stats:             USER_STATS_EXPORT_OPTION,
+      user_meal_prompt:       USER_MEAL_PROMPT_EXPORT_OPTION
     }
   end
 
@@ -68,12 +68,12 @@ class ExportsController < ApplicationController
 
   def filter_user_export_hash(user_export_hash:, export_options:)
     user_export_hash.tap do |hash|
-      hash[:user].delete(:user_foods) unless export_options.include?(USER_FOODS_EXPORT_OPTION.to_s)
+      hash[:user].delete(:user_foods)             unless export_options.include?(USER_FOODS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_health_conditions) unless export_options.include?(USER_HEALTH_CONDITIONS_EXPORT_OPTION.to_s)
-      hash[:user].delete(:user_health_goals) unless export_options.include?(USER_HEALTH_GOALS_EXPORT_OPTION.to_s)
-      hash[:user].delete(:user_supplements) unless export_options.include?(USER_SUPPLEMENTS_EXPORT_OPTION.to_s)
-      hash[:user].delete(:user_stat) unless export_options.include?(USER_STATS_EXPORT_OPTION.to_s)
-      hash[:user].delete(:meal_prompt) unless export_options.include?(MEAL_PROMPT_EXPORT_OPTION.to_s)
+      hash[:user].delete(:user_health_goals)      unless export_options.include?(USER_HEALTH_GOALS_EXPORT_OPTION.to_s)
+      hash[:user].delete(:user_supplements)       unless export_options.include?(USER_SUPPLEMENTS_EXPORT_OPTION.to_s)
+      hash[:user].delete(:user_stat)              unless export_options.include?(USER_STATS_EXPORT_OPTION.to_s)
+      hash[:user].delete(:user_meal_prompt)       unless export_options.include?(USER_MEAL_PROMPT_EXPORT_OPTION.to_s)
     end
   end
 
@@ -82,10 +82,10 @@ class ExportsController < ApplicationController
 
     redacted = "[REDACTED]"
     user_export_hash.tap do |hash|
-      hash[:user][:confirmation_token] = redacted
-      hash[:user][:encrypted_password] = redacted
+      hash[:user][:confirmation_token]   = redacted
+      hash[:user][:encrypted_password]   = redacted
       hash[:user][:reset_password_token] = redacted
-      hash[:user][:unlock_token] = redacted
+      hash[:user][:unlock_token]         = redacted
     end
   end
 end

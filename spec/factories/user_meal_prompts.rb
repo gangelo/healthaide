@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :meal_prompt do
+  factory :user_meal_prompt do
     association :user
     meals_count { 3 }
     include_user_stats { true }

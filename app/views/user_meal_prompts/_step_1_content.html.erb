@@ -1,10 +1,10 @@
-<h2 class="text-xl font-semibold mb-4">Select Health Conditions to Include</h2>
+<h2 class="text-xl font-semibold mb-4">Select Foods to Include</h2>
 
-<% if @health_conditions.any? %>
-  <div data-controller="wizard-select"
-       data-wizard-select-item-label-value="condition"
-       class="mb-4">
-
+<% if @available_foods.any? %>
+  <div data-controller="wizard-select" 
+        data-wizard-select-item-label-value="food"
+        class="mb-4">
+    
     <div class="my-4 flex items-center justify-between">
       <div class="flex gap-3">
         <button type="button"
@@ -23,31 +23,29 @@
         </button>
       </div>
       <span data-wizard-select-target="counter" class="text-sm text-gray-500">
-        0 conditions selected
+        0 foods selected
       </span>
     </div>
-
+    
     <%# Responsive grid layout %>
     <div class="bg-white rounded border border-gray-200 p-4">
       <div class="min-h-60 max-h-[500px] overflow-y-auto pr-2">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          <% @health_conditions.each do |user_condition| %>
+          <% @available_foods.each do |user_food| %>
             <div class="border rounded-md p-3 hover:bg-gray-50">
               <label class="flex items-start cursor-pointer">
-                <%= f.check_box :health_condition_ids,
-                             { multiple: true,
-                               id: "condition_ids_#{user_condition.health_condition.id}",
+                <%= f.check_box :food_ids, 
+                             { multiple: true, 
+                               id: "food_ids_#{user_food.food.id}",
                                class: "h-4 w-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500",
-                               checked: @meal_prompt.health_condition_ids.include?(user_condition.health_condition.id),
-                               data: {
+                               checked: @user_meal_prompt.food_ids.include?(user_food.food.id),
+                               data: { 
                                 wizard_select_target: "checkbox",
-                                action: "change->wizard-select#checkboxChanged"
-                              } },
-                             user_condition.health_condition.id,
+                                action: "change->wizard-select#checkboxChanged" 
+                              } }, 
+                             user_food.food.id, 
                              nil %>
-                <span class="ml-2 text-sm font-medium text-gray-700">
-                  <%= user_condition.health_condition.health_condition_name %>
-                </span>
+                <span class="ml-2 text-sm font-medium text-gray-700"><%= user_food.food.food_name %></span>
               </label>
             </div>
           <% end %>
@@ -57,11 +55,11 @@
   </div>
 <% else %>
   <div class="text-center py-8">
-    <%= render "shared/icons/notebook", screen_reader_text: "No health conditions" %>
-    <h3 class="mt-2 text-sm font-medium text-gray-900">No health conditions found</h3>
-    <p class="mt-1 text-sm text-gray-500">You need to add health conditions to your profile first.</p>
+    <%= render "shared/icons/notebook", screen_reader_text: "No foods" %>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">No foods available</h3>
+    <p class="mt-1 text-sm text-gray-500">You need to add foods to your profile first.</p>
     <div class="mt-6">
-      <%= link_to "Add Health Conditions", new_user_health_condition_path, class: "btn-primary" %>
+      <%= link_to "Add Foods", user_foods_path, class: "btn-primary" %>
     </div>
   </div>
 <% end %>

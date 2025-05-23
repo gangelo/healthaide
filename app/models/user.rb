@@ -26,7 +26,7 @@ class User < ApplicationRecord
 
   has_many :user_supplements, dependent: :destroy
 
-  has_one :meal_prompt, dependent: :destroy
+  has_one :user_meal_prompt, dependent: :destroy
 
   enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER
 
@@ -83,7 +83,7 @@ class User < ApplicationRecord
       hash[:user_health_goals] = user_health_goals.map { it.to_export_hash }
       hash[:user_supplements] = user_supplements.map { it.to_export_hash }
       hash[:user_stat] = user_stat&.to_export_hash
-      hash[:meal_prompt] = meal_prompt&.to_export_hash
+      hash[:user_meal_prompt] = user_meal_prompt&.to_export_hash
     end
     }
   end

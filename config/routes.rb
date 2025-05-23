@@ -95,8 +95,8 @@ Rails.application.routes.draw do
      end
    end
 
-   # Meal prompts
-   resources :meal_prompts, only: [ :show, :update, :destroy ] do
+   # User meal prompts
+   resources :user_meal_prompts, only: [ :show, :update, :destroy ] do
      collection do
        get :wizard
        get :step_1

@@ -22,7 +22,7 @@ RSpec.describe Imports::ImporterService do
     user.user_supplements << create(:user_supplement, :with_components, user: user, user_supplement_name: "Supplement 1")
     user.user_supplements << create(:user_supplement, :with_components, user: user, user_supplement_name: "Supplement 2")
     user.user_supplements << create(:user_supplement, :with_components, user: user, user_supplement_name: "Supplement 3")
-    create(:meal_prompt, user: user)
+    create(:user_meal_prompt, user: user)
     user
   end
   let(:import_user_hash) { import_user.to_export_hash }
@@ -34,7 +34,7 @@ RSpec.describe Imports::ImporterService do
       expect(import_user.user_health_conditions.count).to eq(3)
       expect(import_user.user_health_goals.count).to eq(3)
       expect(import_user.user_supplements.count).to eq(3)
-      expect(import_user.meal_prompt).to be_present
+      expect(import_user.user_meal_prompt).to be_present
     end
   end
 
@@ -184,15 +184,15 @@ RSpec.describe Imports::ImporterService do
                                   .count).to eq(original_components_count)
       end
 
-      it "handles meal_prompt properly when no existing meal prompt exists" do
+      it "handles user_meal_prompt properly when no existing meal prompt exists" do
         # Delete existing meal prompt
-        import_user.meal_prompt.destroy
+        import_user.user_meal_prompt.destroy
         import_user.reload
-        expect(import_user.meal_prompt).to be_nil
+        expect(import_user.user_meal_prompt).to be_nil
 
         # Add meal prompt data to import hash if not present
-        if import_user_hash[:user][:meal_prompt].nil?
-          import_user_hash[:user][:meal_prompt] = {
+        if import_user_hash[:user][:user_meal_prompt].nil?
+          import_user_hash[:user][:user_meal_prompt] = {
             meals_count: 3,
             include_user_stats: true,
             food_ids: [],
@@ -206,69 +206,69 @@ RSpec.describe Imports::ImporterService do
         expect(result).to be_successful
 
         import_user.reload
-        expect(import_user.meal_prompt).to be_present
-        expect(import_user.meal_prompt.meals_count).not_to be_nil
+        expect(import_user.user_meal_prompt).to be_present
+        expect(import_user.user_meal_prompt.meals_count).not_to be_nil
       end
 
-      it "handles meal_prompt properly when updating an existing meal prompt" do
+      it "handles user_meal_prompt properly when updating an existing meal prompt" do
         # Create a meal prompt if it doesn't exist
-        unless import_user.meal_prompt
-          create(:meal_prompt, user: import_user)
+        unless import_user.user_meal_prompt
+          create(:user_meal_prompt, user: import_user)
           import_user.reload
         end
 
         # Save original meal prompt data
-        original_prompt = import_user.meal_prompt
+        original_prompt = import_user.user_meal_prompt
         original_meals_count = original_prompt.meals_count
         new_meals_count = original_meals_count + 2
 
         # Modify the import hash to have different values
         modified_hash = import_user_hash.deep_dup
-        if modified_hash[:user][:meal_prompt].nil?
-          modified_hash[:user][:meal_prompt] = {
+        if modified_hash[:user][:user_meal_prompt].nil?
+          modified_hash[:user][:user_meal_prompt] = {
             meals_count: new_meals_count
           }
         else
-          modified_hash[:user][:meal_prompt][:meals_count] = new_meals_count
+          modified_hash[:user][:user_meal_prompt][:meals_count] = new_meals_count
         end
 
         # Create a new importer with the modified hash
         modified_importer = described_class.new(modified_hash)
 
         # Execute and verify
-        expect(import_user.meal_prompt.meals_count).to eq(original_meals_count)
+        expect(import_user.user_meal_prompt.meals_count).to eq(original_meals_count)
         result = modified_importer.execute
         expect(result).to be_successful
 
         import_user.reload
-        expect(import_user.meal_prompt.meals_count).to eq(new_meals_count)
+        expect(import_user.user_meal_prompt.meals_count).to eq(new_meals_count)
       end
 
-      it "does not create a meal_prompt when not included in the import hash" do
+      it "does not create a user_meal_prompt when not included in the import hash" do
         # Delete existing meal prompt
-        import_user.meal_prompt.destroy
+        import_user.user_meal_prompt.destroy
         import_user.reload
-        expect(import_user.meal_prompt).to be_nil
+        expect(import_user.user_meal_prompt).to be_nil
 
         # Create a new hash without meal prompt data
         hash_without_meal_prompt = import_user_hash.deep_dup
-        hash_without_meal_prompt[:user].delete(:meal_prompt) if hash_without_meal_prompt[:user][:meal_prompt]
+        hash_without_meal_prompt[:user].delete(:user_meal_prompt) if hash_without_meal_prompt[:user][:user_meal_prompt]
         no_meal_prompt_importer = described_class.new(hash_without_meal_prompt)
 
         result = no_meal_prompt_importer.execute
         expect(result).to be_successful
 
         import_user.reload
-        expect(import_user.meal_prompt).to be_nil
+        expect(import_user.user_meal_prompt).to be_nil
       end
 
       it "handles errors during meal prompt import" do
         # Setup to generate an error
-        allow_any_instance_of(MealPrompt).to receive(:update!).and_raise(ActiveRecord::RecordInvalid.new(MealPrompt.new))
+        allow_any_instance_of(UserMealPrompt).to receive(:update!).and_raise(ActiveRecord::RecordInvalid.new(UserMealPrompt.new))
 
         # Make sure meal prompt data exists in the hash
-        if import_user_hash[:user][:meal_prompt].nil?
-          import_user_hash[:user][:meal_prompt][:meals_count] = 3
+        if import_user_hash[:user][:user_meal_prompt].nil?
+          import_user_hash[:user][:user_meal_prompt][:meals_count] = 3
         end
 
         result = importer_service.execute

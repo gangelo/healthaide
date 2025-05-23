@@ -171,16 +171,16 @@ module Imports
 
     def import_user_meal_prompt
       begin
-        meal_prompt_hash = @import_user_hash.dig(:user, :meal_prompt)
-        Rails.logger.info "Importing meal prompt for user: #{@import_user.username}..."
+        meal_prompt_hash = @import_user_hash.dig(:user, :user_meal_prompt)
+        Rails.logger.info "Importing user meal prompt for user: #{@import_user.username}..."
 
         return if meal_prompt_hash.blank?
 
-        meal_prompt = MealPrompt.find_by_username(@import_user.username)&.first
-        meal_prompt ||= @import_user.build_meal_prompt
+        user_meal_prompt = UserMealPrompt.find_by_username(@import_user.username)&.first
+        user_meal_prompt ||= @import_user.build_user_meal_prompt
 
         filtered_meal_prompt_hash = filter_model_hash(meal_prompt_hash)
-        meal_prompt.update!(**filtered_meal_prompt_hash)
+        user_meal_prompt.update!(**filtered_meal_prompt_hash)
 
         @message = nil
       rescue ActiveRecord::RecordInvalid => e
