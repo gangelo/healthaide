@@ -4,10 +4,10 @@ module Pager
   extend ActiveSupport::Concern
   include Pagy::Backend
 
-  included do
-    PAGER_ROWS_DEFAULT = 25
-    PAGER_ROWS_OPTIONS = [ 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100 ].freeze
+  PAGER_ROWS_DEFAULT = 25
+  PAGER_ROWS_OPTIONS = [ 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100 ].freeze
 
+  included do
     before_action :set_pager_params, only: [ :index, :pager_rows_changed ]
   end
 
