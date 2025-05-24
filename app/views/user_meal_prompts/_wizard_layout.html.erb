@@ -7,7 +7,7 @@
   <div class="flex justify-between mb-8 relative">
     <% (1..4).each do |step| %>
       <div class="flex-1 text-center relative z-10">
-        <div class="<%= step < current_step ? 'bg-green-500' : (step == current_step ? 'bg-blue-500' : 'bg-gray-300') %> w-8 h-8 rounded-full mx-auto flex items-center justify-center text-white text-sm font-medium">
+        <div class="<%= step < current_step ? 'bg-green-500' : (step == current_step ? 'bg-blue-500' : 'bg-gray-300') %> w-8 h-8 rounded-full mx-auto flex items-center justify-center text-white">
           <%= step %>
         </div>
         <div class="mt-2 text-xs font-medium <%= step == current_step ? 'text-blue-600' : (step < current_step ? 'text-green-600' : 'text-gray-500') %>">
@@ -25,9 +25,9 @@
       </div>
     <% end %>
     <%# Progress bar %>
-    <div class="absolute top-4 left-0 w-full h-0.5">
+    <div class="absolute top-4 left-0 w-full h-1.5">
       <div class="absolute inset-0 h-full bg-gray-300"></div>
-      <div class="absolute inset-0 w-1/4 h-full bg-green-500" style="width: <%= ((current_step - 1) * 33.33).to_i %>%;"></div>
+      <div class="absolute inset-0 h-full bg-green-500" style="width: <%= ((current_step - 1) * 25) %>%;"></div>
     </div>
   </div>
   <%= form_with model: @user_meal_prompt, url: update_step_user_meal_prompts_path, method: :post, data: { controller: "wizard-steps" } do |f| %>
