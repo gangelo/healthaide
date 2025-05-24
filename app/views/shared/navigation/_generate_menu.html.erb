@@ -2,7 +2,6 @@
   <button type="button"
           data-action="dropdown-menu#toggle"
           aria-expanded="false"
-          <%# TODO: What to do here? (i.e. /generate) %>
           class="<%= nav_link_class('/generate') %> flex items-center gap-1">
     Generate
     <%= render "shared/icons/dropdown" do %>
@@ -13,7 +12,7 @@
   <div data-dropdown-menu-target="menu"
        class="hidden absolute left-0 lg:right-0 lg:left-auto mt-2 w-56 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
     <div class="py-1 flex flex-col space-y-1">
-      <%= link_to "Meal Prompts", wizard_user_meal_prompts_path, class: nav_link_class(wizard_user_meal_prompts_path) %>
+      <%= link_to "Meal Prompt", wizard_user_meal_prompts_path, class: nav_link_class(wizard_user_meal_prompts_path) %>
       <%= link_to "Health goals prompt", "/", class: nav_link_class("/") %>
       <%= link_to "Export", "/", class: nav_link_class("/") %>
     </div>
