@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-    <%# Sidebar with meal plan options %>
+    <%# Sidebar with meal prompt options %>
     <div class="lg:col-span-1 space-y-6">
       <div class="bg-white rounded shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Plan Settings</h2>
@@ -70,8 +70,8 @@
           <div class="text-center py-12">
             <div class="bg-gray-50 p-8 rounded-md">
               <%= render Icons::BoxComponent.new(css_class: "mx-auto h-12 w-12 text-gray-400") %>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">No meal plan generated yet</h3>
-              <p class="mt-1 text-sm text-gray-500">Click the "Generate New Plan" button to create your personalized meal plan.</p>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No meal prompt generated yet</h3>
+              <p class="mt-1 text-sm text-gray-500">Click the "Generate New Plan" button to create your personalized meal prompt.</p>
               <div class="mt-6">
                 <%= button_to "Generate Now", generate_user_meal_prompts_path, method: :post, class: "submit-button mx-auto" %>
               </div>

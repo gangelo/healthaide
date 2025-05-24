@@ -118,7 +118,7 @@ class UserMealPromptsController < ApplicationController
   # POST /user_meal_prompts/generate
   def generate
     @user_meal_prompt.update(generated_at: Time.current)
-    redirect_to user_meal_prompt_path(@user_meal_prompt), notice: "Meal plan generated successfully."
+    redirect_to user_meal_prompt_path(@user_meal_prompt), notice: "Meal prompt generated successfully."
   end
 
   private

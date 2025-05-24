@@ -113,7 +113,7 @@ class UserMealPromptDecorator < BaseDecorator
   end
 
   def full_formatted_prompt
-    sections = [ "CREATE A MEAL PLAN USING MY AVAILABLE FOODS THAT SPECIFICALLY SUPPORTS MY HEALTH NEEDS:" ]
+    sections = [ "CREATE A MEAL PROMPT USING MY AVAILABLE FOODS THAT SPECIFICALLY SUPPORTS MY HEALTH NEEDS:" ]
 
     sections << "\nAVAILABLE FOODS:"
     sections << formatted_foods_section
