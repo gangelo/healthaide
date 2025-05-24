@@ -68,14 +68,6 @@ class UserMealPromptsController < ApplicationController
 
     @user_meal_prompt.save
 
-    # Determine next step or finalize
-    next_step = params[:next_step]
-
-    if next_step == "finalize"
-      redirect_to user_meal_prompt_path(@user_meal_prompt), notice: "Meal prompt created successfully."
-      return
-    end
-
     # Handle back button navigation
     if params[:direction] == "back" && params[:current_step].present?
       current_step = params[:current_step].to_i
@@ -95,8 +87,13 @@ class UserMealPromptsController < ApplicationController
       end
     end
 
-    Rails.logger.debug "UserMealPromptsController next_step: #{next_step}"
+    # Determine next step or finalize
+    next_step = params[:next_step]
 
+    if next_step == "finalize"
+      redirect_to user_meal_prompt_path(@user_meal_prompt), notice: "Meal prompt created successfully."
+      return
+    end
 
     # Otherwise redirect to the next step
     # Make sure next_step is a valid step number
