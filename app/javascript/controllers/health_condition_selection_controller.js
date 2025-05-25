@@ -35,7 +35,10 @@ export default class extends Controller {
       if (searchTerm === "") {
         // Reset search - show all available conditions
         this.availableConditionTargets.forEach((condition) => {
-          condition.classList.remove("hidden");
+          const conditionName = condition.dataset.conditionName;
+          if (!this.alreadySelectedCondition(conditionName)) {
+            condition.classList.remove("hidden");
+          }
         });
         this.newConditionFormTarget.classList.add("hidden");
         return;
@@ -49,7 +52,10 @@ export default class extends Controller {
       this.availableConditionTargets.forEach((condition) => {
         const conditionName = condition.dataset.conditionName.toLowerCase();
 
-        if (conditionName.includes(searchTermLower)) {
+        if (
+          conditionName.includes(searchTermLower) &&
+          !this.alreadySelectedCondition(conditionName)
+        ) {
           condition.classList.remove("hidden");
           anyVisible = true;
         } else {
@@ -57,8 +63,9 @@ export default class extends Controller {
         }
       });
 
-      // If no conditions match, show the "Add new condition" form
-      if (!anyVisible) {
+      // If no conditions match, show the "Add new condition" form as long as it
+      // is not already selected.
+      if (!anyVisible && !this.alreadySelectedCondition(searchTerm)) {
         this.newConditionFormTarget.classList.remove("hidden");
         this.newConditionInputTarget.value = searchTerm;
       } else {
@@ -257,5 +264,13 @@ export default class extends Controller {
       this.submitButtonTarget.classList.add("opacity-50", "cursor-not-allowed");
       this.clearButtonTarget.classList.add("opacity-50", "cursor-not-allowed");
     }
+  }
+
+  alreadySelectedCondition(conditionName) {
+    // Check if the health condition is already selected
+    return Array.from(this.selectedConditions.values()).some(
+      (condition) =>
+        condition.condition_name.toLowerCase() === conditionName.toLowerCase()
+    );
   }
 }
