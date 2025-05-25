@@ -33,9 +33,12 @@ export default class extends Controller {
       const searchTerm = this.searchInputTarget.value.trim();
 
       if (searchTerm === "") {
-        // Reset search - show all available foods
+        // Reset search - show all available foods, except those already selected.
         this.availableFoodTargets.forEach((food) => {
-          food.classList.remove("hidden");
+          const foodName = food.dataset.foodName;
+          if (!this.alreadySelectedFood(foodName)) {
+            food.classList.remove("hidden");
+          }
         });
         this.newFoodFormTarget.classList.add("hidden");
         return;
@@ -48,7 +51,11 @@ export default class extends Controller {
       // Filter the available foods
       this.availableFoodTargets.forEach((food) => {
         const foodName = food.dataset.foodName.toLowerCase();
-        if (foodName.includes(searchTermLower)) {
+
+        if (
+          foodName.includes(searchTermLower) &&
+          !this.alreadySelectedFood(foodName)
+        ) {
           food.classList.remove("hidden");
           anyVisible = true;
         } else {
@@ -56,8 +63,9 @@ export default class extends Controller {
         }
       });
 
-      // If no foods match, show the "Add new food" form
-      if (!anyVisible) {
+      // If no foods match, show the "Add new food" form as long as it
+      // is not already selected.
+      if (!anyVisible && !this.alreadySelectedFood(searchTerm)) {
         this.newFoodFormTarget.classList.remove("hidden");
         this.newFoodInputTarget.value = searchTerm;
       } else {
@@ -169,6 +177,8 @@ export default class extends Controller {
 
   // Render the selected foods list
   renderSelectedFoods() {
+    console.log("Rendering selected foods...");
+
     // Clear current selected foods
     const selectedFoodElements = this.selectedFoodTargets;
     selectedFoodElements.forEach((el) => el.remove());
@@ -254,5 +264,12 @@ export default class extends Controller {
       this.submitButtonTarget.classList.add("opacity-50", "cursor-not-allowed");
       this.clearButtonTarget.classList.add("opacity-50", "cursor-not-allowed");
     }
+  }
+
+  alreadySelectedFood(foodName) {
+    // Check if the food is already selected
+    return Array.from(this.selectedFoods.values()).some(
+      (food) => food.food_name.toLowerCase() === foodName.toLowerCase()
+    );
   }
 }
