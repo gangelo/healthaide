@@ -64,6 +64,9 @@ export default class extends Controller {
     if (this.hasImportFileFormTarget) {
       if (confirm("Import the selected user?")) {
         this.importFileTarget.disabled = true;
+        // NOTE: We need to turn turbo off here so that the form and all controls reset
+        // to accept another upload/import; otherwise, state is retained causing issues.
+        this.importFileFormTarget.setAttribute("data-turbo", "false");
         this.importFileFormTarget.requestSubmit();
       }
     } else {
