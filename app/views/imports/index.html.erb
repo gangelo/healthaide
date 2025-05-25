@@ -26,6 +26,9 @@
         method: :post,
         multipart: true,
         class: "flex flex-col sm:flex-row gap-4 items-start",
+        # NOTE: It's okay to keep turbo on for choosing and uploading the file.
+        # However, we need to disable it for the import form submission so that
+        # our form resets properly for any subsequent uploads/imports.
         data: { turbo: true } do %>
         <div class="flex-grow">
           <%= file_field_tag :json_file,
