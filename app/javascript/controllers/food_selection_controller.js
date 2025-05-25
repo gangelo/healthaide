@@ -34,12 +34,7 @@ export default class extends Controller {
 
       if (searchTerm === "") {
         // Reset search - show all available foods, except those already selected.
-        this.availableFoodTargets.forEach((food) => {
-          const foodName = food.dataset.foodName;
-          if (!this.alreadySelectedFood(foodName)) {
-            food.classList.remove("hidden");
-          }
-        });
+        this.resetAvailableFoodsList();
         this.newFoodFormTarget.classList.add("hidden");
         return;
       }
@@ -84,9 +79,7 @@ export default class extends Controller {
     this.searchInputTarget.value = "";
 
     // Show all available foods again
-    this.availableFoodTargets.forEach((food) => {
-      food.classList.remove("hidden");
-    });
+    this.resetAvailableFoodsList();
   }
 
   // Add a new food from the search that wasn't found
@@ -271,5 +264,15 @@ export default class extends Controller {
     return Array.from(this.selectedFoods.values()).some(
       (food) => food.food_name.toLowerCase() === foodName.toLowerCase()
     );
+  }
+
+  resetAvailableFoodsList() {
+    // Reset search - show all available foods, except those already selected.
+    this.availableFoodTargets.forEach((food) => {
+      const foodName = food.dataset.foodName;
+      if (!this.alreadySelectedFood(foodName)) {
+        food.classList.remove("hidden");
+      }
+    });
   }
 }
