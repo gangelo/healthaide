@@ -3,7 +3,6 @@
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
   <% end %>
-
   <div class="md:flex md:items-center md:justify-between mb-6">
     <div class="min-w-0 flex-1">
       <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:tracking-tight">
@@ -20,9 +19,8 @@
       </span>
     </div>
   </div>
-
   <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden mb-6">
-    <div class="px-6 py-6">
+    <div class="px-6">
       <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4">Upload JSON File</h3>
       <%= form_tag import_upload_path,
         method: :post,
@@ -39,21 +37,20 @@
               } %>
         </div>
       <% end %>
-      <div>
-        <button type="button"
-          class="submit-button mt-2"
-          data-import-target="importFile"
-          data-action="click->import#submitImportFileForm"
-          onclick="event.preventDefault();">
-          <span class="inline-flex items-center">
-            <%= render Icons::ImportComponent.new(css_class: "h-5 w-5 mr-2") %>
-            Import User Data
-          </span>
-        </button>
-      </div>
+    </div>
+    <div class="px-6 mb-2">
+      <button type="button"
+        class="submit-button mt-2"
+        data-import-target="importFile"
+        data-action="click->import#submitImportFileForm"
+        onclick="event.preventDefault();">
+        <span class="inline-flex items-center">
+          <%= render Icons::ImportComponent.new(css_class: "h-5 w-5 mr-2") %>
+          Import User Data
+        </span>
+      </button>
     </div>
   </div>
-
   <div class="mb-6">
     <%= turbo_frame_tag "import_form" do %>
       <%= render partial: "imports/import_form",
@@ -63,7 +60,6 @@
             } %>
     <% end %>
   </div>
-
   <div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
     <div class="px-6 py-6">
       <h3 class="text-base font-semibold leading-6 text-gray-900 mb-4">Preview</h3>
