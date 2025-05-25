@@ -52,8 +52,6 @@ class UserMealPromptsController < ApplicationController
 
   # POST /user_meal_prompts/update_step
   def update_step
-    Rails.logger.debug "UserMealPromptsController params: #{params.inspect}"
-
     # Save form data directly to database
     user_meal_prompt_data = params[:user_meal_prompt] || {}
 
@@ -91,7 +89,8 @@ class UserMealPromptsController < ApplicationController
     next_step = params[:next_step]
 
     if next_step == "finalize"
-      redirect_to user_meal_prompt_path(@user_meal_prompt), notice: "Meal prompt created successfully."
+      @user_meal_prompt.update(generated_at: Time.current)
+      redirect_to user_meal_prompt_path(@user_meal_prompt), notice: "Meal prompt generated successfully."
       return
     end
 
