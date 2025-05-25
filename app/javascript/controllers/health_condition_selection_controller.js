@@ -33,13 +33,8 @@ export default class extends Controller {
       const searchTerm = this.searchInputTarget.value.trim();
 
       if (searchTerm === "") {
-        // Reset search - show all available conditions
-        this.availableConditionTargets.forEach((condition) => {
-          const conditionName = condition.dataset.conditionName;
-          if (!this.alreadySelectedCondition(conditionName)) {
-            condition.classList.remove("hidden");
-          }
-        });
+        // Reset search - show all available conditions except those already selected.
+        this.resetAvailableConditionsList();
         this.newConditionFormTarget.classList.add("hidden");
         return;
       }
@@ -84,9 +79,7 @@ export default class extends Controller {
     this.searchInputTarget.value = "";
 
     // Show all available foods again
-    this.availableConditionTargets.forEach((food) => {
-      food.classList.remove("hidden");
-    });
+    this.resetAvailableConditionsList();
   }
 
   // Add a new condition from the search that wasn't found
@@ -272,5 +265,15 @@ export default class extends Controller {
       (condition) =>
         condition.condition_name.toLowerCase() === conditionName.toLowerCase()
     );
+  }
+
+  resetAvailableConditionsList() {
+    // Reset search - show all available conditions, except those already selected.
+    this.availableConditionTargets.forEach((condition) => {
+      const conditionName = condition.dataset.conditionName;
+      if (!this.alreadySelectedCondition(conditionName)) {
+        condition.classList.remove("hidden");
+      }
+    });
   }
 }

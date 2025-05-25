@@ -33,10 +33,8 @@ export default class extends Controller {
       const searchTerm = this.searchInputTarget.value.trim();
 
       if (searchTerm === "") {
-        // Reset search - show all available goals
-        this.availableGoalTargets.forEach((goal) => {
-          goal.classList.remove("hidden");
-        });
+        // Reset search - show all available goals, except those already selected.
+        this.resetAvailableGoalsList();
         this.newGoalFormTarget.classList.add("hidden");
         return;
       }
@@ -49,7 +47,10 @@ export default class extends Controller {
       this.availableGoalTargets.forEach((goal) => {
         const goalName = goal.dataset.goalName.toLowerCase();
 
-        if (goalName.includes(searchTermLower)) {
+        if (
+          goalName.includes(searchTermLower) &&
+          !this.alreadySelectedGoal(goalName)
+        ) {
           goal.classList.remove("hidden");
           anyVisible = true;
         } else {
@@ -57,8 +58,9 @@ export default class extends Controller {
         }
       });
 
-      // If no goals match, show the "Add new goal" form
-      if (!anyVisible) {
+      // If no goals match, show the "Add new goal" form as long as it
+      // is not already selected.
+      if (!anyVisible && !this.alreadySelectedGoal(searchTerm)) {
         this.newGoalFormTarget.classList.remove("hidden");
         this.newGoalInputTarget.value = searchTerm;
       } else {
@@ -77,9 +79,7 @@ export default class extends Controller {
     this.searchInputTarget.value = "";
 
     // Show all available foods again
-    this.availableGoalTargets.forEach((food) => {
-      food.classList.remove("hidden");
-    });
+    this.resetAvailableGoalsList();
   }
 
   // Add a new goal from the search that wasn't found
@@ -257,5 +257,22 @@ export default class extends Controller {
       this.submitButtonTarget.classList.add("opacity-50", "cursor-not-allowed");
       this.clearButtonTarget.classList.add("opacity-50", "cursor-not-allowed");
     }
+  }
+
+  alreadySelectedGoal(goalName) {
+    // Check if the health goal is already selected
+    return Array.from(this.selectedGoals.values()).some(
+      (goal) => goal.goal_name.toLowerCase() === goalName.toLowerCase()
+    );
+  }
+
+  resetAvailableGoalsList() {
+    // Reset search - show all available goals, except those already selected.
+    this.availableGoalTargets.forEach((goal) => {
+      const goalName = goal.dataset.goalName;
+      if (!this.alreadySelectedGoal(goalName)) {
+        goal.classList.remove("hidden");
+      }
+    });
   }
 }
