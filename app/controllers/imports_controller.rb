@@ -17,9 +17,9 @@ class ImportsController < ApplicationController
         @import_user = service.import_user
         @import_user_hash = service.import_user_hash
         @import_user_json = @import_user_hash.to_json
-        flash[:notice] = "Import file for '#{@import_user.username}' uploaded successfully! Ready to import."
+        flash.now[:notice] = "Import file for '#{@import_user.username}' uploaded successfully! Ready to import."
       else
-        flash[:alert] = service.message
+        flash.now[:alert] = service.message
       end
     else
       flash.now[:alert] = "Please choose a file to import."
@@ -57,13 +57,14 @@ class ImportsController < ApplicationController
         @import_user = service.import_user
         @import_user_hash = service.import_user_hash
         @import_user_json = @import_user_hash.to_json
-        flash[:notice] = "User '#{@import_user.username}' successfully imported!"
+        flash.now[:notice] = "User '#{@import_user.username}' successfully imported!"
       else
-        flash[:alert] = service.message
+        flash.now[:alert] = service.message
       end
-      flash[:notice] = "Import user '#{@import_user.username}' successfully imported."
     else
-      flash[:alert] = "Import user could not be set!"
+      import_user_hash = {}
+      import_user_json = "{}"
+      flash.now[:alert] = "Import user could not be imported. Please try again."
     end
 
     respond_to do |format|
