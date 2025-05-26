@@ -1,0 +1,24 @@
+<%# TODO: Unused. Keep this? Use this? If so, where? %>
+<% if user_signed_in? %>
+  <!-- Quick Actions Section -->
+  <div class="mt-12 bg-gray-50 rounded-xl p-0 mb-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+    <div class="flex flex-wrap gap-3">
+      <%= link_to wizard_user_meal_prompts_path,
+          class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" do %>
+        <%= render Icons::FoodComponent.new(css_class: "w-4 h-4") %>
+        <span class="ml-2">Generate Meal prompt</span>
+      <% end %>
+      <%= link_to new_user_food_path,
+          class: "inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors" do %>
+        <%= render Icons::PlusComponent.new(css_class: "w-4 h-4") %>
+        <span class="ml-2">Add Food</span>
+      <% end %>
+      <%= link_to user_stats_path,
+          class: "inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" do %>
+        <%= render Icons::UserComponent.new(css_class: "w-4 h-4") %>
+        <span class="ml-2">Update Profile</span>
+      <% end %>
+    </div>
+  </div>
+<% end %>
