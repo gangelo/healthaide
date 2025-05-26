@@ -1,0 +1,142 @@
+<!-- Manage dashboard Cards -->
+<h2 class="text-xl font-semibold text-gray-900 mb-4">Manage</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- My Stats Card -->
+  <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg overflow-hidden text-white transform hover:scale-105 transition-transform duration-200">
+    <!-- Header Strip -->
+    <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">My Stats</h3>
+      <%= render Icons::StatsComponent.new %>
+    </div>
+    <!-- Card Body -->
+    <div class="p-6">
+      <p class="text-green-100 mb-4 text-base leading-relaxed">
+        Your personal biological statistics that inform AI of your present characteristics for personalized recommendations.
+      </p>
+      <%= link_to user_stats_path,
+            class: "inline-flex items-center px-4 py-2 bg-white text-green-700 rounded-lg font-medium hover:bg-green-50 transition-colors" do %>
+        Manage Stats
+        <%= render Icons::ChevronRightComponent.new(css_class: "ml-2 w-4 h-4") %>
+      <% end %>
+    </div>
+  </div>
+  <!-- My Foods Card -->
+  <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg overflow-hidden text-white transform hover:scale-105 transition-transform duration-200">
+    <!-- Header Strip -->
+    <div class="bg-gradient-to-r from-orange-600 to-orange-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">My Foods</h3>
+      <%= render Icons::FoodComponent.new %>
+    </div>
+    <!-- Card Body -->
+    <div class="p-6">
+      <p class="text-orange-100 mb-4 text-base leading-relaxed">
+        Manage your available foods inventory to create personalized meal prompts that work with what you have.
+      </p>
+      <%= link_to user_foods_path,
+            class: "inline-flex items-center px-4 py-2 bg-white text-orange-700 rounded-lg font-medium hover:bg-orange-50 transition-colors" do %>
+        Manage Foods
+        <%= render Icons::ChevronRightComponent.new(css_class: "ml-2 w-4 h-4") %>
+      <% end %>
+    </div>
+  </div>
+  <!-- My Health Conditions Card -->
+  <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg overflow-hidden text-white transform hover:scale-105 transition-transform duration-200">
+    <!-- Header Strip -->
+    <div class="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">My Health Conditions</h3>
+      <%= render Icons::HeartComponent.new %>
+    </div>
+    <!-- Card Body -->
+    <div class="p-6">
+      <p class="text-red-100 mb-4 text-base leading-relaxed">
+        Track health conditions that need consideration when generating personalized meal recommendations.
+      </p>
+      <%= link_to user_health_conditions_path,
+            class: "inline-flex items-center px-4 py-2 bg-white text-red-700 rounded-lg font-medium hover:bg-red-50 transition-colors" do %>
+        Manage Conditions
+        <%= render Icons::ChevronRightComponent.new(css_class: "ml-2 w-4 h-4") %>
+      <% end %>
+    </div>
+  </div>
+  <!-- My Health Goals Card -->
+  <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg overflow-hidden text-white transform hover:scale-105 transition-transform duration-200">
+    <!-- Header Strip -->
+    <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">My Health Goals</h3>
+      <%= render Icons::TargetComponent.new %>
+    </div>
+    <!-- Card Body -->
+    <div class="p-6">
+      <p class="text-purple-100 mb-4 text-base leading-relaxed">
+        Set and prioritize your health goals to ensure meal prompts align with your wellness objectives and targets.
+      </p>
+      <%= link_to user_health_goals_path,
+            class: "inline-flex items-center px-4 py-2 bg-white text-purple-700 rounded-lg font-medium hover:bg-purple-50 transition-colors" do %>
+        Manage Goals
+        <%= render Icons::ChevronRightComponent.new(css_class: "ml-2 w-4 h-4") %>
+      <% end %>
+    </div>
+  </div>
+  <!-- My Supplements Card -->
+  <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg overflow-hidden text-white transform hover:scale-105 transition-transform duration-200">
+    <!-- Header Strip -->
+    <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">My Supplements</h3>
+      <%= render Icons::PillComponent.new %>
+    </div>
+    <!-- Card Body -->
+    <div class="p-6">
+      <p class="text-indigo-100 mb-4 text-base leading-relaxed">
+        Track your current supplements to ensure meal prompts complement your existing nutrition regimen.
+      </p>
+      <%= link_to user_supplements_path,
+            class: "inline-flex items-center px-4 py-2 bg-white text-indigo-700 rounded-lg font-medium hover:bg-indigo-50 transition-colors" do %>
+        Manage Supplements
+        <%= render Icons::ChevronRightComponent.new(css_class: "ml-2 w-4 h-4") %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- Generate dashboard Cards -->
+<h2 class="text-xl font-semibold text-gray-900 mb-4">Generate</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Generate Meal Prompt Card -->
+  <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg overflow-hidden text-white transform hover:scale-105 transition-transform duration-200">
+    <!-- Header Strip -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">Generate Meal Prompt</h3>
+      <%= render Icons::FoodComponent.new %>
+    </div>
+    <!-- Card Body -->
+    <div class="p-6">
+      <p class="text-blue-100 mb-4 text-base leading-relaxed">
+        Create personalized meal prompts based on your available foods, health conditions, goals, and stats.
+      </p>
+      <%= link_to wizard_user_meal_prompts_path,
+            class: "inline-flex items-center px-4 py-2 bg-white text-blue-700 rounded-lg font-medium hover:bg-blue-50 transition-colors" do %>
+        Start Wizard
+        <%= render Icons::ChevronRightComponent.new(css_class: "ml-2 w-4 h-4") %>
+      <% end %>
+    </div>
+  </div>
+  <!-- Filler -->
+  <div>
+    &nbsp;
+  </div>
+  <!-- Filler -->
+  <div>
+    &nbsp;
+  </div>
+  <!-- Filler -->
+  <div>
+    &nbsp;
+  </div>
+  <!-- Filler -->
+  <div>
+    &nbsp;
+  </div>
+  <!-- Filler -->
+  <div>
+    &nbsp;
+  </div>
+</div>
