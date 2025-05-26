@@ -1,24 +1,22 @@
 <h2 class="text-xl font-semibold mb-4">Select Foods to Include</h2>
-
 <% if @available_foods.any? %>
-  <div data-controller="wizard-select" 
+  <div data-controller="wizard-select"
         data-wizard-select-item-label-value="food"
         class="mb-4">
-    
     <div class="my-4 flex items-center justify-between">
       <div class="flex gap-3">
         <button type="button"
             class="text-sm text-blue-600 hover:text-blue-800 cursor-pointer"
             data-action="click->wizard-select#selectAll"
-            data-wizard-select-target="selectAllButton">
+          data-wizard-select-target="selectAllButton">
           Select All
         </button>
         <span class="text-sm text-gray-400">|</span>
         <button type="button"
             class="text-sm text-blue-600 hover:text-blue-800 opacity-50 cursor-not-allowed cursor-pointer"
             data-action="click->wizard-select#selectNone"
-            data-wizard-select-target="selectNoneButton"
-            disabled>
+          data-wizard-select-target="selectNoneButton"
+          disabled>
           Select None
         </button>
       </div>
@@ -26,7 +24,6 @@
         0 foods selected
       </span>
     </div>
-    
     <%# Responsive grid layout %>
     <div class="bg-white rounded border border-gray-200 p-4">
       <div class="min-h-60 max-h-[500px] overflow-y-auto pr-2">
@@ -34,16 +31,16 @@
           <% @available_foods.each do |user_food| %>
             <div class="border rounded-md p-3 hover:bg-gray-50">
               <label class="flex items-start cursor-pointer">
-                <%= f.check_box :food_ids, 
-                             { multiple: true, 
+                <%= f.check_box :food_ids,
+                             { multiple: true,
                                id: "food_ids_#{user_food.food.id}",
                                class: "h-4 w-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500",
                                checked: @user_meal_prompt.food_ids.include?(user_food.food.id),
-                               data: { 
+                               data: {
                                 wizard_select_target: "checkbox",
-                                action: "change->wizard-select#checkboxChanged" 
-                              } }, 
-                             user_food.food.id, 
+                                action: "change->wizard-select#checkboxChanged"
+                              } },
+                             user_food.food.id,
                              nil %>
                 <span class="ml-2 text-sm font-medium text-gray-700"><%= user_food.food.food_name %></span>
               </label>
