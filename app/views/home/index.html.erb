@@ -4,11 +4,9 @@
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
   <% end %>
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome to Health<strong>AI</strong>de</h1>
-    <p class="text-lg text-gray-600">Manage your health profile and generate personalized AI meal prompts</p>
-  </div>
   <% if user_signed_in? %>
     <%= render "dashboard" %>
+  <% else %>
+    <%= render "visitor" %>
   <% end %>
 </div>
