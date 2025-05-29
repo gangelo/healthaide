@@ -170,8 +170,6 @@ export default class extends Controller {
 
   // Render the selected foods list
   renderSelectedFoods() {
-    console.log("Rendering selected foods...");
-
     // Clear current selected foods
     const selectedFoodElements = this.selectedFoodTargets;
     selectedFoodElements.forEach((el) => el.remove());
