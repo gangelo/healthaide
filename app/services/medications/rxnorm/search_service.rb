@@ -5,15 +5,18 @@ module Medications
 
       class << self
         def search(name)
+          raise ArgumentError, "Argument [name] cannot be blank" if name.blank?
+
           url = "#{BASE_URL}/drugs.json?name=#{CGI.escape(name)}"
 
           begin
             response = Net::HTTP.get_response(URI(url))
-            return { error: "API request failed with status #{response.code}" } unless response.code == "200"
+            return Medication::SearchResults.new(error_message: "API request failed with status #{response.code}") unless response.code == "200"
 
-            to_medication_name_array(JSON.parse(response.body)) || []
+            medication_names = to_medication_name_array(JSON.parse(response.body))
+            Medication::SearchResults.new(medication_names:)
           rescue => e
-            { error: "Request failed: #{e.message}" }
+            Medication::SearchResults.new(error_message: "Request failed: #{e.message}")
           end
         end
 
