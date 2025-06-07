@@ -1,4 +1,4 @@
-module Medication
+module Medications
   class SearchResults
     attr_reader :medication_names, :error_message
 

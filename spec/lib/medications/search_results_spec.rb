@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Medication::SearchResults do
+RSpec.describe Medications::SearchResults do
   describe '#initialize' do
     context 'when no arguments are provided' do
       subject { described_class.new }
