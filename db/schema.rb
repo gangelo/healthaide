@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_07_120700) do
   create_table "foods", force: :cascade do |t|
     t.string "food_name", null: false
     t.datetime "created_at", null: false
@@ -30,6 +30,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_010831) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["health_goal_name"], name: "index_health_goals_on_health_goal_name", unique: true
+  end
+
+  create_table "medications", force: :cascade do |t|
+    t.string "medication_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medication_name"], name: "index_medications_on_medication_name"
   end
 
   create_table "supplement_components", force: :cascade do |t|
