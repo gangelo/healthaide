@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe NameNormalizable do
   # Create a test class that includes the concern

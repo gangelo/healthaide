@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe UserStat, type: :model do
   describe 'associations' do

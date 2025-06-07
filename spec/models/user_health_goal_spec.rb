@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe UserHealthGoal, type: :model do
   describe 'associations' do

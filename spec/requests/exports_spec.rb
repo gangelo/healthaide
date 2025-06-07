@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe "Exports", type: :request do
   describe "GET /index" do

@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe Medications::SearchResults do
   describe '#initialize' do

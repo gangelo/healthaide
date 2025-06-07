@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe UserSupplement, type: :model do
   describe "validations" do
