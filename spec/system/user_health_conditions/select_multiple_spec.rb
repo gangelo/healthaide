@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 
 RSpec.describe "Selecting multiple health conditions", type: :system do
   let(:user) { create(:user) }

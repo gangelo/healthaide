@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 
 RSpec.describe HealthCondition, type: :model do
   describe 'validations' do

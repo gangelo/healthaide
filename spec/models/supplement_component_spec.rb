@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe SupplementComponent, type: :model do
   describe "validations" do

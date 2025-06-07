@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 
 RSpec.describe "Selecting multiple health goals", type: :system do
   let(:user) { create(:user) }

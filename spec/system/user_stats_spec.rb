@@ -1,4 +1,3 @@
-require 'rails_helper'
 
 RSpec.describe "User Stats", type: :system do
   let(:user) { create(:user) }

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 
 RSpec.describe "Managing foods", type: :system do
   let(:user) { create(:user) }
