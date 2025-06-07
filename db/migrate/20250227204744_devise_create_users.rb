@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Creates the users table.
-class DeviseCreateUsers < ActiveRecord::Migration[7.2]
+class DeviseCreateUsers < ActiveRecord::Migration[8.0]
   def change
     create_table :users do |t|
       t.string :first_name, limit: 64, null: false, default: ''

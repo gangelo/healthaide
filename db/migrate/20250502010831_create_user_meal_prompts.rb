@@ -1,4 +1,4 @@
-class CreateUserMealPrompts < ActiveRecord::Migration[7.2]
+class CreateUserMealPrompts < ActiveRecord::Migration[8.0]
   def change
     create_table :user_meal_prompts do |t|
       t.references :user, null: false, foreign_key: true, index: { unique: true }
