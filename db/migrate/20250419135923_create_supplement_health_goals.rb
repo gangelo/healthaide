@@ -1,4 +1,4 @@
-class CreateSupplementHealthGoals < ActiveRecord::Migration[7.2]
+class CreateSupplementHealthGoals < ActiveRecord::Migration[8.0]
   def change
     create_table :supplement_health_goals do |t|
       t.references :user_supplement, null: false, foreign_key: true

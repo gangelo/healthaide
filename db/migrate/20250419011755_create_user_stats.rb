@@ -1,4 +1,4 @@
-class CreateUserStats < ActiveRecord::Migration[7.2]
+class CreateUserStats < ActiveRecord::Migration[8.0]
   def change
     create_table :user_stats do |t|
       t.date :birthday

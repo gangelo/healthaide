@@ -1,7 +1,8 @@
-class CreateFoods < ActiveRecord::Migration[7.2]
+class CreateFoods < ActiveRecord::Migration[8.0]
   def change
     create_table :foods do |t|
       t.string :food_name, null: false
+
       t.timestamps
     end
 

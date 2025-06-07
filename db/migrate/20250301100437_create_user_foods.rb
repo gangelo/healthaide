@@ -1,4 +1,4 @@
-class CreateUserFoods < ActiveRecord::Migration[7.2]
+class CreateUserFoods < ActiveRecord::Migration[8.0]
   def change
     create_table :user_foods do |t|
       t.references :user, null: false, foreign_key: true

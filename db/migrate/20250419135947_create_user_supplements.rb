@@ -1,4 +1,4 @@
-class CreateUserSupplements < ActiveRecord::Migration[7.2]
+class CreateUserSupplements < ActiveRecord::Migration[8.0]
   def change
     create_table :user_supplements do |t|
       t.string :user_supplement_name, null: false

@@ -1,4 +1,4 @@
-class CreateSupplementComponents < ActiveRecord::Migration[7.2]
+class CreateSupplementComponents < ActiveRecord::Migration[8.0]
   def change
     create_table :supplement_components do |t|
       t.string :supplement_component_name, null: false
