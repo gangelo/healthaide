@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_07_120700) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
   create_table "foods", force: :cascade do |t|
     t.string "food_name", null: false
     t.datetime "created_at", null: false
@@ -112,6 +112,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_120700) do
     t.index ["user_id"], name: "index_user_meal_prompts_on_user_id", unique: true
   end
 
+  create_table "user_medications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "medication_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["medication_id"], name: "index_user_medications_on_medication_id"
+    t.index ["user_id", "medication_id"], name: "index_user_medications_on_user_id_and_medication_id", unique: true
+    t.index ["user_id"], name: "index_user_medications_on_user_id"
+  end
+
   create_table "user_stats", force: :cascade do |t|
     t.date "birthday"
     t.string "sex", limit: 1
@@ -190,6 +200,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_120700) do
   add_foreign_key "user_health_goals", "health_goals"
   add_foreign_key "user_health_goals", "users"
   add_foreign_key "user_meal_prompts", "users"
+  add_foreign_key "user_medications", "medications"
+  add_foreign_key "user_medications", "users"
   add_foreign_key "user_stats", "users"
   add_foreign_key "user_supplements", "users"
 end

@@ -4,6 +4,23 @@ RSpec.describe User do
   subject(:user) { build(:user) }
 
   describe 'associations' do
+    it { is_expected.to have_many(:user_foods).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_many(:foods).through(:user_foods) }
+
+    it { is_expected.to have_many(:user_health_conditions).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_many(:health_conditions).through(:user_health_conditions).source(:health_condition) }
+
+    it { is_expected.to have_many(:user_health_goals).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_many(:health_goals).through(:user_health_goals) }
+
+    it { is_expected.to have_one(:user_stat).inverse_of(:user).dependent(:destroy) }
+
+    it { is_expected.to have_many(:user_supplements).inverse_of(:user).dependent(:destroy) }
+
+    it { is_expected.to have_many(:user_medications).inverse_of(:user).dependent(:destroy) }
+    it { is_expected.to have_many(:medications).through(:user_medications) }
+
+    it { is_expected.to have_one(:user_meal_prompt).inverse_of(:user).dependent(:destroy) }
   end
 
   describe 'validations' do
