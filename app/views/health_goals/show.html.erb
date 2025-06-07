@@ -5,7 +5,8 @@
   <%= render partial: "shared/buttons/show_buttons",
     locals: {
       turbo: false,
-      resource: @health_goal
+      resource: @health_goal,
+      disable_delete: @health_goal.user_health_goals.count.positive?
     }
   %>
 </div>
