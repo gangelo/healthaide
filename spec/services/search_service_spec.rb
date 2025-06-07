@@ -16,8 +16,7 @@ RSpec.describe SearchService do
       end
 
       it 'excludes health conditions the user already has' do
-        # Create without order_of_importance which has been removed
-        UserHealthCondition.create!(user: user, health_condition: health_condition1)
+        create(:user_health_condition, user: user, health_condition: health_condition1)
 
         result = described_class.search_health_conditions(user, nil)
         expect(result).not_to include(health_condition1)
@@ -38,6 +37,45 @@ RSpec.describe SearchService do
 
       it 'returns empty result when no match is found' do
         result = described_class.search_health_conditions(user, 'nonexistent')
+        expect(result).to be_empty
+      end
+    end
+  end
+
+  describe '.search_health_goals' do
+    let(:user) { create(:user) }
+    let!(:health_goal1) { create(:health_goal, health_goal_name: 'Lose Weight') }
+    let!(:health_goal2) { create(:health_goal, health_goal_name: 'Build Muscle') }
+    let!(:health_goal3) { create(:health_goal, health_goal_name: 'Improve Sleep') }
+
+    context 'when no search term is provided' do
+      it 'returns all available health goals' do
+        result = described_class.search_health_goals(user, nil)
+        expect(result).to include(health_goal1, health_goal2, health_goal3)
+      end
+
+      it 'excludes health goals the user already has' do
+        create(:user_health_goal, user: user, health_goal: health_goal1)
+
+        result = described_class.search_health_goals(user, nil)
+        expect(result).not_to include(health_goal1)
+        expect(result).to include(health_goal2, health_goal3)
+      end
+    end
+
+    context 'when a search term is provided' do
+      it 'filters health goals case-insensitively' do
+        result = described_class.search_health_goals(user, 'weight')
+        expect(result).to include(health_goal1)
+        expect(result).not_to include(health_goal2, health_goal3)
+
+        result = described_class.search_health_goals(user, 'WEIGHT')
+        expect(result).to include(health_goal1)
+        expect(result).not_to include(health_goal2, health_goal3)
+      end
+
+      it 'returns empty result when no match is found' do
+        result = described_class.search_health_goals(user, 'nonexistent')
         expect(result).to be_empty
       end
     end
