@@ -1,0 +1,18 @@
+<div class="bg-white shadow-md ring-1 ring-gray-900/5 rounded-xl overflow-hidden">
+  <% if medications.any? %>
+    <div class="divide-y divide-gray-100">
+      <!-- Table header -->
+      <%= render(Grids::HeaderComponent.new(columns: [ :medication, actions: { css_class: "text-right" } ])) %>
+      <!-- Table rows -->
+      <%= render partial: "medications/list/row", locals: { medications: medications } %>
+    </div>
+  <% else %>
+    <div class="px-6 py-10 text-center text-gray-500">
+      <div class="flex items-center justify-center">
+        <%= render "shared/icons/smiley", size_class: "h-24 w-24", mouth_type: :frown %>
+      </div>
+      <h3 class="mt-2 text-sm font-semibold text-gray-900">No medications found</h3>
+      <p class="mt-1 text-sm text-gray-500">Medications are managed through external data sources.</p>
+    </div>
+  <% end %>
+</div>
