@@ -11,6 +11,7 @@
                       data: { turbo_frame: "_top" } %>
           <%= button_to "Delete", medication_path(medication),
                         method: :delete,
+                        disabled: medication.user_medications.count.positive?,
                         class: "delete-button-sm",
                         form: { data: { turbo_confirm: "Are you sure? This will remove the medication from all users who are using it." } } %>
         </div>
