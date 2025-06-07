@@ -1,7 +1,7 @@
 describe Medications::Rxnorm::SearchService do
   shared_examples "a Medication::SharedResults object is returned" do
     it "returns a Medication::SharedResults object" do
-      expect(described_class.search(term)).to be_kind_of(Medication::SearchResults)
+      expect(described_class.search(term)).to be_kind_of(Medications::SearchResults)
     end
   end
 
