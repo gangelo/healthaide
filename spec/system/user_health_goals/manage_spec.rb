@@ -68,7 +68,7 @@ RSpec.describe "Managing health goals", type: :system do
     visit user_health_goal_path(user_health_goal)
 
     accept_confirm do
-      click_button "Delete this user health goal"
+      click_button "Delete this User Health Goal"
     end
 
     # Verify the deletion

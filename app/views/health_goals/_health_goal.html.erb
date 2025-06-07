@@ -1,6 +1,26 @@
+<%
+used_count = @health_goal.user_health_goals.count
+%>
 <div id="<%= dom_id health_goal %>">
   <p class="my-5">
-    <h1>Health goal</h1>
-    <%= health_goal.health_goal_name %>
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="min-w-0 flex-1">
+        <h1>Health Goal</h1>
+      </div>
+      <div class="ml-0 mb-4 md:mt-6">
+        <% if used_count.positive? %>
+          <span class="badge-red-full">
+            In use (<%= used_count %>)
+          </span>
+        <% else %>
+          <span class="badge-green-full">
+            Unused
+          </span>
+        <% end %>
+      </div>
+    </div>
+    <div class="min-w-0 flex-1 md:mt-2">
+      <%= @health_goal.health_goal_name %>
+    </div>
   </p>
 </div>

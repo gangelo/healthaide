@@ -4,13 +4,19 @@
       <div class="text-sm font-semibold text-gray-900">
         <%= health_goal.health_goal_name %>
       </div>
-      <div class="text-right flex justify-end gap-2">
-        <%= link_to "Show", health_goal_path(health_goal), class: "show-button-sm" %>
-        <%= link_to "Edit", edit_health_goal_path(health_goal), class: "edit-button-sm" %>
-        <%= button_to "Delete", health_goal_path(health_goal),
-              method: :delete,
-              class: "delete-button-sm",
-              form: { data: { turbo_confirm: "Are you sure?" } } %>
+      <div class="text-right">
+        <div class="flex justify-end gap-2">
+          <%= link_to "Show", health_goal_path(health_goal),
+                      class: "show-button-sm",
+                      data: { turbo_frame: "_top" } %>
+          <%= link_to "Edit", edit_health_goal_path(health_goal),
+                      class: "edit-button-sm",
+                      data: { turbo_frame: "_top" } %>
+          <%= button_to "Delete", health_goal_path(health_goal),
+                        method: :delete,
+                        class: "delete-button-sm",
+                        form: { data: { turbo_confirm: "Are you sure? This will remove the health goal from all users who are using it." } } %>
+        </div>
       </div>
     </li>
   <% end %>
