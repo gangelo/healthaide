@@ -1,0 +1,26 @@
+<%
+used_count = @medication.user_medications.count
+%>
+<div id="<%= dom_id medication %>">
+  <p class="my-5">
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="min-w-0 flex-1">
+        <h1>Medication</h1>
+      </div>
+      <div class="ml-0 mb-4 md:mt-6">
+        <% if used_count.positive? %>
+          <span class="badge-red-full">
+            In use (<%= used_count %>)
+          </span>
+        <% else %>
+          <span class="badge-green-full">
+            Unused
+          </span>
+        <% end %>
+      </div>
+    </div>
+    <div class="min-w-0 flex-1 md:mt-2">
+      <%= @medication.medication_name %>
+    </div>
+  </p>
+</div>

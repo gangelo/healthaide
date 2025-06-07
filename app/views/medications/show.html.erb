@@ -1,0 +1,15 @@
+<% content_for :title, "Showing medication" %>
+<div class="mx-auto md:w-2/3 w-full">
+  <%= render "shared/flash_messages" %>
+  <%= render @medication %>
+  <%= render partial: "shared/buttons/show_buttons",
+    locals: {
+      turbo: false,
+      resource: @medication,
+      disable_delete: @medication.user_medications.count.positive?,
+      options: {
+        edit_button: { show: false }
+      }
+    }
+  %>
+</div>

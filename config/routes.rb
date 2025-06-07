@@ -40,6 +40,13 @@ Rails.application.routes.draw do
     end
   end
 
+  # Medications
+  resources :medications, only: [ :index, :show, :destroy ] do
+    collection do
+      patch :pager_rows_changed
+    end
+  end
+
   # Imports
   get "imports" => "imports#index", as: :imports
   post "upload" => "imports#upload", as: :import_upload
