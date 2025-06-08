@@ -12,7 +12,7 @@ RSpec.describe "Medications Management", type: :system do
   describe "viewing medications index" do
     it "displays medications navigation link" do
       visit root_path
-      
+
       # Check that the medications link is present in the admin menu
       expect(page).to have_link("Medications", href: medications_path)
     end
@@ -140,14 +140,14 @@ RSpec.describe "Medications Management", type: :system do
     it "handles large number of medications with pagination" do
       # Create more medications than the default page size
       25.times do |i|
-        create(:medication, medication_name: "Medication #{i.to_s.rjust(3, '0')}")
+        create(:medication, medication_name: "Medication #{i.to_s.rjust(3, "0")}")
       end
 
       visit medications_path
 
       # Should show pagination controls
       expect(page).to have_css("#pagination_controls")
-      
+
       # Should show first page of results
       expect(page).to have_content("Medication 000")
     end

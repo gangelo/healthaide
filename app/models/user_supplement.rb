@@ -1,4 +1,5 @@
 class UserSupplement < ApplicationRecord
+  include Frequentable
   include NameNormalizable
 
   belongs_to :user
@@ -30,19 +31,6 @@ class UserSupplement < ApplicationRecord
     other: 999
   }, prefix: true
 
-enum :frequency, {
-  as_needed: 10,
-  daily: 20,
-  every_other_day: 25,
-  four_times_daily: 30,
-  monthly: 40,
-  three_times_daily: 50,
-  twice_daily: 60,
-  twice_weekly: 70,
-  weekly: 80,
-  other: 999
-}, prefix: true
-
   validates :user_supplement_name,
     presence: true,
     uniqueness: { scope: :user_id },
@@ -52,7 +40,6 @@ enum :frequency, {
       message: INVALID_NAME_REGEX_MESSAGE
     }
   validates :form, presence: true
-  validates :frequency, presence: true
   validates :notes, length: { maximum: 256 }, allow_blank: true
 
   scope :ordered, -> do
@@ -69,10 +56,6 @@ enum :frequency, {
   class << self
     def forms_by_value
       forms.sort_by { |_key, value| value }
-    end
-
-    def frequencies_by_value
-      frequencies.sort_by { |_key, value| value }
     end
   end
 

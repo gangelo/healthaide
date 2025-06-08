@@ -1,0 +1,38 @@
+<% content_for :title, "My Medications" %>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <!-- Flash messages outside of Turbo Frames -->
+  <div id="flash_messages">
+    <%= render "shared/flash_messages" %>
+  </div>
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="min-w-0 flex-1">
+      <h2>My Medications</h2>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= link_to new_user_medication_path,
+          class: "add-new-button",
+          data: { turbo_frame: "_top" } do %>
+        <%= render partial: "shared/icons/plus_sign" %>
+        Add Medication
+      <% end %>
+    </div>
+  </div>
+  <div>
+    <%= render "info" %>
+  </div>
+  <!-- Page size selector -->
+  <div class="mt-4">
+    <%= render "shared/pager_rows" %>
+  </div>
+  <!-- Paginated content -->
+  <%= turbo_frame_tag "pager_results" do %>
+    <%= render "user_medications/list/list", user_medications: @records %>
+  <% end %>
+  <!-- Pagination controls -->
+  <%= turbo_frame_tag "pagination_controls" do %>
+    <%= render "shared/pager",
+      pager_pagination_path: @pager_pagination_path,
+      pagy: @pagy,
+      pager_rows: @pager_rows %>
+  <% end %>
+</div>

@@ -1,0 +1,466 @@
+{
+  "approximateGroup": {
+    "inputTerm": null,
+    "candidate": [
+      {
+        "rxcui": "352741",
+        "rxaui": "1551886",
+        "score": "14.078289031982422",
+        "rank": "1",
+        "source": "MMSL"
+      },
+      {
+        "rxcui": "352741",
+        "rxaui": "1551887",
+        "score": "14.078289031982422",
+        "rank": "1",
+        "name": "Lexapro",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "1186154",
+        "rxaui": "3839340",
+        "score": "13.514269910812379",
+        "rank": "3",
+        "name": "Lexapro Pill",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "1186153",
+        "rxaui": "3839339",
+        "score": "13.032068853089811",
+        "rank": "4",
+        "name": "Lexapro Oral Product",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "368571",
+        "rxaui": "12318896",
+        "score": "12.621302292737724",
+        "rank": "5",
+        "name": "escitalopram Oral Tablet [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "1186152",
+        "rxaui": "3839338",
+        "score": "12.614991641591356",
+        "rank": "6",
+        "name": "Lexapro Oral Liquid Product",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "406125",
+        "rxaui": "12318858",
+        "score": "11.353492477432221",
+        "rank": "7",
+        "name": "escitalopram Oral Solution [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "575972",
+        "rxaui": "12306307",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "name": "escitalopram 10 MG [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "575973",
+        "rxaui": "12306308",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "name": "escitalopram 20 MG [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "576370",
+        "rxaui": "12306311",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "name": "escitalopram 5 MG [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "12887768",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "12887769",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "12887770",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "12887771",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "2645625",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "2645626",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "2645627",
+        "score": "10.623301792737724",
+        "rank": "8",
+        "source": "GS"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "2862160",
+        "score": "10.259723377078029",
+        "rank": "18",
+        "source": "GS"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "1550988",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "name": "Lexapro 20 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "1550989",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "source": "MMSL"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "1666493",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "name": "Lexapro 5 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "1666494",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "source": "MMSL"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "1937400",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "name": "Lexapro 10 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "1937401",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "source": "MMSL"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "6360435",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "name": "Lexapro 20 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "6363606",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "name": "Lexapro 5 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "6370678",
+        "score": "10.25459351538949",
+        "rank": "19",
+        "name": "Lexapro 10 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "12357240",
+        "score": "9.939385905634992",
+        "rank": "28",
+        "name": "escitalopram 20 MG Oral Tablet [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "12357390",
+        "score": "9.939385905634992",
+        "rank": "28",
+        "name": "escitalopram 5 MG Oral Tablet [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "12364332",
+        "score": "9.939385905634992",
+        "rank": "28",
+        "name": "escitalopram 10 MG Oral Tablet [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "1666521",
+        "score": "9.934416212682176",
+        "rank": "31",
+        "name": "Lexapro 1 MG/ML Oral Solution",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "2369125",
+        "score": "9.934416212682176",
+        "rank": "31",
+        "source": "MMSL"
+      },
+      {
+        "rxcui": "576381",
+        "rxaui": "12306363",
+        "score": "9.22913416385054",
+        "rank": "33",
+        "name": "escitalopram 1 MG/ML [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "3067396",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "name": "ESCITALOPRAM OXALATE 10 mg ORAL TABLET [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "3067397",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "name": "ESCITALOPRAM OXALATE 20 mg ORAL TABLET [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "3067398",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "name": "ESCITALOPRAM OXALATE 5 mg ORAL TABLET [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "3777179",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "3777181",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "3777183",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "8221594",
+        "score": "8.68946550300611",
+        "rank": "34",
+        "name": "ESCITALOPRAM OXALATE 10 mg ORAL TABLET [LEXAPRO]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "12357103",
+        "score": "8.685120770254606",
+        "rank": "41",
+        "name": "escitalopram 1 MG/ML Oral Solution [Lexapro]",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "8697943",
+        "score": "8.685120770254606",
+        "rank": "41",
+        "name": "Lexapro 5 MG in 5 mL Oral Solution",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "3627483",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 10 mg ORAL TABLET, FILM COATED [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "3627484",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 20 mg ORAL TABLET, FILM COATED [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "3627485",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 5 mg ORAL TABLET, FILM COATED [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "3718193",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 5 mg ORAL TABLET, FILM COATED [LEXAPRO]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "4649829",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 10 mg ORAL TABLET, FILM COATED [LEXAPRO]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "5937407",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 10 mg ORAL TABLET, FILM COATED [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "5937408",
+        "score": "8.254779573006749",
+        "rank": "43",
+        "name": "ESCITALOPRAM OXALATE 20 mg ORAL TABLET, FILM COATED [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "352272",
+        "rxaui": "3628489",
+        "score": "7.614558321381044",
+        "rank": "50",
+        "name": "Lexapro (as escitalopram oxalate) 10 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "352273",
+        "rxaui": "3628490",
+        "score": "7.614558321381044",
+        "rank": "50",
+        "name": "Lexapro (as escitalopram oxalate) 20 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404408",
+        "rxaui": "3628491",
+        "score": "7.614558321381044",
+        "rank": "50",
+        "name": "Lexapro (as escitalopram oxalate) 5 MG Oral Tablet",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "3777185",
+        "score": "7.610751042220355",
+        "rank": "53",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "5042221",
+        "score": "6.6830282684084",
+        "rank": "54",
+        "name": "ESCITALOPRAM OXALATE 5 mg in 5 mL ORAL SOLUTION [Lexapro]",
+        "source": "MTHSPL"
+      },
+      {
+        "rxcui": "404420",
+        "rxaui": "3628488",
+        "score": "6.5323068707895215",
+        "rank": "55",
+        "name": "Lexapro (as escitalopram oxalate) 5 MG per 5 ML Oral Solution",
+        "source": "RXNORM"
+      },
+      {
+        "rxcui": "2572014",
+        "rxaui": "12825568",
+        "score": "0.8512567012461132",
+        "rank": "56",
+        "source": "GS"
+      },
+      {
+        "rxcui": "1428948",
+        "rxaui": "9736030",
+        "score": "0.7205546543190429",
+        "rank": "57",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "2572014",
+        "rxaui": "12621796",
+        "score": "0.6168651788582774",
+        "rank": "58",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "2572014",
+        "rxaui": "12750182",
+        "score": "0.5293318770262924",
+        "rank": "59",
+        "source": "MMX"
+      },
+      {
+        "rxcui": "2572014",
+        "rxaui": "12534450",
+        "score": "0.4766370078275769",
+        "rank": "60",
+        "name": "MENTHOL 40 mg in 1 g / LIDOCAINE 40 mg in 1 g TOPICAL PATCH [LenzaPro Flex]",
+        "source": "MTHSPL"
+      }
+    ]
+  }
+}

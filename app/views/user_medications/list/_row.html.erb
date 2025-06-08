@@ -1,0 +1,5 @@
+<ul role="list">
+  <% user_medications.each_with_index do |user_medication, index| %>
+    <%= render partial: "user_medications/list/row_item", locals: { user_medication: user_medication, index: index } %>
+  <% end %>
+</ul>

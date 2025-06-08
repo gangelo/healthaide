@@ -3,6 +3,7 @@ class CreateUserMedications < ActiveRecord::Migration[8.0]
     create_table :user_medications do |t|
       t.references :user, null: false, foreign_key: true
       t.references :medication, null: false, foreign_key: true
+      t.integer :frequency, null: false
 
       t.timestamps
     end

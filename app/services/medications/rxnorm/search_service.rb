@@ -7,7 +7,8 @@ module Medications
         def search(name)
           raise ArgumentError, "Argument [name] cannot be blank" if name.blank?
 
-          url = "#{BASE_URL}/drugs.json?name=#{CGI.escape(name)}"
+          # Fixed: approximateTerm (not approximageTerm)
+          url = "#{BASE_URL}/approximateTerm.json?term=#{CGI.escape(name)}&maxEntries=100"
 
           begin
             response = Net::HTTP.get_response(URI(url))
@@ -22,9 +23,16 @@ module Medications
 
         private
 
-        def to_medication_name_array(response_hash)
-          concept_group = response_hash.dig("drugGroup", "conceptGroup")&.find { |entry| entry.key?("conceptProperties") }
-          concept_group.dig("conceptProperties").map { |entry| entry["name"] } if concept_group
+        def to_medication_name_array(response_hash, return_data: "name")
+          # Fixed: correct path through the response structure
+          approximate_group = response_hash.dig("approximateGroup", "candidate")
+          return [] unless approximate_group
+
+          # Handle both single candidate (hash) and multiple candidates (array)
+          candidates = approximate_group.is_a?(Array) ? approximate_group : [ approximate_group ]
+
+          # Extract the specified field from each candidate
+          candidates.map { |candidate| candidate[return_data] }.compact
         end
       end
     end

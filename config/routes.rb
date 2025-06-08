@@ -82,6 +82,14 @@ Rails.application.routes.draw do
     end
   end
 
+  # User medications
+  resources :user_medications, only: [ :create, :destroy, :index, :new, :show, :edit, :update ] do
+    collection do
+      get :search
+      patch :pager_rows_changed
+    end
+  end
+
    # User stats
    resources :user_stats do
      collection do

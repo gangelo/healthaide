@@ -1,0 +1,71 @@
+<% content_for :title, "Add Medication" %>
+<div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10">
+  <%= turbo_frame_tag "flash_messages" do %>
+    <%= render "shared/flash_messages" %>
+  <% end %>
+  <%= render partial: "shared/active_record_errors", locals: { resource: @user_medication } %>
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="min-w-0 flex-1">
+      <h2>Add Medication</h2>
+      <p class="mt-1 text-sm text-gray-500 max-w-3xl">Search for a medication and add it to your list.</p>
+    </div>
+    <div class="mt-4 flex md:ml-4 md:mt-0">
+      <%= link_to "Back to My Medications",
+          user_medications_path,
+          class: "back-button-sm" %>
+    </div>
+  </div>
+  <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl p-6" data-controller="medication-search">
+    <div class="hidden" data-medication-search-target="lastValidMedication"></div>
+    <%= form_with(model: [ @user_medication ], local: true) do |form| %>
+      <div class="mb-6">
+        <label for="user_medication_medication_name" class="block text-sm font-medium leading-6 text-gray-900 mb-2">
+          Search and Select Medication
+        </label>
+        <div class="relative border border-1 rounded-md border-gray-300" data-medication-search-target="searchContainer">
+          <input type="text"
+                id="user_medication_medication_name"
+                name="user_medication[medication_attributes][medication_name]"
+                placeholder="Type to search medications..."
+                list="medications_datalist"
+                class="block w-full rounded-md border-0 py-1 pl-3 pr-16 text-gray-900 focus:ring-0 focus:outline-none sm:text-sm sm:leading-6"
+                autocomplete="off"
+                data-medication-search-target="searchInput">
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 space-x-1">
+            <%= render Icons::SearchComponent.new(size_class: "h-4 w-4") %>
+            <button type="button"
+                    class="text-gray-400 hover:text-gray-600 hover:text-red-500 hidden"
+                    data-medication-search-target="clearButton"
+                    data-action="click->medication-search#clear">
+              <%= render "shared/icons/trash_can", css_class: "h-4 w-4" %>
+            </button>
+          </div>
+          <datalist id="medications_datalist" data-medication-search-target="datalist">
+            <!-- Options will be populated dynamically -->
+          </datalist>
+        </div>
+        <p class="mt-1 text-sm text-gray-500">Type a medication name to see an available list (e.g. "tylenol", "tylen", etc.). <em>Only</em> medications found in the list will be considered valid.</p>
+      </div>
+      <%# medication frequency (e.g. daily, weekly, etc. %>
+      <div class="mb-6">
+        <%= form.label :frequency, class: "block text-sm font-medium leading-6 text-gray-900 mb-2" %>
+        <%= form.select :frequency, options_for_select(UserMedication.frequencies_by_value.map { |k, _v| [k.humanize, k] }, @user_medication.frequency),
+                        { include_blank: "Choose frequency..." },
+                        {
+                          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                          data: {
+                            medication_search_target: "frequency",
+                            action: "medication-search#frequencyChanged"
+                          }
+                        } %>
+      </div>
+      <div class="button-group-container">
+        <%= form.submit "Add Medication",
+            class: "submit-button",
+            data: { medication_search_target: "submitButton" },
+            disabled: true %>
+        <%= link_to "Cancel", user_medications_path, class: "back-button" %>
+      </div>
+    <% end %>
+  </div>
+</div>

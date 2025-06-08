@@ -33,6 +33,14 @@ RSpec.describe UserMedication do
         expect(user_medication).to be_valid
       end
     end
+
+    describe '#frequency' do
+      it { is_expected.to validate_presence_of(:frequency) }
+    end
+  end
+
+  describe 'enums' do
+    it { is_expected.to define_enum_for(:frequency).with_prefix(:frequency) }
   end
 
   describe 'scopes' do
@@ -47,7 +55,7 @@ RSpec.describe UserMedication do
 
       it 'returns user medications ordered by medication name' do
         ordered_medications = described_class.ordered
-        expect(ordered_medications).to eq([user_medication_a, user_medication_b, user_medication_c])
+        expect(ordered_medications).to eq([ user_medication_a, user_medication_b, user_medication_c ])
       end
     end
   end

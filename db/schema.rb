@@ -115,6 +115,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
   create_table "user_medications", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "medication_id", null: false
+    t.integer "frequency", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["medication_id"], name: "index_user_medications_on_medication_id"
