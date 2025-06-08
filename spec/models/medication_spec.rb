@@ -12,7 +12,7 @@ RSpec.describe Medication do
     describe '#medication_name' do
       it { is_expected.to validate_presence_of(:medication_name) }
       it { is_expected.to validate_uniqueness_of(:medication_name) }
-      it { is_expected.to validate_length_of(:medication_name).is_at_most(128) }
+      it { is_expected.to validate_length_of(:medication_name).is_at_most(1024) }
     end
   end
 
@@ -23,7 +23,7 @@ RSpec.describe Medication do
       let!(:medication_c) { create(:medication, medication_name: 'C Medication') }
 
       it 'returns medications ordered by medication_name' do
-        expect(described_class.ordered).to eq([medication_a, medication_b, medication_c])
+        expect(described_class.ordered).to eq([ medication_a, medication_b, medication_c ])
       end
     end
   end

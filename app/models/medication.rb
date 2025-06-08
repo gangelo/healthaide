@@ -5,7 +5,7 @@ class Medication < ApplicationRecord
   validates :medication_name,
             presence: true,
             uniqueness: true,
-            length: { maximum: 128 }
+            length: { maximum: 1024 }
 
   scope :ordered, -> { order(:medication_name) }
 

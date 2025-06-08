@@ -101,6 +101,7 @@
                 <%= link_to "My Health Conditions", user_health_conditions_path, class: "#{nav_link_class(user_health_conditions_path)} block py-2" %>
                 <%= link_to "My Health Goals", user_health_goals_path, class: "#{nav_link_class(user_health_goals_path)} block py-2" %>
                 <%= link_to "My Supplements", user_supplements_path, class: "#{nav_link_class(user_supplements_path)} block py-2" %>
+                <%= link_to "My Medications", user_medications_path, class: "#{nav_link_class(user_medications_path)} block py-2" %>
               </div>
               <% if current_user.admin? %>
                 <div class="mt-2 border-t border-gray-700 pt-2">
