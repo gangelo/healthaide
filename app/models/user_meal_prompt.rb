@@ -27,6 +27,7 @@ class UserMealPrompt < ApplicationRecord
   def to_export_hash
     {
       meals_count:,
+      include_user_medications:,
       include_user_stats:,
       food_names:             Food.where(id: food_ids).pluck(:food_name),
       health_condition_names: HealthCondition.where(id: health_condition_ids).pluck(:health_condition_name),
@@ -34,6 +35,12 @@ class UserMealPrompt < ApplicationRecord
       user_supplement_names:  UserSupplement.where(id: user_supplement_ids).pluck(:user_supplement_name)
     }
   end
+
+  delegate :user_medications, to: :user
+
+  # NOTE: We cannot delegate (e.g. `delegate :method, to: :user`) any of the below
+  # methods to user because we need to only include what the user selects to be included
+  # in the meal prompt.
 
   # Convenience methods for associations with proper ordering
   def foods

@@ -1,6 +1,16 @@
 <h2 class="text-xl font-semibold mb-4">Meal Prompt Options</h2>
 <div class="mb-6">
-  <h3 class="text-md font-medium mb-3">User Statistics</h3>
+  <h3 class="text-md font-medium mb-3">Meal Count</h3>
+  <div class="flex items-center">
+    <%= f.label :meals_count, "Number of meals to generate:", class: "block text-sm font-medium text-gray-700 mr-3" %>
+    <%= f.select :meals_count,
+                options_for_select((1..21).map { |n| [pluralize(n, "meal"), n] }, @user_meal_prompt.meals_count),
+                {},
+                { class: "mt-1 block w-full md:w-1/4 pl-3 pr-10 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" } %>
+  </div>
+</div>
+<div class="mb-6">
+  <h3 class="text-md font-medium mb-3">Statistics</h3>
   <div class="mb-4">
     <label class="flex items-center">
       <%= f.check_box :include_user_stats, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2" %>
@@ -10,6 +20,20 @@
   <% if !@user_stat.present? %>
     <div class="text-xs text-gray-500 italic mb-4">
       No statistics available. <%= link_to "Add statistics", new_user_stat_path, class: "text-blue-600" %>
+    </div>
+  <% end %>
+</div>
+<div class="mb-6">
+  <h3 class="text-md font-medium mb-3">Medications</h3>
+  <div class="mb-4">
+    <label class="flex items-center">
+      <%= f.check_box :include_user_medications, class: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2" %>
+      <span class="text-sm text-gray-700">Include my medications in the meal prompt</span>
+    </label>
+  </div>
+  <% if !@user_medications.present? %>
+    <div class="text-xs text-gray-500 italic mb-4">
+      No medications available. <%= link_to "Add medications", user_medications_path, class: "text-blue-600" %>
     </div>
   <% end %>
 </div>
@@ -76,14 +100,4 @@
       No supplements available. <%= link_to "Add supplements", new_user_supplement_path, class: "text-blue-600" %>
     </div>
   <% end %>
-</div>
-<div class="mb-6">
-  <h3 class="text-md font-medium mb-3">Meal Count</h3>
-  <div class="flex items-center">
-    <%= f.label :meals_count, "Number of meals to generate:", class: "block text-sm font-medium text-gray-700 mr-3" %>
-    <%= f.select :meals_count,
-                options_for_select((1..21).map { |n| [pluralize(n, "meal"), n] }, @user_meal_prompt.meals_count),
-                {},
-                { class: "mt-1 block w-full md:w-1/4 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" } %>
-  </div>
 </div>

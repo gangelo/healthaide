@@ -62,6 +62,7 @@ class UserMealPromptsController < ApplicationController
 
     # Handle boolean and numeric values
     @user_meal_prompt.include_user_stats = user_meal_prompt_data[:include_user_stats] == "1" if user_meal_prompt_data.key?(:include_user_stats)
+    @user_meal_prompt.include_user_medications = user_meal_prompt_data[:include_user_medications] == "1" if user_meal_prompt_data.key?(:include_user_medications)
     @user_meal_prompt.meals_count = user_meal_prompt_data[:meals_count].to_i if user_meal_prompt_data[:meals_count].present?
 
     @user_meal_prompt.save
@@ -130,8 +131,9 @@ class UserMealPromptsController < ApplicationController
     @available_foods   = current_user.user_foods.ordered
     @health_conditions = current_user.user_health_conditions.ordered
     @health_goals      = current_user.user_health_goals.ordered_by_importance
+    @user_medications  = current_user.user_medications.ordered
     @user_stat         = current_user.user_stat
-    @user_supplements       = current_user.user_supplements.ordered
+    @user_supplements  = current_user.user_supplements.ordered
   end
 
   def user_meal_prompt_params
