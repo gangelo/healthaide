@@ -47,17 +47,20 @@
             <% @supplements.each do |supplement| %>
               <div class="border rounded-md p-3 hover:bg-gray-50">
                 <label class="flex items-start cursor-pointer">
-                  <%= f.check_box :supplement_ids,
-                               { multiple: true,
-                                 id: "supplement_ids_#{supplement.id}",
-                                 class: "h-4 w-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500",
-                                 checked: @user_meal_prompt.supplement_ids.include?(supplement.id),
-                                 data: {
-                                  wizard_select_target: "checkbox",
-                                  action: "change->wizard-select#checkboxChanged"
-                                } },
-                               supplement.id,
-                               nil %>
+                  <%= f.check_box :user_supplement_ids,
+                    {
+                    multiple: true,
+                    id: "supplement_ids_#{supplement.id}",
+                    class: "h-4 w-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500",
+                    checked: @user_meal_prompt.user_supplement_ids.include?(supplement.id),
+                    data:
+                      {
+                        wizard_select_target: "checkbox",
+                        action: "change->wizard-select#checkboxChanged"
+                      }
+                    },
+                  supplement.id,
+                  nil %>
                   <span class="ml-2 text-sm font-medium text-gray-700">
                     <%= supplement.user_supplement_name %>
                   </span>

@@ -8,6 +8,6 @@ FactoryBot.define do
     food_ids { [] }
     health_condition_ids { [] }
     health_goal_ids { [] }
-    supplement_ids { [] }
+    user_supplement_ids { [] }
   end
 end

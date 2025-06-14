@@ -104,7 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
     t.text "food_ids", default: "[]"
     t.text "health_condition_ids", default: "[]"
     t.text "health_goal_ids", default: "[]"
-    t.text "supplement_ids", default: "[]"
+    t.text "user_supplement_ids", default: "[]"
     t.integer "meals_count", default: 3
     t.datetime "generated_at"
     t.datetime "created_at", null: false

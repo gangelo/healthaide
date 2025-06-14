@@ -5,14 +5,14 @@ class UserMealPrompt < ApplicationRecord
   serialize :food_ids, coder: JSON
   serialize :health_condition_ids, coder: JSON
   serialize :health_goal_ids, coder: JSON
-  serialize :supplement_ids, coder: JSON
+  serialize :user_supplement_ids, coder: JSON
 
   # Set empty array defaults
   after_initialize do
-    self.food_ids ||= []
+    self.food_ids             ||= []
     self.health_condition_ids ||= []
-    self.health_goal_ids ||= []
-    self.supplement_ids ||= []
+    self.health_goal_ids      ||= []
+    self.user_supplement_ids  ||= []
   end
 
   scope :find_by_username, ->(username) {
@@ -25,14 +25,14 @@ class UserMealPrompt < ApplicationRecord
   }
 
   def to_export_hash
-    attributes.symbolize_keys.slice(
-      :food_ids,
-      :health_condition_ids,
-      :health_goal_ids,
-      :include_user_stats,
-      :meals_count,
-      :supplement_ids
-    )
+    {
+      meals_count:,
+      include_user_stats:,
+      food_names:             Food.where(id: food_ids).pluck(:food_name),
+      health_condition_names: HealthCondition.where(id: health_condition_ids).pluck(:health_condition_name),
+      health_goal_names:      HealthGoal.where(id: health_goal_ids).pluck(:health_goal_name),
+      user_supplement_names:  UserSupplement.where(id: user_supplement_ids).pluck(:user_supplement_name)
+    }
   end
 
   # Convenience methods for associations with proper ordering
@@ -55,7 +55,7 @@ class UserMealPrompt < ApplicationRecord
 
   def supplements
     UserSupplement
-      .where(id: supplement_ids)
+      .where(id: user_supplement_ids)
       .includes(:supplement_components)
       .ordered
   end

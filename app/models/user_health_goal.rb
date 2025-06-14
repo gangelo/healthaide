@@ -14,7 +14,7 @@ class UserHealthGoal < ApplicationRecord
 
   def to_export_hash
     {
-    user_health_goal: attributes.symbolize_keys.tap do |hash|
+    user_health_goal: attributes.symbolize_keys.slice(:order_of_importance).tap do |hash|
       hash.merge!(health_goal.to_export_hash)
     end
     }

@@ -56,7 +56,7 @@ class UserMealPromptsController < ApplicationController
     user_meal_prompt_data = params[:user_meal_prompt] || {}
 
     # Handle arrays
-    [ :food_ids, :health_condition_ids, :health_goal_ids, :supplement_ids ].each do |array_key|
+    [ :food_ids, :health_condition_ids, :health_goal_ids, :user_supplement_ids ].each do |array_key|
       @user_meal_prompt[array_key] = Array(user_meal_prompt_data[array_key].presence).map(&:to_i)
     end
 
@@ -141,7 +141,7 @@ class UserMealPromptsController < ApplicationController
       { food_ids: [] },
       { health_condition_ids: [] },
       { health_goal_ids: [] },
-      { supplement_ids: [] }
+      { user_supplement_ids: [] }
     )
   end
 end

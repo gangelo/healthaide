@@ -188,7 +188,7 @@ module Imports
 
         if user_stats_hash.present?
           user_stat = @import_user.build_user_stat
-          user_stat.update!(**filter_model_hash(user_stats_hash))
+          user_stat.update!(**user_stats_hash)
         end
         @message = nil
       rescue ActiveRecord::RecordInvalid => e
@@ -208,22 +208,22 @@ module Imports
         user_meal_prompt = UserMealPrompt.find_by_username(@import_user.username)&.first
         user_meal_prompt ||= @import_user.build_user_meal_prompt
 
-        filtered_meal_prompt_hash = filter_model_hash(meal_prompt_hash)
-        user_meal_prompt.update!(**filtered_meal_prompt_hash)
+        user_meal_prompg_update_params = {
+          meals_count:          meal_prompt_hash[:meals_count],
+          include_user_stats:   meal_prompt_hash[:include_user_stats],
+          food_ids:             Food.where(food_name: meal_prompt_hash[:food_names]).pluck(:id),
+          health_condition_ids: HealthCondition.where(health_condition_name: meal_prompt_hash[:health_condition_names]).pluck(:id),
+          health_goal_ids:      HealthGoal.where(health_goal_name: meal_prompt_hash[:health_goal_names]).pluck(:id),
+          user_supplement_ids:  UserSupplement.where(user_supplement_name: meal_prompt_hash[:user_supplement_names]).pluck(:id)
+        }
+
+        user_meal_prompt.update!(**user_meal_prompg_update_params)
 
         @message = nil
       rescue ActiveRecord::RecordInvalid => e
         @message = format_error("Error importing meal prompt", error: e)
       rescue => e
         @message = format_error("Error importing meal prompt", error: e)
-      end
-    end
-
-    def filter_model_hash(model_hash)
-      return {} unless model_hash.is_a?(Hash)
-
-      model_hash.reject do |key, value|
-        %i[created_at id user_id updated_at].include?(key.to_sym)
       end
     end
   end
