@@ -15,7 +15,14 @@ namespace :db do
       deleted_counts = {
         user_foods: UserFood.delete_all,
         user_health_conditions: UserHealthCondition.delete_all,
-        user_health_goals: UserHealthGoal.delete_all
+        user_health_goals: UserHealthGoal.delete_all,
+        user_meal_prompts: UserMealPrompt.delete_all,
+        user_medications: UserMedication.delete_all,
+        user_stats: UserStat.delete_all,
+        supplement_components: SupplementComponent.delete_all,
+        supplement_health_conditions: SupplementHealthCondition.delete_all,
+        supplement_health_goals: SupplementHealthGoal.delete_all,
+        user_supplements: UserSupplement.delete_all
       }
 
       # Print results
@@ -40,7 +47,14 @@ namespace :db do
       before_counts = {
         user_foods: UserFood.count,
         user_health_conditions: UserHealthCondition.count,
-        user_health_goals: UserHealthGoal.count
+        user_health_goals: UserHealthGoal.count,
+        user_meal_prompts: UserMealPrompt.count,
+        user_medications: UserMedication.count,
+        user_stats: UserStat.count,
+        supplement_components: SupplementComponent.count,
+        supplement_health_conditions: SupplementHealthCondition.count,
+        supplement_health_goals: SupplementHealthGoal.count,
+        user_supplements: UserSupplement.count
       }
 
       # Print current counts
@@ -58,7 +72,14 @@ namespace :db do
         deleted_counts = {
           user_foods: UserFood.delete_all,
           user_health_conditions: UserHealthCondition.delete_all,
-          user_health_goals: UserHealthGoal.delete_all
+          user_health_goals: UserHealthGoal.delete_all,
+          user_meal_prompts: UserMealPrompt.delete_all,
+          user_medications: UserMedication.delete_all,
+          user_stats: UserStat.delete_all,
+          supplement_components: SupplementComponent.delete_all,
+          supplement_health_conditions: SupplementHealthCondition.delete_all,
+          supplement_health_goals: SupplementHealthGoal.delete_all,
+          user_supplements: UserSupplement.delete_all
         }
 
         # Print results
@@ -87,7 +108,8 @@ namespace :db do
       before_counts = {
         foods: Food.count,
         health_conditions: HealthCondition.count,
-        health_goals: HealthGoal.count
+        health_goals: HealthGoal.count,
+        medications: Medication.count
         # users: User.count
       }
 
@@ -101,7 +123,8 @@ namespace :db do
       deleted_counts = {
         foods: Food.delete_all,
         health_conditions: HealthCondition.delete_all,
-        health_goals: HealthGoal.delete_all
+        health_goals: HealthGoal.delete_all,
+        medications: Medication.delete_all
         # users: User.delete_all
       }
 
@@ -128,7 +151,8 @@ namespace :db do
       before_counts = {
         foods: Food.count,
         health_conditions: HealthCondition.count,
-        health_goals: HealthGoal.count
+        health_goals: HealthGoal.count,
+        medications: Medication.count
         # users: User.count
       }
 
@@ -147,7 +171,8 @@ namespace :db do
         deleted_counts = {
           foods: Food.delete_all,
           health_conditions: HealthCondition.delete_all,
-          health_goals: HealthGoal.delete_all
+          health_goals: HealthGoal.delete_all,
+          medications: Medication.delete_all
           # users: User.delete_all
         }
 
