@@ -1,13 +1,13 @@
 module UserSupplementsHelper
-  def format_user_supplement(supplement)
-    formatted_user_supplement = if supplement.supplement_components.any?
-      "#{supplement.user_supplement_name} (#{format_supplement_components(supplement.supplement_components)})"
-    elsif supplement.dosage?
-      "#{supplement.user_supplement_name}, #{supplement.dosage} #{supplement.dosage_unit}"
+  def format_user_supplement(user_supplement)
+    formatted_user_supplement = if user_supplement.supplement_components.any?
+      "#{user_supplement.user_supplement_name} (#{format_supplement_components(user_supplement.supplement_components)})"
+    elsif user_supplement.dosage?
+      "#{user_supplement.user_supplement_name}, #{user_supplement.dosage} #{user_supplement.dosage_unit}"
     else
-      "#{supplement.user_supplement_name}"
+      "#{user_supplement.user_supplement_name}"
     end
-    "#{formatted_user_supplement}, taken #{format_supplemet_component_frequency(supplement.frequency)}"
+    "#{formatted_user_supplement}, taken #{format_supplemet_component_frequency(user_supplement.frequency)}"
   end
 
   private

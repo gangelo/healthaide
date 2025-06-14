@@ -53,7 +53,7 @@ class UserMealPrompt < ApplicationRecord
         .map(&:health_goal)
   end
 
-  def supplements
+  def user_supplements
     UserSupplement
       .where(id: user_supplement_ids)
       .includes(:supplement_components)

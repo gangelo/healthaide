@@ -131,7 +131,7 @@ class UserMealPromptsController < ApplicationController
     @health_conditions = current_user.user_health_conditions.ordered
     @health_goals      = current_user.user_health_goals.ordered_by_importance
     @user_stat         = current_user.user_stat
-    @supplements       = current_user.user_supplements.ordered
+    @user_supplements       = current_user.user_supplements.ordered
   end
 
   def user_meal_prompt_params
