@@ -1,6 +1,5 @@
 <%= form_with(model: user_medication, class: "space-y-6") do |form| %>
   <%= render "shared/active_record_errors", resource: user_medication %>
-  
   <div class="my-5">
     <h2>Medication Information</h2>
     <label class="block font-medium text-gray-700 mb-1">Medication Name</label>
@@ -9,7 +8,6 @@
     </div>
     <p class="mt-1 text-xs text-gray-500">Medication name cannot be changed</p>
   </div>
-  
   <%# medication frequency (e.g. daily, weekly, etc. %>
   <div class="my-5">
     <%= form.label :frequency, class: "block font-medium text-gray-700 mb-1" %>
@@ -17,7 +15,6 @@
                     { include_blank: "Choose frequency..." },
                     { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
   </div>
-  
   <%= render partial: "shared/forms/form_buttons", locals: {
     form: form,
     resource: user_medication,
@@ -26,6 +23,9 @@
         turbo: false
       },
       create_button: {
+        turbo: false
+      },
+      update_button: {
         turbo: false
       }
     }
