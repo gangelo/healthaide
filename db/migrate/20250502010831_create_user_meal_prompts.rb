@@ -6,7 +6,7 @@ class CreateUserMealPrompts < ActiveRecord::Migration[8.0]
       t.text :food_ids, default: '[]'
       t.text :health_condition_ids, default: '[]'
       t.text :health_goal_ids, default: '[]'
-      t.text :supplement_ids, default: '[]'
+      t.text :user_supplement_ids, default: '[]'
       t.integer :meals_count, default: 3
       t.datetime :generated_at
 
