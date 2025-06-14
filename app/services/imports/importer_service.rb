@@ -17,6 +17,7 @@ module Imports
       import_user_conditions   if successful?
       import_user_health_goals if successful?
       import_user_supplements  if successful?
+      import_user_medications  if successful?
       import_user_stats        if successful?
       import_user_meal_prompt  if successful?
 
@@ -150,6 +151,34 @@ module Imports
       @message = format_error("Error importing user supplement components", error: e)
     rescue => e
       @message = format_error("Error importing user supplement components", error: e)
+    end
+
+    def import_user_medications
+      begin
+        user_medications_hash = @import_user_hash.dig(:user, :user_medications)
+        user_medications_hash.each do |user_medication_hash|
+          user_medication_hash = user_medication_hash[:user_medication]
+          medication_name      = user_medication_hash[:medication][:medication_name]
+          Rails.logger.info "Importing user medication: '#{medication_name}' for user: #{@import_user.username}..."
+
+          next if medication_name.blank?
+
+          medication = Medication.find_or_initialize_by(medication_name:)
+          Rails.logger.debug("xyzzy: medication_name: #{medication_name}")
+          Rails.logger.debug("xyzzy: medication: #{medication.inspect}")
+
+          @import_user.user_medications.find_or_initialize_by(medication:).tap do |user_medication|
+            user_medication.frequency = user_medication_hash[:frequency]
+
+            user_medication.save!
+          end
+        end
+        @message = nil
+      rescue ActiveRecord::RecordInvalid => e
+        @message = format_error("Error importing user medications", error: e)
+      rescue => e
+        @message = format_error("Error importing user medications", error: e)
+      end
     end
 
     def import_user_stats

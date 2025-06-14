@@ -57,14 +57,17 @@ RSpec.describe UserSupplement, type: :model do
 
       expect(export_hash).to be_a(Hash)
       expect(export_hash[:user_supplement]).to include(
-        id: user_supplement.id,
         user_supplement_name: user_supplement.user_supplement_name,
         form: user_supplement.form,
-        frequency: user_supplement.frequency
+        frequency: user_supplement.frequency,
+        dosage: user_supplement.dosage,
+        dosage_unit: user_supplement.dosage_unit,
+        manufacturer: user_supplement.manufacturer,
+        notes: user_supplement.notes,
+        supplement_components: user_supplement.supplement_components.map { it.to_export_hash },
+        health_conditions: user_supplement.health_conditions.map { it.to_export_hash },
+        health_goals: user_supplement.health_goals.map { it.to_export_hash }
       )
-      expect(export_hash[:user_supplement][:supplement_components]).to be_an(Array)
-      expect(export_hash[:user_supplement][:health_conditions]).to be_an(Array)
-      expect(export_hash[:user_supplement][:health_goals]).to be_an(Array)
     end
   end
 end

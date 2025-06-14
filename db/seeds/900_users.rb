@@ -15,33 +15,39 @@ if Rails.env.development?
   puts "Creating users..."
 
   User.find_or_create_by!(username: "adam.user") do |user|
-    user.role = User::ROLE_USER
-
+    user.role       = User::ROLE_USER
     user.first_name = "Adam"
-    user.last_name = "User"
-    user.email = "adam.user@nowhere.com"
+    user.last_name  = "User"
+    user.email      = "adam.user@nowhere.com"
 
     init_common_user_attributes_for(user)
   end
 
   User.find_or_create_by!(username: "bob.user") do |user|
-    user.role = User::ROLE_USER
-
+    user.role       = User::ROLE_USER
     user.first_name = "Bob"
-    user.last_name = "User"
-    user.email = "bob.user@nowhere.com"
+    user.last_name  = "User"
+    user.email      = "bob.user@nowhere.com"
 
     init_common_user_attributes_for(user)
   end
 
-  puts "Creating admin user..."
+  puts "Creating admin users..."
 
   User.find_or_create_by!(username: "joe.admin") do |user|
-    user.role = User::ROLE_ADMIN
-
+    user.role       = User::ROLE_ADMIN
     user.first_name = "Joe"
-    user.last_name = "Admin"
-    user.email = "joe.admin@nowhere.com"
+    user.last_name  = "Admin"
+    user.email      = "joe.admin@nowhere.com"
+
+    init_common_user_attributes_for(user)
+  end
+
+  User.find_or_create_by!(username: "gangelo") do |user|
+    user.role       = User::ROLE_ADMIN
+    user.first_name = "Gene"
+    user.last_name  = "Angelo"
+    user.email      = "gangelo@nowhere.com"
 
     init_common_user_attributes_for(user)
   end

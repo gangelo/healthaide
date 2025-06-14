@@ -24,7 +24,9 @@ class Food < ApplicationRecord
 
   def to_export_hash
     {
-      food: attributes.symbolize_keys
+      food: {
+        food_name: food_name
+      }
     }
   end
 

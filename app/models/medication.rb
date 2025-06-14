@@ -15,7 +15,7 @@ class Medication < ApplicationRecord
 
   def to_export_hash
     {
-      medication: attributes.symbolize_keys
+      medication: attributes.symbolize_keys.slice(:medication_name)
     }
   end
 end

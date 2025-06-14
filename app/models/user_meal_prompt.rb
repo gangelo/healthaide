@@ -25,7 +25,14 @@ class UserMealPrompt < ApplicationRecord
   }
 
   def to_export_hash
-    attributes.symbolize_keys
+    attributes.symbolize_keys.slice(
+      :food_ids,
+      :health_condition_ids,
+      :health_goal_ids,
+      :include_user_stats,
+      :meals_count,
+      :supplement_ids
+    )
   end
 
   # Convenience methods for associations with proper ordering

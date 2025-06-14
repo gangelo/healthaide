@@ -21,7 +21,7 @@ class HealthCondition < ApplicationRecord
 
   def to_export_hash
     {
-      health_condition: attributes.symbolize_keys
+      health_condition: attributes.symbolize_keys.slice(:health_condition_name)
     }
   end
 

@@ -10,9 +10,7 @@ class UserFood < ApplicationRecord
 
   def to_export_hash
     {
-    user_food: attributes.symbolize_keys.tap do |hash|
-      hash.merge!(food.to_export_hash)
-    end
+    user_food: food.to_export_hash
     }
   end
 end

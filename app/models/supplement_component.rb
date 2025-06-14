@@ -20,7 +20,7 @@ class SupplementComponent < ApplicationRecord
 
   def to_export_hash
     {
-      supplement_component: attributes.symbolize_keys
+      supplement_component: attributes.symbolize_keys.slice(:supplement_component_name, :amount, :unit)
     }
   end
 

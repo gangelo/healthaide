@@ -12,7 +12,7 @@ class UserMedication < ApplicationRecord
 
   def to_export_hash
     {
-      user_medication: attributes.symbolize_keys.tap do |hash|
+      user_medication: attributes.symbolize_keys.slice(:frequency).tap do |hash|
         hash.merge!(medication.to_export_hash)
       end
     }
