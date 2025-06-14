@@ -62,7 +62,7 @@
       <div class="button-group-container">
         <%= form.submit "Add Medication",
             class: "submit-button",
-            data: { medication_search_target: "submitButton" },
+            data: { turbo: false, medication_search_target: "submitButton" },
             disabled: true %>
         <%= link_to "Cancel", user_medications_path, class: "back-button" %>
       </div>
