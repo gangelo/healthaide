@@ -15,7 +15,7 @@
 </div>
 <div class="mb-6">
   <h3 class="text-md font-medium mb-3">Supplements</h3>
-  <% if @supplements.any? %>
+  <% if @user_supplements.any? %>
     <div data-controller="wizard-select"
          data-wizard-select-item-label-value="supplement"
          class="mb-4">
@@ -44,25 +44,25 @@
       <div class="bg-white rounded border border-gray-200 p-4">
         <div class="max-h-[400px] overflow-y-auto pr-2">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            <% @supplements.each do |supplement| %>
+            <% @user_supplements.each do |user_supplement| %>
               <div class="border rounded-md p-3 hover:bg-gray-50">
                 <label class="flex items-start cursor-pointer">
                   <%= f.check_box :user_supplement_ids,
                     {
                     multiple: true,
-                    id: "supplement_ids_#{supplement.id}",
+                    id: "supplement_ids_#{user_supplement.id}",
                     class: "h-4 w-4 mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500",
-                    checked: @user_meal_prompt.user_supplement_ids.include?(supplement.id),
+                    checked: @user_meal_prompt.user_supplement_ids.include?(user_supplement.id),
                     data:
                       {
                         wizard_select_target: "checkbox",
                         action: "change->wizard-select#checkboxChanged"
                       }
                     },
-                  supplement.id,
+                  user_supplement.id,
                   nil %>
                   <span class="ml-2 text-sm font-medium text-gray-700">
-                    <%= supplement.user_supplement_name %>
+                    <%= user_supplement.user_supplement_name %>
                   </span>
                 </label>
               </div>

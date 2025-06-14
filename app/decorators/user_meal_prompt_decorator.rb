@@ -49,10 +49,10 @@ class UserMealPromptDecorator < BaseDecorator
   end
 
   def formatted_supplements
-    return "" if supplements.empty?
+    return "" if user_supplements.empty?
 
-    supplements_content = supplements.map do |supplement|
-      "- #{format_supplement(supplement)}"
+    supplements_content = user_supplements.map do |user_supplement|
+      "- #{format_supplement(user_supplement)}"
     end.join("\n")
 
     <<~SUPPLEMENTS
@@ -61,17 +61,17 @@ class UserMealPromptDecorator < BaseDecorator
     SUPPLEMENTS
   end
 
-  def format_supplement(supplement)
-    if supplement.supplement_components.any?
-      components = supplement.supplement_components.map do |sc|
+  def format_supplement(user_supplement)
+    if user_supplement.supplement_components.any?
+      components = user_supplement.supplement_components.map do |sc|
         "#{sc.supplement_component_name} #{sc.amount} #{sc.unit}"
       end.join(", ")
 
-      "#{supplement.user_supplement_name} (#{components})"
-    elsif supplement.dosage?
-      "#{supplement.user_supplement_name}, #{supplement.dosage} #{supplement.dosage_unit}, #{supplement.frequency.to_s.humanize.downcase}"
+      "#{user_supplement.user_supplement_name} (#{components})"
+    elsif user_supplement.dosage?
+      "#{user_supplement.user_supplement_name}, #{user_supplement.dosage} #{user_supplement.dosage_unit}, #{user_supplement.frequency.to_s.humanize.downcase}"
     else
-      "#{supplement.user_supplement_name}, #{supplement.frequency.to_s.humanize.downcase}"
+      "#{user_supplement.user_supplement_name}, #{user_supplement.frequency.to_s.humanize.downcase}"
     end
   end
 
@@ -122,7 +122,7 @@ class UserMealPromptDecorator < BaseDecorator
       sections << "\n" + formatted_health_profile.strip
     end
 
-    if supplements.any?
+    if user_supplements.any?
       sections << "\n" + formatted_supplements.strip
     end
 
