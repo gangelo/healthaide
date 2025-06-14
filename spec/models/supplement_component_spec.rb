@@ -18,7 +18,6 @@ RSpec.describe SupplementComponent, type: :model do
 
       expect(export_hash).to be_a(Hash)
       expect(export_hash[:supplement_component]).to include(
-        id: component.id,
         supplement_component_name: component.supplement_component_name,
         amount: component.amount,
         unit: component.unit

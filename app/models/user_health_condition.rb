@@ -12,9 +12,7 @@ class UserHealthCondition < ApplicationRecord
 
   def to_export_hash
     {
-    user_health_condition: attributes.symbolize_keys.tap do |hash|
-        hash.merge!(health_condition.to_export_hash)
-      end
+    user_health_condition: health_condition.to_export_hash
     }
   end
 

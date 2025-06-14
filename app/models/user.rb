@@ -80,13 +80,14 @@ class User < ApplicationRecord
 
   def to_export_hash
     {
-    user: attributes.symbolize_keys.tap do |hash|
-      hash[:user_foods] = user_foods.map { it.to_export_hash }
+    user: attributes.symbolize_keys.slice(:email, :first_name, :last_name, :role, :username).tap do |hash|
+      hash[:user_foods]             = user_foods.map             { it.to_export_hash }
       hash[:user_health_conditions] = user_health_conditions.map { it.to_export_hash }
-      hash[:user_health_goals] = user_health_goals.map { it.to_export_hash }
-      hash[:user_supplements] = user_supplements.map { it.to_export_hash }
-      hash[:user_stat] = user_stat&.to_export_hash
-      hash[:user_meal_prompt] = user_meal_prompt&.to_export_hash
+      hash[:user_health_goals]      = user_health_goals.map      { it.to_export_hash }
+      hash[:user_supplements]       = user_supplements.map       { it.to_export_hash }
+      hash[:user_medications]       = user_medications.map       { it.to_export_hash }
+      hash[:user_stat]              = user_stat&.to_export_hash
+      hash[:user_meal_prompt]       = user_meal_prompt&.to_export_hash
     end
     }
   end

@@ -8,11 +8,12 @@ class ExportsController < ApplicationController
   USER_HEALTH_CONDITIONS_EXPORT_OPTION = 2
   USER_HEALTH_GOALS_EXPORT_OPTION      = 3
   USER_SUPPLEMENTS_EXPORT_OPTION       = 4
-  USER_STATS_EXPORT_OPTION             = 5
-  USER_MEAL_PROMPT_EXPORT_OPTION       = 6
+  USER_MEDICATIONS_EXPORT_OPTION       = 5
+  USER_STATS_EXPORT_OPTION             = 6
+  USER_MEAL_PROMPT_EXPORT_OPTION       = 7
 
   def index
-    @user_export_hash = redact_user_export_hash(current_user.to_export_hash)
+    @user_export_hash = current_user.to_export_hash
   end
 
   def preview
@@ -24,9 +25,7 @@ class ExportsController < ApplicationController
       user_export_hash = filter_user_export_hash(user_export_hash:, export_options:)
     end
 
-    redacted_user_export_hash = redact_user_export_hash(user_export_hash)
-
-    render partial: "exports/preview", locals: { user_export_hash: redacted_user_export_hash }
+    render partial: "exports/preview", locals: { user_export_hash: user_export_hash }
   end
 
   def export
@@ -38,7 +37,7 @@ class ExportsController < ApplicationController
       user_export_hash = filter_user_export_hash(user_export_hash:, export_options:)
     end
 
-    json = JSON.pretty_generate(redact_user_export_hash(user_export_hash))
+    json = JSON.pretty_generate(user_export_hash)
     send_data json,
       filename: "#{@export_user.username}.json",
       type: "application/json",
@@ -57,6 +56,7 @@ class ExportsController < ApplicationController
       user_health_conditions: USER_HEALTH_CONDITIONS_EXPORT_OPTION,
       user_health_goals:      USER_HEALTH_GOALS_EXPORT_OPTION,
       user_supplements:       USER_SUPPLEMENTS_EXPORT_OPTION,
+      user_medications:       USER_MEDICATIONS_EXPORT_OPTION,
       user_stats:             USER_STATS_EXPORT_OPTION,
       user_meal_prompt:       USER_MEAL_PROMPT_EXPORT_OPTION
     }
@@ -72,20 +72,9 @@ class ExportsController < ApplicationController
       hash[:user].delete(:user_health_conditions) unless export_options.include?(USER_HEALTH_CONDITIONS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_health_goals)      unless export_options.include?(USER_HEALTH_GOALS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_supplements)       unless export_options.include?(USER_SUPPLEMENTS_EXPORT_OPTION.to_s)
+      hash[:user].delete(:user_medications)       unless export_options.include?(USER_MEDICATIONS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_stat)              unless export_options.include?(USER_STATS_EXPORT_OPTION.to_s)
       hash[:user].delete(:user_meal_prompt)       unless export_options.include?(USER_MEAL_PROMPT_EXPORT_OPTION.to_s)
-    end
-  end
-
-  def redact_user_export_hash(user_export_hash)
-    return {} unless user_export_hash.present?
-
-    redacted = "[REDACTED]"
-    user_export_hash.tap do |hash|
-      hash[:user][:confirmation_token]   = redacted
-      hash[:user][:encrypted_password]   = redacted
-      hash[:user][:reset_password_token] = redacted
-      hash[:user][:unlock_token]         = redacted
     end
   end
 end

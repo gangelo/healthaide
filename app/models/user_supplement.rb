@@ -69,11 +69,18 @@ class UserSupplement < ApplicationRecord
 
   def to_export_hash
     {
-      user_supplement: attributes.symbolize_keys.tap do |hash|
-        hash[:supplement_components] = supplement_components.map(&:to_export_hash)
-        hash[:health_conditions] = health_conditions.map(&:to_export_hash)
-        hash[:health_goals] = health_goals.map(&:to_export_hash)
-      end
+      user_supplement: {
+        user_supplement_name:,
+        form:,
+        frequency:,
+        dosage:,
+        dosage_unit:,
+        manufacturer:,
+        notes:,
+        supplement_components: supplement_components.map(&:to_export_hash),
+        health_conditions: health_conditions.map(&:to_export_hash),
+        health_goals: health_goals.map(&:to_export_hash)
+      }
     }
   end
 
