@@ -100,6 +100,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
 
   create_table "user_meal_prompts", force: :cascade do |t|
     t.integer "user_id", null: false
+    t.boolean "include_user_medications", default: true
     t.boolean "include_user_stats", default: true
     t.text "food_ids", default: "[]"
     t.text "health_condition_ids", default: "[]"

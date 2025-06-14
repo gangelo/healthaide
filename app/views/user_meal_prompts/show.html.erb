@@ -24,14 +24,6 @@
         <h2 class="text-lg font-semibold mb-4">Plan Settings</h2>
         <div class="space-y-3 text-sm">
           <div>
-            <div class="font-medium">Meals</div>
-            <div class="text-gray-600"><%= pluralize(@user_meal_prompt.meals_count, "meal") %></div>
-          </div>
-          <div>
-            <div class="font-medium">Health Profile</div>
-            <div class="text-gray-600"><%= @user_meal_prompt.include_user_stats? ? "Included" : "Not included" %></div>
-          </div>
-          <div>
             <div class="font-medium">Selected Foods</div>
             <div class="text-gray-600"><%= @user_meal_prompt.foods.count %> foods</div>
           </div>
@@ -44,6 +36,18 @@
             <div class="text-gray-600"><%= @user_meal_prompt.health_goals.count %> goals</div>
           </div>
           <div>
+            <div class="font-medium">Meals</div>
+            <div class="text-gray-600"><%= pluralize(@user_meal_prompt.meals_count, "meal") %></div>
+          </div>
+          <div>
+            <div class="font-medium">Health Statistics</div>
+            <div class="text-gray-600"><%= @user_meal_prompt.include_user_stats? ? "Included" : "Not included" %></div>
+          </div>
+          <div>
+            <div class="font-medium">Medications</div>
+            <div class="text-gray-600"><%= @user_meal_prompt.include_user_medications? ? "Included" : "Not included" %></div>
+          </div>
+          <div>
             <div class="font-medium">Supplements</div>
             <div class="text-gray-600"><%= @user_meal_prompt.user_supplements.count %> supplements</div>
           </div>
@@ -52,8 +56,8 @@
     </div>
     <%# Main content area with generated meal prompt %>
     <div class="lg:col-span-3">
-      <div class="bg-white rounded shadow p-6" data-controller="clipboard">
-        <div class="flex justify-between items-center mb-4">
+      <div class="bg-white rounded shadow p-2" data-controller="clipboard">
+        <div class="flex justify-between items-center mb-0">
           <h2 class="text-lg font-semibold">Generated Meal Prompt</h2>
           <% if @user_meal_prompt.generated_at %>
             <button type="button"
@@ -65,7 +69,7 @@
           <% end %>
         </div>
         <% if @user_meal_prompt.generated_at %>
-          <div data-clipboard-target="source" class="bg-gray-50 p-4 rounded-md font-mono text-sm whitespace-pre-wrap overflow-auto max-h-[600px]">
+          <div data-clipboard-target="source" class="bg-gray-50 p-1 font-mono text-sm whitespace-pre-wrap overflow-auto max-h-[600px] bg-gray-100 rounded-lg border border-gray-300">
             <%= render "user_meal_prompts/user_meal_prompt", user_meal_prompt: @user_meal_prompt %>
           </div>
         <% else %>

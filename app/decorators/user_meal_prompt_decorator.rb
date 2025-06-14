@@ -1,4 +1,28 @@
 class UserMealPromptDecorator < BaseDecorator
+  def full_formatted_prompt
+    sections = [ "CREATE A MEAL PLAN USING MY AVAILABLE FOODS THAT SPECIFICALLY SUPPORTS MY HEALTH NEEDS:" ]
+
+    sections << "\nAVAILABLE FOODS:"
+    sections << formatted_foods_section
+
+    if include_user_stats?
+      sections << "\n" + formatted_health_profile.strip
+    end
+
+    unless user_supplements.empty?
+      sections << "\n" + formatted_user_supplements.strip
+    end
+
+    if include_user_medications? && user.user_medications.any?
+      sections << "\n" + formatted_user_medications.strip
+    end
+
+    sections << "\n" + formatted_health_goals.strip
+    sections << "\n" + formatted_instructions.strip
+
+    sections.join("\n")
+  end
+
   def formatted_foods_section
     return "[No foods selected]" if foods.empty?
 
@@ -48,9 +72,7 @@ class UserMealPromptDecorator < BaseDecorator
     stats.join(", ")
   end
 
-  def formatted_supplements
-    return "" if user_supplements.empty?
-
+  def formatted_user_supplements
     supplements_content = user_supplements.map do |user_supplement|
       "- #{format_supplement(user_supplement)}"
     end.join("\n")
@@ -59,6 +81,17 @@ class UserMealPromptDecorator < BaseDecorator
       SUPPLEMENTS:
       #{supplements_content}
     SUPPLEMENTS
+  end
+
+  def formatted_user_medications
+    medications_content = user.user_medications.map do |user_medication|
+      "- #{user_medication.medication.medication_name}"
+    end.join("\n")
+
+    <<~MEDICATIONS
+      MEDICATIONS:
+      #{medications_content}
+    MEDICATIONS
   end
 
   def format_supplement(user_supplement)
@@ -110,26 +143,6 @@ class UserMealPromptDecorator < BaseDecorator
 
   def pluralize_meals_count
     "MEAL".pluralize(meals_count).upcase
-  end
-
-  def full_formatted_prompt
-    sections = [ "CREATE A MEAL PLAN USING MY AVAILABLE FOODS THAT SPECIFICALLY SUPPORTS MY HEALTH NEEDS:" ]
-
-    sections << "\nAVAILABLE FOODS:"
-    sections << formatted_foods_section
-
-    if include_user_stats?
-      sections << "\n" + formatted_health_profile.strip
-    end
-
-    if user_supplements.any?
-      sections << "\n" + formatted_supplements.strip
-    end
-
-    sections << "\n" + formatted_health_goals.strip
-    sections << "\n" + formatted_instructions.strip
-
-    sections.join("\n")
   end
 
   private
