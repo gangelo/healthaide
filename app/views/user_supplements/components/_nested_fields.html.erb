@@ -1,25 +1,23 @@
 <%# Components fields for nested attributes using Stimulus %>
 <div data-controller="supplement-components">
   <h2 class="text-lg font-medium text-gray-900 mb-4">Supplement Components</h2>
-  
   <div class="overflow-x-auto">
     <!-- Use the HeaderComponent for grid headers -->
-    <%= render Grids::HeaderComponent.new(columns: %w[name amount unit actions]) %>
-    
+    <%= render Grids::HeaderComponent.new({ columns: [ :name, :amount, :unit, actions: { css_class: "text-center" } ] }, header_grid_cols_css: "grid-cols-[35%_25%_25%_15%]") %>
     <!-- Grid rows container -->
     <div class="bg-white divide-y divide-gray-200 rounded-b-lg" data-supplement-components-target="container" data-next-index="<%= user_supplement.supplement_components.size %>">
       <%= form.fields_for :supplement_components do |component_form| %>
-        <div class="grid grid-cols-4 hover:bg-gray-50">
-          <div class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-            <%= component_form.text_field :supplement_component_name, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+        <div class="grid grid-cols-[35%_25%_25%_15%] hover:bg-gray-50">
+          <div class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <%= component_form.text_field :supplement_component_name %>
           </div>
-          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            <%= component_form.text_field :amount, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+          <div class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= component_form.text_field :amount %>
           </div>
-          <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            <%= component_form.text_field :unit, class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+          <div class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= component_form.text_field :unit %>
           </div>
-          <div class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+          <div class="px-0 py-4 whitespace-nowrap text-sm font-medium text-center">
             <%= component_form.hidden_field :_destroy, class: "destroy-field" %>
             <button type="button" class="text-red-600 hover:text-red-900" data-action="supplement-components#removeComponent">
               <%= render "shared/icons/trash_can", css_class: "inline-block h-5 w-5" %>
@@ -29,27 +27,25 @@
       <% end %>
     </div>
   </div>
-  
   <!-- Template for adding new component -->
   <template data-supplement-components-target="template">
-    <div class="grid grid-cols-4 hover:bg-gray-50">
-      <div class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-        <input type="text" name="user_supplement[supplement_components_attributes][NEW_RECORD][supplement_component_name]" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+    <div class="grid grid-cols-[35%_25%_25%_15%] hover:bg-gray-50">
+      <div class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+        <input type="text" name="user_supplement[supplement_components_attributes][NEW_RECORD][supplement_component_name]" autocomplete="on">
       </div>
-      <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        <input type="text" name="user_supplement[supplement_components_attributes][NEW_RECORD][amount]" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      <div class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+        <input type="text" name="user_supplement[supplement_components_attributes][NEW_RECORD][amount]" autocomplete="on">
       </div>
-      <div class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        <input type="text" name="user_supplement[supplement_components_attributes][NEW_RECORD][unit]" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+      <div class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+        <input type="text" name="user_supplement[supplement_components_attributes][NEW_RECORD][unit]" autocomplete="on">
       </div>
-      <div class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+      <div class="px-0 py-4 whitespace-nowrap text-center text-sm font-medium">
         <button type="button" class="text-red-600 hover:text-red-900" data-action="supplement-components#removeComponent">
           <%= render "shared/icons/trash_can", css_class: "inline-block h-5 w-5" %>
         </button>
       </div>
     </div>
   </template>
-  
   <!-- Add new component button -->
   <div class="mt-4">
     <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" data-action="supplement-components#addComponent">
