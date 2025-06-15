@@ -52,7 +52,6 @@
         <%= form.select :frequency, options_for_select(UserMedication.frequencies_by_value.map { |k, _v| [k.humanize, k] }, @user_medication.frequency),
                         { include_blank: "Choose frequency..." },
                         {
-                          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
                           data: {
                             medication_search_target: "frequency",
                             action: "medication-search#frequencyChanged"

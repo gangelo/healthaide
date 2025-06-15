@@ -5,7 +5,7 @@ class SupplementComponent < ApplicationRecord
 
   validates :supplement_component_name,
     presence: true,
-    uniqueness: true,
+    uniqueness: { scope: :user_supplement_id, message: "has already been used" },
     length: { minimum: 2, maximum: 64 },
     format: {
       with: VALID_NAME_REGEX,

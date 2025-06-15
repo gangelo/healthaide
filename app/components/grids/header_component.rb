@@ -1,11 +1,12 @@
 class Grids::HeaderComponent < ViewComponent::Base
   ALLOWED_COLUMN_KEY_VALUE_PAIRS = %i[css_class]
 
-  def initialize(columns)
-    @columns = columns_hash_for(columns[:columns])
+  def initialize(columns:, header_grid_cols_css: nil)
+    @columns = columns_hash_for(columns)
+    @header_grid_cols_css = header_grid_cols_css
   end
 
-  attr_reader :columns
+  attr_reader :columns, :header_grid_cols_css
 
   private
 
@@ -31,6 +32,8 @@ class Grids::HeaderComponent < ViewComponent::Base
   # we have to do this silliness.
   # https://tailwindcss.com/docs/detecting-classes-in-source-files#dynamic-class-names
   def grid_cols_css_class
+    return header_grid_cols_css if header_grid_cols_css.present?
+
     column_count = columns.keys.length
     case column_count
     when 1
