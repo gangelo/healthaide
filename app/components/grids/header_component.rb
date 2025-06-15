@@ -1,8 +1,8 @@
 class Grids::HeaderComponent < ViewComponent::Base
   ALLOWED_COLUMN_KEY_VALUE_PAIRS = %i[css_class]
 
-  def initialize(columns, header_grid_cols_css: nil)
-    @columns = columns_hash_for(columns[:columns])
+  def initialize(columns:, header_grid_cols_css: nil)
+    @columns = columns_hash_for(columns)
     @header_grid_cols_css = header_grid_cols_css
   end
 

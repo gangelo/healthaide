@@ -3,7 +3,7 @@
   <h2 class="text-lg font-medium text-gray-900 mb-4">Supplement Components</h2>
   <div class="overflow-x-auto">
     <!-- Use the HeaderComponent for grid headers -->
-    <%= render Grids::HeaderComponent.new({ columns: [ :name, :amount, :unit, actions: { css_class: "text-center" } ] }, header_grid_cols_css: "grid-cols-[35%_25%_25%_15%]") %>
+    <%= render Grids::HeaderComponent.new(columns: [ :name, :amount, :unit, actions: { css_class: "text-center" } ], header_grid_cols_css: "grid-cols-[35%_25%_25%_15%]") %>
     <!-- Grid rows container -->
     <div class="bg-white divide-y divide-gray-200 rounded-b-lg" data-supplement-components-target="container" data-next-index="<%= user_supplement.supplement_components.size %>">
       <%= form.fields_for :supplement_components do |component_form| %>
