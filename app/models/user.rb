@@ -13,6 +13,8 @@ class User < ApplicationRecord
          :confirmable, :lockable, :timeoutable, :trackable,
          authentication_keys: [ :email_or_username ]
 
+  has_one :profile, class_name: "UserProfile", inverse_of: :user, dependent: :destroy
+
   has_many :user_foods, inverse_of: :user, dependent: :destroy
   has_many :foods, through: :user_foods
 

@@ -1,5 +1,5 @@
 
-RSpec.describe SupplementComponent, type: :model do
+RSpec.describe SupplementComponent do
   describe "validations" do
     it { should validate_presence_of(:supplement_component_name) }
     it { should validate_presence_of(:amount) }

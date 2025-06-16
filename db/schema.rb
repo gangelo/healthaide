@@ -124,6 +124,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
     t.index ["user_id"], name: "index_user_medications_on_user_id"
   end
 
+  create_table "user_profiles", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "ai_provider", default: 0, null: false
+    t.string "ai_provider_api_key"
+    t.string "ai_provider_model"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_profiles_on_user_id"
+  end
+
   create_table "user_stats", force: :cascade do |t|
     t.date "birthday"
     t.string "sex", limit: 1
@@ -204,6 +214,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
   add_foreign_key "user_meal_prompts", "users"
   add_foreign_key "user_medications", "medications"
   add_foreign_key "user_medications", "users"
+  add_foreign_key "user_profiles", "users"
   add_foreign_key "user_stats", "users"
   add_foreign_key "user_supplements", "users"
 end
