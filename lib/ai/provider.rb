@@ -14,6 +14,7 @@ module Ai
       AI_PROVIDER_OPENAI
     ].freeze
 
+    # https://rubyllm.com/guides/available-models
     AI_PROVIDER_MODELS = {
       AI_PROVIDER_NONE => [
         {

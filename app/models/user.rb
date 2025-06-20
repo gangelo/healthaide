@@ -6,6 +6,7 @@ class User < ApplicationRecord
   ROLE_ADMIN = 1
 
   before_save :downcase_email
+  after_save :set_profile_if
 
   # Include default devise modules. Others available are: :omniauthable
   devise :database_authenticatable, :registerable,
@@ -104,5 +105,9 @@ class User < ApplicationRecord
 
   def downcase_email
     self.email = email.downcase
+  end
+
+  def set_profile_if
+    self.create_profile! if profile.nil?
   end
 end
