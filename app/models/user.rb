@@ -15,6 +15,7 @@ class User < ApplicationRecord
          authentication_keys: [ :email_or_username ]
 
   has_one :profile, class_name: "UserProfile", inverse_of: :user, dependent: :destroy
+  accepts_nested_attributes_for :profile, reject_if: :all_blank
 
   has_many :user_foods, inverse_of: :user, dependent: :destroy
   has_many :foods, through: :user_foods
