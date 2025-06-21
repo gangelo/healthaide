@@ -112,7 +112,7 @@ RSpec.describe "Selecting multiple foods", type: :system do
     visit new_user_food_path
 
     # Click the back link
-    click_link "Back to My Foods"
+    click_link "Back to Foods"
 
     # Should return to food list
     expect(page).to have_current_path(user_foods_path)

@@ -1,15 +1,11 @@
-<% content_for :title, "My Stats" %>
-
+<% content_for :title, "Stats" %>
 <div class="mx-auto md:w-10/12 w-full p-4">
   <%= turbo_frame_tag "flash_messages" do %>
     <%= render "shared/flash_messages" %>
   <% end %>
-
   <h1 class="text-2xl font-bold mb-6">Enter Your Stats</h1>
-
   <div>
     <%= render "info" %>
   </div>
-
   <%= render "form", user_stat: @user_stat %>
 </div>

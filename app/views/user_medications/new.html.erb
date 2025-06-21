@@ -10,7 +10,7 @@
       <p class="mt-1 text-sm text-gray-500 max-w-3xl">Search for a medication and add it to your list.</p>
     </div>
     <div class="mt-4 flex md:ml-4 md:mt-0">
-      <%= link_to "Back to My Medications",
+      <%= link_to "Back to Medications",
           user_medications_path,
           class: "back-button-sm" %>
     </div>
@@ -52,7 +52,6 @@
         <%= form.select :frequency, options_for_select(UserMedication.frequencies_by_value.map { |k, _v| [k.humanize, k] }, @user_medication.frequency),
                         { include_blank: "Choose frequency..." },
                         {
-                          class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
                           data: {
                             medication_search_target: "frequency",
                             action: "medication-search#frequencyChanged"

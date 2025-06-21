@@ -96,12 +96,12 @@
               </div>
               <!-- Apply touch-friendly styles to user menu in mobile view -->
               <div class="py-1 flex flex-col space-y-2">
-                <%= link_to "My Stats", user_stats_path, class: "#{nav_link_class(user_stats_path)} block py-2" %>
-                <%= link_to "My Foods", user_foods_path, class: "#{nav_link_class(user_foods_path)} block py-2" %>
-                <%= link_to "My Health Conditions", user_health_conditions_path, class: "#{nav_link_class(user_health_conditions_path)} block py-2" %>
-                <%= link_to "My Health Goals", user_health_goals_path, class: "#{nav_link_class(user_health_goals_path)} block py-2" %>
-                <%= link_to "My Supplements", user_supplements_path, class: "#{nav_link_class(user_supplements_path)} block py-2" %>
-                <%= link_to "My Medications", user_medications_path, class: "#{nav_link_class(user_medications_path)} block py-2" %>
+                <%= link_to "Stats", user_stats_path, class: "#{nav_link_class(user_stats_path)} block py-2" %>
+                <%= link_to "Foods", user_foods_path, class: "#{nav_link_class(user_foods_path)} block py-2" %>
+                <%= link_to "Health Conditions", user_health_conditions_path, class: "#{nav_link_class(user_health_conditions_path)} block py-2" %>
+                <%= link_to "Health Goals", user_health_goals_path, class: "#{nav_link_class(user_health_goals_path)} block py-2" %>
+                <%= link_to "Supplements", user_supplements_path, class: "#{nav_link_class(user_supplements_path)} block py-2" %>
+                <%= link_to "Medications", user_medications_path, class: "#{nav_link_class(user_medications_path)} block py-2" %>
               </div>
               <% if current_user.admin? %>
                 <div class="mt-2 border-t border-gray-700 pt-2">

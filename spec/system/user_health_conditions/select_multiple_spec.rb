@@ -112,7 +112,7 @@ RSpec.describe "Selecting multiple health conditions", type: :system do
     visit new_user_health_condition_path
 
     # Click the back link
-    click_link "Back to My Health Conditions"
+    click_link "Back to Health Conditions"
 
     # Should return to health conditions list
     expect(page).to have_current_path(user_health_conditions_path)

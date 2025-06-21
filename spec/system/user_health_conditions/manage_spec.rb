@@ -17,7 +17,7 @@ RSpec.describe "Managing health conditions", type: :system do
   scenario "User can view their health conditions" do
     visit user_health_conditions_path
 
-    expect(page).to have_content("My Health Conditions")
+    expect(page).to have_content("Health Conditions")
     expect(page).to have_content(health_condition1.health_condition_name)
     expect(page).to have_content(health_condition2.health_condition_name)
   end

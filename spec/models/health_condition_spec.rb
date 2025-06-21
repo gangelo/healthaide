@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 
-RSpec.describe HealthCondition, type: :model do
+RSpec.describe HealthCondition do
   describe 'validations' do
     it { should validate_presence_of(:health_condition_name) }
     it { should validate_length_of(:health_condition_name).is_at_least(2).is_at_most(64) }

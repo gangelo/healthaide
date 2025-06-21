@@ -5,23 +5,19 @@
     <%= render "shared/active_record_errors", resource: resource %>
     <div class="my-5">
       <%= f.label :email_or_username, "Email or username", class: "block font-medium text-gray-700 mb-1" %>
-      <%= f.text_field :email_or_username, 
-                    autofocus: true, 
-                    autocomplete: "email", 
-                    class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+      <%= f.text_field :email_or_username,
+                    autofocus: true,
+                    autocomplete: "email",
                     required: true,
                     placeholder: "Enter your email or username" %>
     </div>
-    
     <div class="my-5">
       <%= f.label :password, "Password", class: "block font-medium text-gray-700 mb-1" %>
-      <%= f.password_field :password, 
-                         autocomplete: "current-password", 
-                         class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+      <%= f.password_field :password,
+                         autocomplete: "current-password",
                          required: true,
                          placeholder: "Enter your password" %>
     </div>
-    
     <% if devise_mapping.rememberable? %>
       <div class="my-5">
         <div class="flex items-center">
@@ -30,13 +26,11 @@
         </div>
       </div>
     <% end %>
-    
     <div class="button-group-container">
       <%= f.submit "Sign in", class: "submit-button" %>
       <%= link_to "Sign up instead", new_registration_path(resource_name), class: "back-button whitespace-nowrap" %>
     </div>
   <% end %>
-  
   <div class="mt-6 text-center">
     <%= render "devise/shared/links" %>
   </div>

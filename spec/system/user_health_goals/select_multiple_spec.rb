@@ -112,7 +112,7 @@ RSpec.describe "Selecting multiple health goals", type: :system do
     visit new_user_health_goal_path
 
     # Click the back link
-    click_link "Back to My Health Goals"
+    click_link "Back to Health Goals"
 
     # Should return to health goals list
     expect(page).to have_current_path(user_health_goals_path)
