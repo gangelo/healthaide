@@ -58,7 +58,7 @@ RSpec.describe "Selecting existing foods", type: :system do
   scenario "User can navigate back to list" do
     visit new_user_food_path
 
-    click_link "Back to My Foods"
+    click_link "Back to Foods"
 
     expect(page).to have_current_path(user_foods_path)
   end
