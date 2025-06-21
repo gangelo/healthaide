@@ -14,7 +14,7 @@
       </p>
     </div>
     <div class="mt-4 md:mt-0 flex gap-3">
-      <%= link_to "Edit Plan", wizard_user_meal_prompts_path, class: "edit-button-sm" %>
+      <%= link_to "Edit Meal Prompt", wizard_user_meal_prompts_path, class: "edit-button-sm" %>
     </div>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -60,12 +60,20 @@
         <div class="flex justify-between items-center mb-0">
           <h2 class="text-lg font-semibold">Generated Meal Prompt</h2>
           <% if @user_meal_prompt.generated_at %>
-            <button type="button"
-                   class="edit-button-sm inline-flex items-center"
-                   data-action="clipboard#copy">
-              <%= render Icons::ClipboardComponent.new(css_class: "h-4 w-4 mr-2") %>
-              Copy to Clipboard
-            </button>
+            <div class="flex gap-2">
+              <button type="button"
+                     class="edit-button-sm inline-flex items-center"
+                     data-action="clipboard#copy">
+                <%= render Icons::ClipboardComponent.new(css_class: "h-6 w-6 mr-2") %>
+                Copy to Clipboard
+              </button>
+              <% if current_user.profile.ai_configured? %>
+                <button type="button" class="generate-button-sm inline-flex items-center">
+                  <%= render Icons::AiComponent.new(css_class: "h-6 w-6 mr-2") %>
+                  Continue to AI
+                </button>
+              <% end %>
+            </div>
           <% end %>
         </div>
         <% if @user_meal_prompt.generated_at %>

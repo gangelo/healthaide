@@ -20,6 +20,10 @@ class UserProfile < ApplicationRecord
                                              }, unless: -> { no_provider? }
 
 
+  def ai_configured?
+    !no_provider?
+  end
+
   # Rails override.
   # We're overridding this method to make sure that ai_provider_api_key and
   # ai_model get nil'ed out if ai_provider is Ai::Provider::AI_PROVIDER_NONE.
