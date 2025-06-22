@@ -19,129 +19,178 @@ RSpec.describe Ai::Provider do
       expect(described_class::ALL_AI_PROVIDERS).to eq(expected_providers)
     end
 
-    it "has models defined for all providers including none" do
-      all_providers_with_none = described_class::ALL_AI_PROVIDERS + [ described_class::AI_PROVIDER_NONE ]
-
-      all_providers_with_none.each do |provider|
-        expect(described_class::AI_PROVIDER_MODELS).to have_key(provider)
-        expect(described_class::AI_PROVIDER_MODELS[provider]).to be_an(Array)
-        expect(described_class::AI_PROVIDER_MODELS[provider]).not_to be_empty
-      end
+    it "freezes ALL_AI_PROVIDERS" do
+      expect(described_class::ALL_AI_PROVIDERS).to be_frozen
     end
   end
 
   describe ".valid_provider?" do
-    it "returns true for valid providers" do
-      described_class::ALL_AI_PROVIDERS.each do |provider|
-        expect(described_class.valid_provider?(provider)).to be true
+    context "with valid providers" do
+      it "returns true for all defined providers" do
+        described_class::ALL_AI_PROVIDERS.each do |provider|
+          expect(described_class.valid_provider?(provider)).to be true
+        end
       end
     end
 
-    it "returns false for invalid providers" do
-      expect(described_class.valid_provider?("invalid_provider")).to be false
-      expect(described_class.valid_provider?(nil)).to be false
-      expect(described_class.valid_provider?("")).to be false
+    context "with invalid providers" do
+      it "returns false for invalid providers" do
+        expect(described_class.valid_provider?("invalid_provider")).to be false
+        expect(described_class.valid_provider?("random_string")).to be false
+        expect(described_class.valid_provider?("")).to be false
+      end
+
+      it "returns false for nil" do
+        expect(described_class.valid_provider?(nil)).to be false
+      end
     end
   end
 
   describe ".models_for" do
     context "with valid providers" do
-      it "returns hash of models for anthropic" do
+      it "returns a hash for anthropic provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_ANTHROPIC)
-
+        
         expect(models).to be_a(Hash)
-        expect(models.keys).to include("claude-opus-4-20250514")
-        expect(models.keys).to include("claude-sonnet-4-20250514")
-        expect(models.keys).to include("claude-3-5-haiku-20241022")
-        expect(models["claude-opus-4-20250514"]).to include("Premium flagship model")
+        # Should have models available through RubyLLM::Aliases
+        unless models.empty?
+          models.each do |model_name, provider_model_id|
+            expect(model_name).to be_a(String)
+            expect(provider_model_id).to be_a(String)
+            expect(model_name).not_to be_empty
+            expect(provider_model_id).not_to be_empty
+          end
+        end
       end
 
-      it "returns hash of models for openai" do
+      it "returns a hash for openai provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_OPENAI)
-
+        
         expect(models).to be_a(Hash)
-        expect(models.keys).to include("gpt-4.1-2025-04-14")
-        expect(models.keys).to include("gpt-4.1-nano")
-        expect(models.keys).to include("o3")
-        expect(models["o3"]).to include("Specialized reasoning model")
+        unless models.empty?
+          models.each do |model_name, provider_model_id|
+            expect(model_name).to be_a(String)
+            expect(provider_model_id).to be_a(String)
+          end
+        end
       end
 
-      it "returns hash of models for gemini" do
+      it "returns a hash for gemini provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_GEMINI)
-
+        
         expect(models).to be_a(Hash)
-        expect(models.keys).to include("gemini-2.5-pro-preview-06-05")
-        expect(models.keys).to include("gemini-2.5-flash-preview-05-20")
-        expect(models.keys).to include("gemini-2.0-flash-lite")
+        unless models.empty?
+          models.each do |model_name, provider_model_id|
+            expect(model_name).to be_a(String)
+            expect(provider_model_id).to be_a(String)
+          end
+        end
       end
 
-      it "returns hash of models for deepseek" do
+      it "returns a hash for deepseek provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_DEEPSEEK)
-
+        
         expect(models).to be_a(Hash)
-        expect(models.keys).to include("deepseek-reasoner")
-        expect(models.keys).to include("deepseek-chat")
-        expect(models["deepseek-reasoner"]).to include("Advanced reasoning model")
+        unless models.empty?
+          models.each do |model_name, provider_model_id|
+            expect(model_name).to be_a(String)
+            expect(provider_model_id).to be_a(String)
+          end
+        end
       end
     end
 
-    context "with AI_PROVIDER_NONE" do
-      it "returns a dummy, placeholder model" do
+    context "with no_provider" do
+      it "returns empty hash for no_provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_NONE)
-        expect(models).to eq({ described_class::AI_PROVIDER_NONE => "No AI provider" })
+        expect(models).to eq({})
       end
     end
 
     context "with invalid providers" do
       it "returns empty hash for invalid provider" do
         expect(described_class.models_for("invalid_provider")).to eq({})
+      end
+
+      it "returns empty hash for nil" do
         expect(described_class.models_for(nil)).to eq({})
+      end
+
+      it "returns empty hash for empty string" do
         expect(described_class.models_for("")).to eq({})
       end
     end
 
-    it "transforms model data structure correctly" do
-      models = described_class.models_for(described_class::AI_PROVIDER_ANTHROPIC)
+    context "when RubyLLM::Aliases is available" do
+      before do
+        # Mock RubyLLM::Aliases to ensure consistent test behavior
+        allow(RubyLLM::Aliases).to receive(:aliases).and_return({
+          "claude-3-5-sonnet" => {
+            "anthropic" => "claude-3-5-sonnet-20241022",
+            "openrouter" => "anthropic/claude-3.5-sonnet"
+          },
+          "gpt-4" => {
+            "openai" => "gpt-4-turbo",
+            "openrouter" => "openai/gpt-4-turbo"
+          },
+          "gemini-pro" => {
+            "gemini" => "gemini-1.5-pro",
+            "openrouter" => "google/gemini-pro"
+          }
+        })
+      end
 
-      # Verify the transformation from array of hashes to hash
-      expect(models).to be_a(Hash)
-      models.each do |model_name, notes|
-        expect(model_name).to be_a(String)
-        expect(notes).to be_a(String)
-        expect(model_name).not_to be_empty
-        expect(notes).not_to be_empty
+      it "returns models correctly from RubyLLM::Aliases for anthropic" do
+        models = described_class.models_for("anthropic")
+        expect(models).to include("claude-3-5-sonnet" => "claude-3-5-sonnet-20241022")
+      end
+
+      it "returns models correctly from RubyLLM::Aliases for openai" do
+        models = described_class.models_for("openai")
+        expect(models).to include("gpt-4" => "gpt-4-turbo")
+      end
+
+      it "returns models correctly from RubyLLM::Aliases for gemini" do
+        models = described_class.models_for("gemini")
+        expect(models).to include("gemini-pro" => "gemini-1.5-pro")
       end
     end
   end
 
-
-
-  describe "data integrity" do
-    it "ensures all model entries have required keys" do
-      described_class::AI_PROVIDER_MODELS.each do |provider, models|
-        models.each do |model_data|
-          expect(model_data).to have_key(:model)
-          expect(model_data).to have_key(:notes)
-          expect(model_data[:model]).to be_a(String)
-          expect(model_data[:notes]).to be_a(String)
-        end
+  describe ".all_models" do
+    it "returns a hash with all providers" do
+      all_models = described_class.all_models
+      
+      expect(all_models).to be_a(Hash)
+      described_class::ALL_AI_PROVIDERS.each do |provider|
+        expect(all_models).to have_key(provider)
+        expect(all_models[provider]).to be_an(Array)
       end
     end
 
-    it "has unique model names within each provider" do
-      described_class::AI_PROVIDER_MODELS.each do |provider, models|
-        model_names = models.map { |m| m[:model] }
-        expect(model_names).to eq(model_names.uniq),
-          "Provider #{provider} has duplicate model names"
+    it "includes models for each provider" do
+      all_models = described_class.all_models
+      
+      all_models.each do |provider, models_array|
+        expect(models_array).to be_an(Array)
+        expect(models_array.length).to eq(1) # Each provider gets one hash of models
+        expect(models_array.first).to be_a(Hash)
       end
     end
+  end
 
-    it "has non-empty notes for all models" do
-      described_class::AI_PROVIDER_MODELS.each do |provider, models|
-        models.each do |model_data|
-          expect(model_data[:notes].strip).not_to be_empty,
-            "Model #{model_data[:model]} in #{provider} has empty notes"
-        end
+  describe "integration with RubyLLM" do
+    it "depends on RubyLLM::Aliases being available" do
+      expect(defined?(RubyLLM::Aliases)).to be_truthy
+      expect(RubyLLM::Aliases).to respond_to(:aliases)
+    end
+
+    it "handles RubyLLM::Aliases.aliases returning empty hash gracefully" do
+      allow(RubyLLM::Aliases).to receive(:aliases).and_return({})
+      
+      described_class::ALL_AI_PROVIDERS.each do |provider|
+        models = described_class.models_for(provider)
+        expect(models).to eq({})
       end
     end
   end

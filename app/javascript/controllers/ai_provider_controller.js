@@ -44,7 +44,8 @@ export default class extends Controller {
   }
 
   updateModelOptions(provider) {
-    const models = this.modelsValue[provider] || {};
+    const provider_models = this.modelsValue[provider] || {};
+    const models = Object.keys(provider_models[0]);
     const modelSelect = this.modelTarget;
 
     // Clear existing options except prompt
@@ -53,12 +54,10 @@ export default class extends Controller {
     }
 
     // Add new options
-    Object.entries(models).forEach(([model, notes]) => {
+    Object.entries(models).forEach(([_index, model]) => {
       const option = document.createElement("option");
-      option.value = notes.model;
-      option.textContent = `${notes.model} - ${notes.notes.substring(0, 60)}${
-        notes.length > 60 ? "..." : ""
-      }`;
+      option.value = model;
+      option.textContent = model;
       modelSelect.appendChild(option);
     });
 

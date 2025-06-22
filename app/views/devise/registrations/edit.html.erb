@@ -62,7 +62,7 @@
       <%= f.fields_for :profile do |profile_f| %>
         <div class="bg-white rounded-lg shadow-sm mb-8"
               data-controller="ai-provider"
-              data-ai-provider-models-value="<%= Ai::Provider::AI_PROVIDER_MODELS.to_json %>"
+              data-ai-provider-models-value="<%= Ai::Provider.all_models.to_json %>"
               data-ai-provider-current-provider-value="<%= resource.profile.ai_provider %>"
               data-ai-provider-current-model-value="<%= resource.profile.ai_provider_model %>"
               data-ai-provider-current-api-key-value="<%= resource.profile.ai_provider_api_key %>">

@@ -122,4 +122,9 @@ Rails.application.routes.draw do
        post :generate
      end
    end
+
+  # AI
+  namespace :ai do
+    resources :meal_prompts, only: [ :new, :create, :edit, :update ]
+  end
 end
