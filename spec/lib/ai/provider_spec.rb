@@ -50,7 +50,7 @@ RSpec.describe Ai::Provider do
     context "with valid providers" do
       it "returns a hash for anthropic provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_ANTHROPIC)
-        
+
         expect(models).to be_a(Hash)
         # Should have models available through RubyLLM::Aliases
         unless models.empty?
@@ -65,7 +65,7 @@ RSpec.describe Ai::Provider do
 
       it "returns a hash for openai provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_OPENAI)
-        
+
         expect(models).to be_a(Hash)
         unless models.empty?
           models.each do |model_name, provider_model_id|
@@ -77,7 +77,7 @@ RSpec.describe Ai::Provider do
 
       it "returns a hash for gemini provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_GEMINI)
-        
+
         expect(models).to be_a(Hash)
         unless models.empty?
           models.each do |model_name, provider_model_id|
@@ -89,7 +89,7 @@ RSpec.describe Ai::Provider do
 
       it "returns a hash for deepseek provider" do
         models = described_class.models_for(described_class::AI_PROVIDER_DEEPSEEK)
-        
+
         expect(models).to be_a(Hash)
         unless models.empty?
           models.each do |model_name, provider_model_id|
@@ -160,7 +160,7 @@ RSpec.describe Ai::Provider do
   describe ".all_models" do
     it "returns a hash with all providers" do
       all_models = described_class.all_models
-      
+
       expect(all_models).to be_a(Hash)
       described_class::ALL_AI_PROVIDERS.each do |provider|
         expect(all_models).to have_key(provider)
@@ -170,7 +170,7 @@ RSpec.describe Ai::Provider do
 
     it "includes models for each provider" do
       all_models = described_class.all_models
-      
+
       all_models.each do |provider, models_array|
         expect(models_array).to be_an(Array)
         expect(models_array.length).to eq(1) # Each provider gets one hash of models
@@ -187,7 +187,7 @@ RSpec.describe Ai::Provider do
 
     it "handles RubyLLM::Aliases.aliases returning empty hash gracefully" do
       allow(RubyLLM::Aliases).to receive(:aliases).and_return({})
-      
+
       described_class::ALL_AI_PROVIDERS.each do |provider|
         models = described_class.models_for(provider)
         expect(models).to eq({})

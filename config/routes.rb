@@ -125,6 +125,6 @@ Rails.application.routes.draw do
 
   # AI
   namespace :ai do
-    resources :meal_prompts, only: [ :new, :create, :edit, :update ]
+    resources :user_meal_chats, only: [ :new, :create, :edit, :update ]
   end
 end

@@ -1,6 +1,6 @@
 # This controller handles user meal prompts and generates
 # the meals using AI if it is configured.
-class Ai::MealPromptsController < ApplicationController
+class Ai::UserMealChatsController < ApplicationController
   before_action :set_meal_prompt, only: %i[ :new ]
   before_action :set_chat, only: %i[ :edit, :update ]
 
