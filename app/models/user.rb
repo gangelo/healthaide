@@ -2,6 +2,8 @@
 
 # The user model for this application.
 class User < ApplicationRecord
+  include UserMealPromptChattable
+
   ROLE_USER = 0
   ROLE_ADMIN = 1
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_24_232513) do
   create_table "foods", force: :cascade do |t|
     t.string "food_name", null: false
     t.datetime "created_at", null: false
@@ -96,6 +96,39 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
     t.index ["health_goal_id"], name: "index_user_health_goals_on_health_goal_id"
     t.index ["user_id", "health_goal_id"], name: "index_user_health_goals_on_user_id_and_health_goal_id", unique: true
     t.index ["user_id"], name: "index_user_health_goals_on_user_id"
+  end
+
+  create_table "user_meal_prompt_chats", force: :cascade do |t|
+    t.string "model_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_meal_prompt_chats_on_user_id"
+  end
+
+  create_table "user_meal_prompt_messages", force: :cascade do |t|
+    t.integer "user_meal_prompt_chat_id", null: false
+    t.integer "user_meal_prompt_tool_call_id"
+    t.string "role"
+    t.text "content"
+    t.string "model_id"
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_meal_prompt_chat_id"], name: "index_user_meal_prompt_messages_on_user_meal_prompt_chat_id"
+    t.index ["user_meal_prompt_tool_call_id"], name: "idx_on_user_meal_prompt_tool_call_id_9382a5c0c9"
+  end
+
+  create_table "user_meal_prompt_tool_calls", force: :cascade do |t|
+    t.integer "user_meal_prompt_message_id", null: false
+    t.string "tool_call_id", null: false
+    t.string "name", null: false
+    t.text "arguments", default: "{}"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tool_call_id"], name: "index_user_meal_prompt_tool_calls_on_tool_call_id", unique: true
+    t.index ["user_meal_prompt_message_id"], name: "idx_on_user_meal_prompt_message_id_aa565bb7d4"
   end
 
   create_table "user_meal_prompts", force: :cascade do |t|
@@ -211,6 +244,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_121645) do
   add_foreign_key "user_health_conditions", "users"
   add_foreign_key "user_health_goals", "health_goals"
   add_foreign_key "user_health_goals", "users"
+  add_foreign_key "user_meal_prompt_messages", "user_meal_prompt_chats"
+  add_foreign_key "user_meal_prompt_tool_calls", "user_meal_prompt_messages"
   add_foreign_key "user_meal_prompts", "users"
   add_foreign_key "user_medications", "medications"
   add_foreign_key "user_medications", "users"
