@@ -98,6 +98,10 @@ class User < ApplicationRecord
     }
   end
 
+  def health_goals_grouped_by_importance
+    user_health_goals.ordered_by_importance.group_by(&:order_of_importance)
+  end
+
   private
 
   def password_complexity

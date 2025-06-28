@@ -77,7 +77,7 @@
           <% end %>
         </div>
         <% if @user_meal_prompt.generated_at %>
-          <div data-clipboard-target="source" class="bg-gray-50 p-1 font-mono text-sm whitespace-pre-wrap overflow-auto max-h-[600px] bg-gray-100 rounded-lg border border-gray-300">
+          <div data-clipboard-target="source" class="bg-gray-50 overflow-auto max-h-[600px] bg-gray-100 rounded-lg border border-gray-300">
             <%= render "user_meal_prompts/user_meal_prompt", user_meal_prompt: @user_meal_prompt %>
           </div>
         <% else %>

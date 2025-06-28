@@ -93,9 +93,7 @@ class UserMealPromptDecorator < BaseDecorator
   def format_supplement(user_supplement)
     return format_supplement_with_components(user_supplement) if user_supplement.supplement_components.any?
 
-    content = []
-
-    content << user_supplement.user_supplement_name
+    content = [ user_supplement.user_supplement_name ]
     content << "#{user_supplement.dosage} #{user_supplement.dosage_unit}" if user_supplement.dosage?
     content << humanize(user_supplement.frequency)
 
@@ -127,27 +125,27 @@ class UserMealPromptDecorator < BaseDecorator
   end
 
   def formatted_health_goals
-    if health_goals.empty?
-      <<~EMPTY_GOALS
-        HEALTH PRIORITIES (MUST ADDRESS THESE, IN ORDER OF IMPORTANCE):
-        [No health goals selected]
-      EMPTY_GOALS
-    else
-      goals_content = health_goals.each_with_index.map do |goal, index|
-        user_health_goal = user.user_health_goals.find_by(health_goal_id: goal.id)
-        "#{user_health_goal.order_of_importance}. #{goal.health_goal_name}"
-      end.join("\n")
+    return formatted_empty_health_goals if health_goals.empty?
 
-      <<~GOALS
-        HEALTH PRIORITIES (MUST ADDRESS THESE, IN ORDER OF IMPORTANCE):
-        #{goals_content}
-      GOALS
+    content = [ "HEALTH PRIORITIES (MUST ADDRESS THESE, IN ORDER OF IMPORTANCE):" ]
+
+    user.health_goals_grouped_by_importance.each do |importance_level, user_health_goals_array|
+      content << "#{importance_level}: "
+      content.last << user_health_goals_array.map { |user_health_goal| user_health_goal.health_goal.health_goal_name }.join(", ")
     end
+
+    content.join("\n")
+  end
+
+  def formatted_empty_health_goals
+    <<~EMPTY_GOALS
+      HEALTH PRIORITIES (MUST ADDRESS THESE, IN ORDER OF IMPORTANCE):
+      [No health goals selected]
+    EMPTY_GOALS
   end
 
   def formatted_food_examples
-    sample_foods = foods.take(3).map(&:food_name).join(", ")
-    foods.count > 3 ? "#{sample_foods}, etc." : sample_foods
+    "#{foods.take(3).map(&:food_name).join(", ")}, etc."
   end
 
   def pluralize_meals_count
