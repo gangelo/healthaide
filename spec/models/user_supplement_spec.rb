@@ -1,5 +1,5 @@
 
-RSpec.describe UserSupplement, type: :model do
+RSpec.describe UserSupplement do
   describe "validations" do
     it { should validate_presence_of(:user_supplement_name) }
     it { should validate_presence_of(:form) }

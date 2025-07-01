@@ -30,7 +30,7 @@ RSpec.describe "User Stats", type: :system do
 
     # Should be redirected to edit page with success message
     expect(page).to have_content("Your stats were successfully saved")
-    expect(page).to have_content("My Stats")
+    expect(page).to have_content("Stats")
 
     # Check if data was saved correctly
     expect(user.reload.user_stat).to be_present
@@ -46,7 +46,7 @@ RSpec.describe "User Stats", type: :system do
 
       # Should be redirected to edit page
       expect(page).to have_current_path(edit_user_stat_path(user_stat))
-      expect(page).to have_content("My Stats")
+      expect(page).to have_content("Stats")
 
       # Update some values
       fill_in "Weight (lbs)", with: "180"
@@ -57,7 +57,7 @@ RSpec.describe "User Stats", type: :system do
 
       # Should stay on edit page with success message
       expect(page).to have_content("Your stats were successfully updated")
-      expect(page).to have_content("My Stats")
+      expect(page).to have_content("Stats")
 
       # Check if data was updated correctly
       expect(user.reload.user_stat.muscle_fat_analysis_weight).to eq(180)
@@ -67,12 +67,12 @@ RSpec.describe "User Stats", type: :system do
     scenario "User navigates to stats through menu", js: true do
       visit root_path
 
-      # Click on My Stats in the navigation (first instance in desktop nav)
-      find('div.lg\\:ml-6', match: :first).click_link "My Stats"
+      # Click on Stats in the navigation (first instance in desktop nav)
+      find('div.lg\\:ml-6', match: :first).click_link "Stats"
 
       # Should go to edit page
       expect(page).to have_current_path(edit_user_stat_path(user_stat))
-      expect(page).to have_content("My Stats")
+      expect(page).to have_content("Stats")
     end
   end
 end

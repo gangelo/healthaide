@@ -6,15 +6,15 @@
     <div>
       <h1 class="text-2xl font-bold">Your Meal Prompt</h1>
       <p class="text-gray-600">
-        <% if @user_meal_prompt.generated_at %>
-          Last generated <%= time_ago_in_words(@user_meal_prompt.generated_at) %> ago
+        <% if @user_meal_prompt.generated? %>
+          Last generated <%= time_ago_in_words(@user_meal_prompt.generated?) %> ago
         <% else %>
           Not yet generated
         <% end %>
       </p>
     </div>
     <div class="mt-4 md:mt-0 flex gap-3">
-      <%= link_to "Edit Plan", wizard_user_meal_prompts_path, class: "edit-button-sm" %>
+      <%= link_to "Edit Meal Prompt", wizard_user_meal_prompts_path, class: "edit-button-sm" %>
     </div>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -59,17 +59,29 @@
       <div class="bg-white rounded shadow p-2" data-controller="clipboard">
         <div class="flex justify-between items-center mb-0">
           <h2 class="text-lg font-semibold">Generated Meal Prompt</h2>
-          <% if @user_meal_prompt.generated_at %>
-            <button type="button"
-                   class="edit-button-sm inline-flex items-center"
-                   data-action="clipboard#copy">
-              <%= render Icons::ClipboardComponent.new(css_class: "h-4 w-4 mr-2") %>
-              Copy to Clipboard
-            </button>
+          <% if @user_meal_prompt.generated? %>
+            <div class="flex gap-2">
+              <button type="button"
+                     class="edit-button-sm inline-flex items-center"
+                     data-action="clipboard#copy">
+                <%= render Icons::ClipboardComponent.new(css_class: "h-6 w-6 mr-2") %>
+                Copy to Clipboard
+              </button>
+              <% if current_user.profile.ai_configured? %>
+                <%= button_to ai_user_meal_chats_path,
+                  method: :post,
+                  params: { meal_prompt: "" },
+                  data: { turbo: false },
+                  class: "generate-button-sm inline-flex items-center" do %>
+                  <%= render Icons::AiComponent.new(css_class: "h-6 w-6 mr-2") %>
+                  Continue to AI
+                <% end %>
+              <% end %>
+            </div>
           <% end %>
         </div>
-        <% if @user_meal_prompt.generated_at %>
-          <div data-clipboard-target="source" class="bg-gray-50 p-1 font-mono text-sm whitespace-pre-wrap overflow-auto max-h-[600px] bg-gray-100 rounded-lg border border-gray-300">
+        <% if @user_meal_prompt.generated? %>
+          <div data-clipboard-target="source" class="bg-gray-50 overflow-auto max-h-[600px] bg-gray-100 rounded-lg border border-gray-300">
             <%= render "user_meal_prompts/user_meal_prompt", user_meal_prompt: @user_meal_prompt %>
           </div>
         <% else %>

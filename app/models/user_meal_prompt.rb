@@ -66,4 +66,8 @@ class UserMealPrompt < ApplicationRecord
       .includes(:supplement_components)
       .ordered
   end
+
+  def generated?
+    generated_at
+  end
 end

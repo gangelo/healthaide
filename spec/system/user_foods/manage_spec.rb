@@ -17,7 +17,7 @@ RSpec.describe "Managing foods", type: :system do
   scenario "User can view their foods" do
     visit user_foods_path
 
-    expect(page).to have_content("My Foods")
+    expect(page).to have_content("Foods")
     expect(page).to have_content(food1.food_name)
     expect(page).to have_content(food2.food_name)
   end

@@ -12,8 +12,7 @@
   <div class="my-5">
     <%= form.label :frequency, class: "block font-medium text-gray-700 mb-1" %>
     <%= form.select :frequency, options_for_select(UserMedication.frequencies_by_value.map { |k, _v| [k.humanize, k] }, user_medication.frequency),
-                    { include_blank: "Choose frequency..." },
-                    { class: "block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
+                    { include_blank: "Choose frequency..." } %>
   </div>
   <%= render partial: "shared/forms/form_buttons", locals: {
     form: form,

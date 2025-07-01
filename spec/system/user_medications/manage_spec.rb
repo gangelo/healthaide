@@ -16,7 +16,7 @@ RSpec.describe "Managing medications", type: :system do
   scenario "User can view their medications with frequency" do
     visit user_medications_path
 
-    expect(page).to have_content("My Medications")
+    expect(page).to have_content("Medications")
     expect(page).to have_content(medication1.medication_name)
     expect(page).to have_content(medication2.medication_name)
     expect(page).to have_content("Taken daily")

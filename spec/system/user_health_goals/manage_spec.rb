@@ -17,7 +17,7 @@ RSpec.describe "Managing health goals", type: :system do
   scenario "User can view their health goals" do
     visit user_health_goals_path
 
-    expect(page).to have_content("My Health Goals")
+    expect(page).to have_content("Health Goals")
     expect(page).to have_content(health_goal1.health_goal_name)
     expect(page).to have_content(health_goal2.health_goal_name)
   end

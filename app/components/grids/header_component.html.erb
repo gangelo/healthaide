@@ -1,5 +1,5 @@
-<div class="bg-gray-800 text-white uppercase text-sm leading-normal px-4 py-3 sm:px-6 grid <%= grid_cols_css_class %> gap-4">
+<div class="bg-gray-800 text-white uppercase text-sm leading-normal grid <%= grid_cols_css_class %>">
   <% columns.each_pair do |column_name, column_options| %>
-    <div class="text-sm font-medium <%= column_options[:css_class] %>"><%= column_name %></div>
+    <div class="px-4 py-3 sm:px-6 text-sm font-medium <%= column_options[:css_class] %>"><%= column_name %></div>
   <% end %>
 </div>

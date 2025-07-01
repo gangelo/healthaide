@@ -1,5 +1,5 @@
 
-RSpec.describe UserStat, type: :model do
+RSpec.describe UserStat do
   describe 'associations' do
     it { is_expected.to belong_to(:user) }
   end
