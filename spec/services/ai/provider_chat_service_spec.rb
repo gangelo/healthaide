@@ -1,4 +1,4 @@
-RSpec.describe Ai::ProviderChatService do
+RSpec.describe Ai::ChatService do
   subject(:service) { described_class.new(user) }
 
   let(:user)          { create(:user) }

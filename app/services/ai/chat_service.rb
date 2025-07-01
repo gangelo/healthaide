@@ -7,7 +7,7 @@ module Ai
   #
   # Example usage:
   # user = User.find_by(last_name: "Angelo")
-  # service = Ai::ProviderChatService.new(user)
+  # service = Ai::ChatService.new(user)
   #
   # service.with_instructions("Just return your output like a simple calculator; no commentary please!")
   # service.ask("what is the sum of 2 + 2?")
@@ -19,18 +19,25 @@ module Ai
   #     {role: :assistant, content: "4"},
   #     {role: :user, content: "what would be the sum if I added 5?"},
   #     {role: :assistant, content: "9"}]
-  class ProviderChatService
+  class ChatService
     private delegate :ai_provider, :ai_provider_model, :ai_provider_api_key, :no_provider?, to: :user_profile
 
-    # ask(prompt)
-    # with_instructions(instructions, replace: <true || false>)
-    # See: https://rubyllm.com/guides/chat#guiding-the-ai-with-instructions
-    delegate :ask, :with_instructions, to: :chat
+    def initialize(chat)
+      @chat         = chat
+      @user         = chat.user
+      @user_profile = chat.user.profile
 
-    def initialize(user)
-      @user_profile = user.profile
+      raise ArgumentError, "Argument :chat is not present?" unless chat.present?
+      raise ArgumentError, "Argument :chat is not persisted?" unless chat.persisted?
+    end
 
-      raise ArgumentError, "AI provider #{ai_provider} is not a valid provider" if no_provider?
+    def ask(prompt, &)
+      chat.with_context(context).ask(prompt, &)
+    end
+
+    def with_instructions(instructions, replace: false)
+      chat.with_context(context).with_instructions(instructions, replace: replace)
+      self
     end
 
     # Returns the chat history
@@ -39,20 +46,15 @@ module Ai
         { role: message.role, content: message.content }
       end
     end
-
     private
 
-    attr_reader :user_profile
+    attr_reader :chat, :user, :user_profile
 
     def context
+      # https://rubyllm.com/configuration#provider-api-keys
       @context ||= RubyLLM.context do |config|
-        # https://rubyllm.com/configuration#provider-api-keys
         config.public_send("#{ai_provider}_api_key=", ai_provider_api_key)
       end
-    end
-
-    def chat
-      @chat ||= context.chat(model: ai_provider_model, provider: ai_provider)
     end
   end
 end

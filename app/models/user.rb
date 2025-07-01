@@ -2,8 +2,6 @@
 
 # The user model for this application.
 class User < ApplicationRecord
-  include UserMealPromptChattable
-
   ROLE_USER = 0
   ROLE_ADMIN = 1
 
@@ -36,6 +34,8 @@ class User < ApplicationRecord
   has_many :medications, through: :user_medications
 
   has_one :user_meal_prompt, inverse_of: :user, dependent: :destroy
+
+  has_many :user_meal_prompt_chats
 
   enum :role, user: ROLE_USER, admin: ROLE_ADMIN, default: ROLE_USER
 

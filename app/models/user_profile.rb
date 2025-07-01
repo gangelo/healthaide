@@ -1,3 +1,5 @@
+require "ruby_llm"
+
 class UserProfile < ApplicationRecord
   belongs_to :user
 
@@ -34,6 +36,10 @@ class UserProfile < ApplicationRecord
     nil_api_key_and_model_if_no_provider
 
     save!
+  end
+
+  def resolved_ai_provider_model
+    RubyLLM::Aliases.resolve(ai_provider_model, ai_provider)
   end
 
   private
